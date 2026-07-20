@@ -2,6 +2,7 @@ import logging
 from django.shortcuts import render, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 from resumes.models import Resume
 
 logger = logging.getLogger(__name__)
@@ -16,25 +17,29 @@ def generate_pdf_html(resume):
     })
 
 
+def render_to_pdf(html_string, filename):
+    """Convert HTML string to PDF response using xhtml2pdf."""
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    pisa_status = pisa.CreatePDF(html_string, dest=response)
+    if pisa_status.err:
+        return None
+    return response
+
+
 @login_required
 def download_pdf(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
 
     try:
-        from weasyprint import HTML
         html_string = generate_pdf_html(resume)
-        pdf = HTML(string=html_string).write_pdf()
-        response = HttpResponse(pdf, content_type='application/pdf')
         filename = f"{resume.title.replace(' ', '_')}.pdf"
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        logger.info(f"PDF generated for resume '{resume.title}' by user {request.user.username}")
-        return response
-    except ImportError:
-        logger.error("WeasyPrint is not installed")
-        return HttpResponse(
-            "PDF generation requires WeasyPrint. Install it with: pip install weasyprint",
-            status=501
-        )
+        response = render_to_pdf(html_string, filename)
+        if response:
+            logger.info(f"PDF generated for resume '{resume.title}' by user {request.user.username}")
+            return response
+        logger.error(f"PDF rendering failed for resume {resume_id}")
+        return HttpResponse("PDF generation failed. Please try again.", status=500)
     except Exception as e:
         logger.error(f"PDF generation failed for resume {resume_id}: {str(e)}")
         return HttpResponse(
