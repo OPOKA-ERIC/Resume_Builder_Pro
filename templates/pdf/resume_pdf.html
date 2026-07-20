@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Resume PDF - {{ resume.title }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; font-family: 'Times New Roman', serif; color: #000;">
+    <h1 style="text-align: center; margin-bottom: 5px;">{{ user.get_full_name|default:user.username }}</h1>
+    <p style="text-align: center; font-size: 14px; color: #555;">
+        {{ user.email }}
+        {% if user.profile.phone %} | {{ user.profile.phone }}{% endif %}
+        {% if user.profile.address %} | {{ user.profile.address }}{% endif %}
+    </p>
+    <hr style="border: 1px solid #ccc;">
+
+    {% if resume.educations.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">EDUCATION</h3>
+        {% for edu in resume.educations.all %}
+            <div style="margin-bottom: 10px;">
+                <strong>{{ edu.institution }}</strong> — {{ edu.qualification }}<br>
+                <em>{{ edu.start_date|date:"M Y" }} - {{ edu.end_date|date:"M Y"|default:"Present" }}</em>
+                {% if edu.description %}<p>{{ edu.description }}</p>{% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if resume.experiences.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">WORK EXPERIENCE</h3>
+        {% for exp in resume.experiences.all %}
+            <div style="margin-bottom: 10px;">
+                <strong>{{ exp.role }}</strong> — {{ exp.company }}<br>
+                <em>{{ exp.start_date|date:"M Y" }} - {{ exp.end_date|date:"M Y"|default:"Present" }}</em>
+                {% if exp.description %}<p>{{ exp.description }}</p>{% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if resume.skills.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">SKILLS</h3>
+        <p>{% for skill in resume.skills.all %}{{ skill.name }} ({{ skill.proficiency_level }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+
+    {% if resume.projects.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">PROJECTS</h3>
+        {% for project in resume.projects.all %}
+            <div style="margin-bottom: 10px;">
+                <strong>{{ project.name }}</strong>
+                {% if project.link %}<a href="{{ project.link }}">{{ project.link }}</a>{% endif %}
+                {% if project.description %}<p>{{ project.description }}</p>{% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if resume.certifications.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">CERTIFICATIONS</h3>
+        {% for cert in resume.certifications.all %}
+            <div style="margin-bottom: 5px;">
+                <strong>{{ cert.title }}</strong> — {{ cert.issuer }}, {{ cert.date_awarded|date:"M Y" }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if resume.languages.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">LANGUAGES</h3>
+        <p>{% for lang in resume.languages.all %}{{ lang.name }} ({{ lang.proficiency_level }}){% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    {% endif %}
+
+    {% if resume.references.all %}
+        <h3 style="border-bottom: 2px solid #007bff; padding-bottom: 4px;">REFERENCES</h3>
+        {% for ref in resume.references.all %}
+            <div style="margin-bottom: 5px;">
+                <strong>{{ ref.name }}</strong> — {{ ref.relationship }}, {{ ref.contact }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

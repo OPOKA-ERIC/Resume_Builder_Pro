@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Preview - {{ resume.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Preview: {{ resume.title }}</h3>
+    <div>
+        <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="btn btn-success">
+            <i class="bi bi-download"></i> Download PDF
+        </a>
+        <a href="{% url 'resumes:resume_edit' resume.id %}" class="btn btn-outline-primary">Edit</a>
+        <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary">Dashboard</a>
+    </div>
+</div>
+
+<div class="card shadow" style="max-width: 800px; margin: 0 auto;">
+    <div class="card-body p-5">
+        <h2>{{ user.get_full_name|default:user.username }}</h2>
+        <p class="text-muted">{{ user.email }}</p>
+        {% if user.profile.phone %}<p class="text-muted">{{ user.profile.phone }}</p>{% endif %}
+        {% if user.profile.address %}<p class="text-muted">{{ user.profile.address }}</p>{% endif %}
+
+        <hr>
+
+        {% if resume.educations.all %}
+            <h4>Education</h4>
+            {% for edu in resume.educations.all %}
+                <div class="mb-2">
+                    <strong>{{ edu.institution }}</strong> — {{ edu.qualification }}
+                    <br><small class="text-muted">{{ edu.start_date|date:"M Y" }} - {{ edu.end_date|date:"M Y"|default:"Present" }}</small>
+                    {% if edu.description %}<p class="small">{{ edu.description }}</p>{% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if resume.experiences.all %}
+            <h4>Work Experience</h4>
+            {% for exp in resume.experiences.all %}
+                <div class="mb-2">
+                    <strong>{{ exp.role }}</strong> at {{ exp.company }}
+                    <br><small class="text-muted">{{ exp.start_date|date:"M Y" }} - {{ exp.end_date|date:"M Y"|default:"Present" }}</small>
+                    {% if exp.description %}<p class="small">{{ exp.description }}</p>{% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if resume.skills.all %}
+            <h4>Skills</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for skill in resume.skills.all %}
+                    <span class="badge bg-primary">{{ skill.name }} — {{ skill.proficiency_level }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if resume.projects.all %}
+            <h4>Projects</h4>
+            {% for project in resume.projects.all %}
+                <div class="mb-2">
+                    <strong>{{ project.name }}</strong>
+                    {% if project.link %}<a href="{{ project.link }}" class="small">Link</a>{% endif %}
+                    {% if project.description %}<p class="small">{{ project.description }}</p>{% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if resume.certifications.all %}
+            <h4>Certifications</h4>
+            {% for cert in resume.certifications.all %}
+                <div class="mb-2">
+                    <strong>{{ cert.title }}</strong> — {{ cert.issuer }}
+                    <br><small class="text-muted">{{ cert.date_awarded|date:"M Y" }}</small>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if resume.languages.all %}
+            <h4>Languages</h4>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for lang in resume.languages.all %}
+                    <span class="badge bg-secondary">{{ lang.name }} — {{ lang.proficiency_level }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if resume.references.all %}
+            <h4>References</h4>
+            {% for ref in resume.references.all %}
+                <div class="mb-2">
+                    <strong>{{ ref.name }}</strong> — {{ ref.relationship }}
+                    <br><small class="text-muted">{{ ref.contact }}</small>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

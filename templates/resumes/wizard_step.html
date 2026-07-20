@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ step|title }} - Resume Builder Pro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h3 class="mb-3">Resume: {{ resume.title }}</h3>
+
+        <!-- Step Progress Bar -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between">
+                {% for s in steps %}
+                    <div class="text-center flex-fill">
+                        <div class="rounded-circle mx-auto mb-1 {% if forloop.counter0 <= step_index %}bg-primary text-white{% else %}bg-secondary text-white{% endif %}"
+                             style="width:35px; height:35px; line-height:35px; font-size:14px;">
+                            {{ forloop.counter }}
+                        </div>
+                        <small class="{% if forloop.counter0 == step_index %}fw-bold text-primary{% else %}text-muted{% endif %}">
+                            {{ s|title }}
+                        </small>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="progress mt-2" style="height:4px;">
+                <div class="progress-bar bg-primary" style="width: {% widthratio step_index steps|length|add:'-1' 100 %}%"></div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="card-title mb-4">{{ step|title }}</h4>
+
+                {% if existing_items %}
+                    <div class="mb-3">
+                        <h6>Added items:</h6>
+                        <ul class="list-group mb-3">
+                            {% for item in existing_items %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                    {% if step == 'education' %}
+                                        {{ item.institution }} - {{ item.qualification }}
+                                    {% elif step == 'experience' %}
+                                        {{ item.role }} at {{ item.company }}
+                                    {% elif step == 'skills' %}
+                                        {{ item.name }} ({{ item.proficiency_level }})
+                                    {% elif step == 'projects' %}
+                                        {{ item.name }}
+                                    {% elif step == 'certifications' %}
+                                        {{ item.title }} - {{ item.issuer }}
+                                    {% elif step == 'languages' %}
+                                        {{ item.name }} ({{ item.proficiency_level }})
+                                    {% elif step == 'references' %}
+                                        {{ item.name }} - {{ item.relationship }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            {% if step_index < steps|length|add:'-1' %}
+                                Save & Next
+                            {% else %}
+                                Finish
+                            {% endif %}
+                        </button>
+                        {% if step_index > 0 %}
+                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=steps|first %}" class="btn btn-outline-secondary">Back to Start</a>
+                        {% endif %}
+                        <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-danger">Save & Exit</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
