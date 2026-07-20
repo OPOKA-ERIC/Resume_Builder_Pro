@@ -2,5 +2,5 @@ Django==6.0.6
 gunicorn
 whitenoise
 psycopg2-binary
-weasyprint
+xhtml2pdf
 Pillow
