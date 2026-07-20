@@ -7,25 +7,66 @@
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <h3 class="card-title mb-4">My Profile</h3>
-                <form method="post">
+
+                {% if profile.photo %}
+                    <div class="text-center mb-3">
+                        <img src="{{ profile.photo.url }}" alt="Profile Photo"
+                             class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" novalidate>
                     {% csrf_token %}
+
                     <div class="mb-3">
-                        <label class="form-label">Username</label>
+                        <label for="id_username" class="form-label">Username</label>
                         <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                        <small class="text-muted">Username cannot be changed.</small>
                     </div>
+
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}">
+                        <label for="id_first_name" class="form-label">First Name</label>
+                        {{ form.first_name }}
                     </div>
+
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
-                        <input type="text" name="phone" id="phone" class="form-control" value="{{ profile.phone }}">
+                        <label for="id_last_name" class="form-label">Last Name</label>
+                        {{ form.last_name }}
                     </div>
+
                     <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <textarea name="address" id="address" class="form-control" rows="2">{{ profile.address }}</textarea>
+                        <label for="id_email" class="form-label">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                        {% endif %}
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+
+                    <div class="mb-3">
+                        <label for="id_phone" class="form-label">Phone</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small">{{ form.phone.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_address" class="form-label">Address</label>
+                        {{ form.address }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_photo" class="form-label">Profile Photo</label>
+                        {{ form.photo }}
+                        {% if form.photo.errors %}
+                            <div class="text-danger small">{{ form.photo.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-secondary">Change Password</a>
+                    </div>
                 </form>
             </div>
         </div>
