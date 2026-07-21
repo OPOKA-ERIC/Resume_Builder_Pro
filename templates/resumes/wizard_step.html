@@ -1,89 +1,130 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ step|title }} - Resume Builder Pro{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <h3 class="mb-3">Resume: {{ resume.title }}</h3>
-
-        <!-- Step Progress Bar -->
-        <div class="mb-4">
-            <div class="d-flex justify-content-between">
-                {% for s in steps %}
-                    <div class="text-center flex-fill">
-                        <div class="rounded-circle mx-auto mb-1 {% if forloop.counter0 <= step_index %}bg-primary text-white{% else %}bg-secondary text-white{% endif %}"
-                             style="width:35px; height:35px; line-height:35px; font-size:14px;">
-                            {{ forloop.counter }}
-                        </div>
-                        <small class="{% if forloop.counter0 == step_index %}fw-bold text-primary{% else %}text-muted{% endif %}">
-                            {{ s|title }}
-                        </small>
-                    </div>
-                {% endfor %}
+    <div class="col-lg-8">
+        <div class="animate-fade-in-up">
+            <!-- Resume Title -->
+            <div class="d-flex align-items-center mb-3">
+                <a href="{% url 'resumes:dashboard' %}" class="btn btn-sm btn-outline-secondary me-3">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div>
+                    <h3 class="mb-0">Resume: {{ resume.title }}</h3>
+                    <small class="text-muted">Step {{ step_index|add:'1' }} of {{ steps|length }} &mdash; {{ step|title }}</small>
+                </div>
             </div>
-            <div class="progress mt-2" style="height:4px;">
-                <div class="progress-bar bg-primary" style="width: {% widthratio step_index steps|length|add:'-1' 100 %}%"></div>
+
+            <!-- Wizard Steps -->
+            <div class="wizard-progress mb-4">
+                <div class="wizard-steps">
+                    {% for s in steps %}
+                        <div class="wizard-step">
+                            <div class="wizard-step-circle {% if forloop.counter0 < step_index %}completed{% elif forloop.counter0 == step_index %}active{% else %}upcoming{% endif %}">
+                                {% if forloop.counter0 < step_index %}
+                                    <i class="bi bi-check-lg"></i>
+                                {% else %}
+                                    {{ forloop.counter }}
+                                {% endif %}
+                            </div>
+                            <div class="wizard-step-label {% if forloop.counter0 == step_index %}active{% elif forloop.counter0 < step_index %}completed{% endif %}">
+                                {{ s|title }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="wizard-connector">
+                    <div class="wizard-connector-fill" style="width: {% widthratio step_index steps|length|add:'-1' 100 %}%;"></div>
+                </div>
             </div>
         </div>
 
-        <div class="card shadow-sm">
+        <!-- Form Card -->
+        <div class="card animate-fade-in-up delay-1">
             <div class="card-body p-4">
-                <h4 class="card-title mb-4">{{ step|title }}</h4>
+                <h4 class="card-title mb-4">
+                    <i class="bi bi-{% if step == 'education' %}book{% elif step == 'experience' %}briefcase{% elif step == 'skills' %}tools{% elif step == 'projects' %}folder2-open{% elif step == 'certifications' %}award{% elif step == 'languages' %}translate{% elif step == 'references' %}people{% else %}pencil{% endif %} me-2" style="color: var(--primary);"></i>
+                    {{ step|title }}
+                </h4>
 
                 {% if existing_items %}
-                    <div class="mb-3">
-                        <h6>Added items:</h6>
-                        <ul class="list-group mb-3">
+                    <div class="mb-4">
+                        <h6 class="text-muted fw-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 0.05em;">
+                            <i class="bi bi-list-check me-1"></i> Added Items ({{ existing_items|length }})
+                        </h6>
+                        <ul class="list-group list-group-flush">
                             {% for item in existing_items %}
-                                <li class="list-group-item d-flex justify-content-between">
-                                    {% if step == 'education' %}
-                                        {{ item.institution }} - {{ item.qualification }}
-                                    {% elif step == 'experience' %}
-                                        {{ item.role }} at {{ item.company }}
-                                    {% elif step == 'skills' %}
-                                        {{ item.name }} ({{ item.proficiency_level }})
-                                    {% elif step == 'projects' %}
-                                        {{ item.name }}
-                                    {% elif step == 'certifications' %}
-                                        {{ item.title }} - {{ item.issuer }}
-                                    {% elif step == 'languages' %}
-                                        {{ item.name }} ({{ item.proficiency_level }})
-                                    {% elif step == 'references' %}
-                                        {{ item.name }} - {{ item.relationship }}
-                                    {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span>
+                                        {% if step == 'education' %}
+                                            <i class="bi bi-book text-primary me-2"></i>
+                                            <strong>{{ item.institution }}</strong> &mdash; {{ item.qualification }}
+                                        {% elif step == 'experience' %}
+                                            <i class="bi bi-briefcase text-success me-2"></i>
+                                            <strong>{{ item.role }}</strong> at {{ item.company }}
+                                        {% elif step == 'skills' %}
+                                            <i class="bi bi-tools text-warning me-2"></i>
+                                            {{ item.name }}
+                                            <span class="badge bg-secondary-subtle text-secondary ms-2">{{ item.proficiency_level }}</span>
+                                        {% elif step == 'projects' %}
+                                            <i class="bi bi-folder2-open text-info me-2"></i>
+                                            <strong>{{ item.name }}</strong>
+                                        {% elif step == 'certifications' %}
+                                            <i class="bi bi-award text-danger me-2"></i>
+                                            <strong>{{ item.title }}</strong> &mdash; {{ item.issuer }}
+                                        {% elif step == 'languages' %}
+                                            <i class="bi bi-translate text-primary me-2"></i>
+                                            {{ item.name }}
+                                            <span class="badge bg-info-subtle text-info ms-2">{{ item.proficiency_level }}</span>
+                                        {% elif step == 'references' %}
+                                            <i class="bi bi-person text-secondary me-2"></i>
+                                            <strong>{{ item.name }}</strong> &mdash; {{ item.relationship }}
+                                        {% endif %}
+                                    </span>
                                 </li>
                             {% endfor %}
                         </ul>
                     </div>
                 {% endif %}
 
-                <form method="post" novalidate>
+                <form method="post" novalidate data-wizard-step="{{ step }}">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="mb-3">
                             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                             {{ field }}
                             {% if field.errors %}
-                                <div class="text-danger small">{{ field.errors.0 }}</div>
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}</div>
                             {% endif %}
                         </div>
                     {% endfor %}
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
+
+                    <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                        <button type="submit" class="btn btn-primary btn-icon">
                             {% if step_index < steps|length|add:'-1' %}
-                                Save & Next
+                                <i class="bi bi-arrow-right"></i> Save & Next
                             {% else %}
-                                Finish
+                                <i class="bi bi-check-lg"></i> Finish
                             {% endif %}
                         </button>
                         {% if step_index > 0 %}
-                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=steps|first %}" class="btn btn-outline-secondary">Back to Start</a>
+                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=steps|first %}" class="btn btn-outline-secondary btn-icon">
+                                <i class="bi bi-arrow-counterclockwise"></i> Start Over
+                            </a>
                         {% endif %}
-                        <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-danger">Save & Exit</a>
+                        <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-danger btn-icon ms-auto">
+                            <i class="bi bi-x-lg"></i> Save & Exit
+                        </a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/wizard.js' %}"></script>
 {% endblock %}

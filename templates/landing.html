@@ -1,34 +1,124 @@
 {% extends "base.html" %}
 {% block title %}Resume Builder Pro - Build Your Professional Resume{% endblock %}
+{% block main_class %}{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold text-primary">Resume Builder Pro</h1>
-    <p class="lead text-muted mt-3 mb-4">
-        Create professional, polished resumes in minutes.<br>
-        No design skills needed &mdash; just your career information.
-    </p>
-    <div class="d-flex justify-content-center gap-3">
-        <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">Get Started Free</a>
-        <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="hero-title animate-fade-in-up">
+                    Build Your Dream Resume<br>
+                    <span style="color: var(--accent);">In Minutes</span>
+                </h1>
+                <p class="hero-subtitle animate-fade-in-up delay-1">
+                    Create professional, polished resumes that stand out. Step-by-step guidance, beautiful templates, and instant PDF export.
+                </p>
+                <div class="hero-cta d-flex gap-3 mt-4 animate-fade-in-up delay-2">
+                    <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+                    </a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center animate-fade-in delay-3">
+                <div style="font-size: 12rem; line-height: 1; opacity: 0.15; animation: float 4s ease-in-out infinite;">
+                    &#128196;
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 
-<div class="row mt-5">
-    <div class="col-md-4 text-center mb-4">
-        <i class="bi bi-pencil-square display-4 text-primary"></i>
-        <h4 class="mt-3">Step-by-Step Wizard</h4>
-        <p class="text-muted">Enter your information section by section with guided prompts and validation.</p>
+<!-- Features Section -->
+<section class="container mb-5">
+    <div class="text-center mb-5 animate-fade-in-up">
+        <h2 class="fw-bold" style="font-size: 2rem;">Why Resume Builder Pro?</h2>
+        <div class="divider"></div>
+        <p class="text-muted mt-3" style="max-width: 520px; margin: 0 auto;">
+            Everything you need to create a standout resume, all in one place.
+        </p>
     </div>
-    <div class="col-md-4 text-center mb-4">
-        <i class="bi bi-palette display-4 text-primary"></i>
-        <h4 class="mt-3">Professional Templates</h4>
-        <p class="text-muted">Choose from multiple professionally designed templates to match your style.</p>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-1">
+            <div class="feature-card h-100">
+                <div class="feature-icon feature-icon-primary">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <h5>Step-by-Step Wizard</h5>
+                <p>Enter your information section by section with guided prompts and validation.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-2">
+            <div class="feature-card h-100">
+                <div class="feature-icon feature-icon-secondary">
+                    <i class="bi bi-palette"></i>
+                </div>
+                <h5>Professional Templates</h5>
+                <p>Choose from multiple professionally designed templates to match your style.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-3">
+            <div class="feature-card h-100">
+                <div class="feature-icon feature-icon-accent">
+                    <i class="bi bi-file-earmark-pdf"></i>
+                </div>
+                <h5>PDF Download</h5>
+                <p>Generate a print-ready PDF of your resume with one click.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-4">
+            <div class="feature-card h-100">
+                <div class="feature-icon feature-icon-success">
+                    <i class="bi bi-lightning-charge"></i>
+                </div>
+                <h5>Lightning Fast</h5>
+                <p>Build a complete resume in under 10 minutes with our intuitive interface.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4 text-center mb-4">
-        <i class="bi bi-file-earmark-pdf display-4 text-primary"></i>
-        <h4 class="mt-3">PDF Download</h4>
-        <p class="text-muted">Generate a print-ready PDF of your resume with one click.</p>
+</section>
+
+<!-- How It Works Section -->
+<section class="container mb-5">
+    <div class="text-center mb-5 animate-fade-in-up">
+        <h2 class="fw-bold" style="font-size: 2rem;">How It Works</h2>
+        <div class="divider"></div>
     </div>
-</div>
+
+    <div class="row g-4 align-items-center">
+        <div class="col-md-4 text-center animate-fade-in-up delay-1">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-50); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 1.25rem;">1</div>
+            <h5 class="fw-bold">Create Your Profile</h5>
+            <p class="text-muted">Sign up and fill in your personal details, education, and work experience.</p>
+        </div>
+        <div class="col-md-4 text-center animate-fade-in-up delay-2">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #e0f2fe; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--secondary); margin-bottom: 1.25rem;">2</div>
+            <h5 class="fw-bold">Choose a Template</h5>
+            <p class="text-muted">Pick from our collection of professionally designed resume templates.</p>
+        </div>
+        <div class="col-md-4 text-center animate-fade-in-up delay-3">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #fef3c7; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 1.25rem;">3</div>
+            <h5 class="fw-bold">Download PDF</h5>
+            <p class="text-muted">Preview your resume and download it as a polished PDF in seconds.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="container mb-5 animate-fade-in-up">
+    <div class="card-gradient text-center" style="border-radius: var(--radius-xl); padding: 3.5rem 2rem;">
+        <h2 class="fw-bold mb-3" style="font-size: 2rem;">Ready to Build Your Resume?</h2>
+        <p class="mb-4" style="color: rgba(255,255,255,0.8); max-width: 450px; margin: 0 auto;">
+            Join us and create your professional resume today. It's free and takes just a few minutes.
+        </p>
+        <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg fw-bold">
+            <i class="bi bi-rocket-takeoff me-2"></i>Get Started Now
+        </a>
+    </div>
+</section>
 {% endblock %}

@@ -1,0 +1,38 @@
+[
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 1,
+    "fields": {
+      "name": "Classic",
+      "description": "A clean, traditional single-column layout with serif typography. ATS-friendly and perfect for formal industries like finance, law, and government.",
+      "preview_image": null,
+      "html_file": "pdf/template_classic.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 2,
+    "fields": {
+      "name": "Modern",
+      "description": "A two-column layout with a dark sidebar for skills, languages, and certifications. Great for tech, creative, and startup roles.",
+      "preview_image": null,
+      "html_file": "pdf/template_modern.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 3,
+    "fields": {
+      "name": "Compact",
+      "description": "A dense two-column layout optimized for candidates with extensive experience. Fits more content on a single page.",
+      "preview_image": null,
+      "html_file": "pdf/template_compact.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  }
+]

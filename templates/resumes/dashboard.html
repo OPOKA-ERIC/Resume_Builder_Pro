@@ -2,42 +2,70 @@
 {% block title %}Dashboard - Resume Builder Pro{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>My Resumes</h2>
-    <a href="{% url 'resumes:resume_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Create New Resume
-    </a>
+<!-- Dashboard Header -->
+<div class="dashboard-header animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-1"><i class="bi bi-grid-1x2 me-2"></i>My Resumes</h2>
+            <p class="mb-0">Manage and create your professional resumes</p>
+        </div>
+        <a href="{% url 'resumes:resume_create' %}" class="btn btn-light btn-icon fw-bold">
+            <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Create New</span>
+        </a>
+    </div>
 </div>
 
 {% if resumes %}
-    <div class="row">
+    <div class="row g-4">
         {% for resume in resumes %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ resume.title }}</h5>
-                        <p class="text-muted small">
-                            Template: {{ resume.template.name|default:"None selected" }}
-                        </p>
-                        <p class="text-muted small">
-                            Last updated: {{ resume.updated_at|date:"M d, Y" }}
-                        </p>
+            <div class="col-md-6 col-lg-4 animate-fade-in-up delay-{{ forloop.counter }}">
+                <div class="resume-card h-100">
+                    <div class="resume-card-accent"></div>
+                    <div class="resume-card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="resume-card-title mb-0">{{ resume.title }}</h5>
+                            <span class="badge bg-primary-subtle text-primary rounded-pill">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </span>
+                        </div>
+                        <div class="resume-card-meta">
+                            <i class="bi bi-palette"></i>
+                            {{ resume.template.name|default:"Default template" }}
+                        </div>
+                        <div class="resume-card-meta">
+                            <i class="bi bi-clock"></i>
+                            Updated {{ resume.updated_at|date:"M d, Y" }}
+                        </div>
                     </div>
-                    <div class="card-footer bg-transparent">
-                        <a href="{% url 'resumes:resume_edit' resume.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                        <a href="{% url 'resumes:resume_preview' resume.id %}" class="btn btn-sm btn-outline-success">Preview</a>
-                        <a href="{% url 'resumes:resume_delete' resume.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    <div class="resume-card-actions">
+                        <a href="{% url 'resumes:resume_edit' resume.id %}" class="btn btn-sm btn-outline-primary btn-icon">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a href="{% url 'resumes:resume_preview' resume.id %}" class="btn btn-sm btn-outline-success btn-icon">
+                            <i class="bi bi-eye"></i> Preview
+                        </a>
+                        <a href="{% url 'resumes:resume_delete' resume.id %}" class="btn btn-sm btn-outline-danger btn-icon">
+                            <i class="bi bi-trash"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 {% else %}
-    <div class="text-center py-5">
-        <i class="bi bi-file-earmark-x display-1 text-muted"></i>
-        <h4 class="mt-3 text-muted">No resumes yet</h4>
-        <p class="text-muted">Create your first resume to get started!</p>
-        <a href="{% url 'resumes:resume_create' %}" class="btn btn-primary btn-lg">Create Resume</a>
+    <div class="card animate-fade-in-up">
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-file-earmark-plus"></i>
+            </div>
+            <h4 class="fw-bold mb-2">No resumes yet</h4>
+            <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">
+                Create your first professional resume and start standing out to employers.
+            </p>
+            <a href="{% url 'resumes:resume_create' %}" class="btn btn-primary btn-lg btn-icon">
+                <i class="bi bi-plus-lg"></i> Create Your First Resume
+            </a>
+        </div>
     </div>
 {% endif %}
 {% endblock %}

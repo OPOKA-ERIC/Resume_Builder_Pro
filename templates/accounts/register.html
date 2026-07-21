@@ -2,53 +2,79 @@
 {% block title %}Register - Resume Builder Pro{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h3 class="card-title text-center mb-4">Create Account</h3>
-                <form method="post" novalidate>
-                    {% csrf_token %}
+<div class="auth-page">
+    <div class="auth-card animate-fade-in-up">
+        <div class="auth-card-header">
+            <div class="auth-icon">
+                <i class="bi bi-person-plus"></i>
+            </div>
+            <h3>Create Account</h3>
+            <p>Start building your resume today</p>
+        </div>
+        <div class="auth-card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Username</label>
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    <div class="input-group-icon">
+                        <i class="bi bi-person input-icon"></i>
                         {{ form.username }}
-                        {% if form.username.errors %}
-                            <div class="text-danger small">{{ form.username.errors.0 }}</div>
-                        {% endif %}
                     </div>
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.username.errors.0 }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="id_email" class="form-label">Email</label>
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    <div class="input-group-icon">
+                        <i class="bi bi-envelope input-icon"></i>
                         {{ form.email }}
-                        {% if form.email.errors %}
-                            <div class="text-danger small">{{ form.email.errors.0 }}</div>
-                        {% endif %}
                     </div>
+                    {% if form.email.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="id_password1" class="form-label">Password</label>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Password</label>
+                    <div class="input-group-icon">
+                        <i class="bi bi-lock input-icon"></i>
                         {{ form.password1 }}
-                        {% if form.password1.errors %}
-                            <div class="text-danger small">{{ form.password1.errors.0 }}</div>
-                        {% endif %}
-                        {% if form.password1.help_text %}
-                            <small class="form-text text-muted">{{ form.password1.help_text }}</small>
-                        {% endif %}
+                        <button type="button" class="password-toggle" onclick="togglePassword(this)" title="Show password">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
+                    {% if form.password1.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                    {% if form.password1.help_text %}
+                        <div class="form-text"><i class="bi bi-info-circle"></i> {{ form.password1.help_text }}</div>
+                    {% endif %}
+                </div>
 
-                    <div class="mb-3">
-                        <label for="id_password2" class="form-label">Confirm Password</label>
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Confirm Password</label>
+                    <div class="input-group-icon">
+                        <i class="bi bi-lock input-icon"></i>
                         {{ form.password2 }}
-                        {% if form.password2.errors %}
-                            <div class="text-danger small">{{ form.password2.errors.0 }}</div>
-                        {% endif %}
+                        <button type="button" class="password-toggle" onclick="togglePassword(this)" title="Show password">
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
+                    {% if form.password2.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.password2.errors.0 }}</div>
+                    {% endif %}
+                </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mt-2">Register</button>
-                </form>
-                <p class="text-center mt-3">
-                    Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
+                <button type="submit" class="btn btn-primary w-100 mt-3 btn-icon">
+                    <i class="bi bi-rocket-takeoff"></i> Create Account
+                </button>
+            </form>
+            <div class="text-center mt-4">
+                <p class="mb-0 text-muted">
+                    Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link">Sign in</a>
                 </p>
             </div>
         </div>

@@ -2,32 +2,31 @@
 {% block title %}{{ template.name }} - Resume Builder Pro{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-eye"></i> {{ template.name }}</h2>
-    <a href="{% url 'templates_app:gallery' %}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> Back to Gallery
-    </a>
-</div>
-
-{% if template.preview_image %}
-    <div class="text-center mb-4">
-        <img src="{{ template.preview_image.url }}" class="img-fluid rounded shadow" alt="{{ template.name }}">
-    </div>
-{% endif %}
-
-{% if template.description %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5>Description</h5>
-            <p>{{ template.description }}</p>
+<div class="animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{% url 'templates_app:gallery' %}" class="text-muted text-decoration-none mb-2 d-inline-block">
+                <i class="bi bi-arrow-left"></i> Back to Templates
+            </a>
+            <h3 class="mb-1">{{ template.name }}</h3>
+            <p class="text-muted mb-0">{{ template.description }}</p>
         </div>
+        <a href="{% url 'resumes:dashboard' %}" class="btn btn-primary btn-icon">
+            <i class="bi bi-plus-lg"></i> Use Template
+        </a>
     </div>
-{% endif %}
 
-<div class="card">
-    <div class="card-body">
-        <p class="text-muted">Template file: <code>{{ template.html_file }}</code></p>
-        <p class="text-muted">Created: {{ template.created_at|date:"M d, Y" }}</p>
+    <div class="card overflow-hidden">
+        {% if template.preview_image %}
+            <img src="{{ template.preview_image.url }}" alt="{{ template.name }}" class="w-100" style="max-height: 700px; object-fit: contain; background: var(--gray-100);">
+        {% else %}
+            <div class="d-flex align-items-center justify-content-center" style="height: 500px; background: var(--gray-50);">
+                <div class="text-center">
+                    <i class="bi bi-file-earmark-text" style="font-size: 4rem; color: var(--gray-300);"></i>
+                    <p class="text-muted mt-3">Preview image not available for this template.</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
