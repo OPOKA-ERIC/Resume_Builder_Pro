@@ -1,6 +1,6 @@
 # Chapter 10: Deployment Strategy
 
-**Co-authored by: Opeto Isaac (Authentication & PDF Generation Lead) & Auma Dillis (Testing, Documentation & Deployment Lead)**
+**Co-authored by: Opeto Isaac (Authentication & PDF Generation Lead) & Auma Dilish (Testing, Documentation & Deployment Lead)**
 
 ## 10.1 Overview
 
@@ -47,12 +47,6 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install system dependencies for WeasyPrint
-RUN apt-get update && apt-get install -y \
-    libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 \
-    libffi-dev libcairo2 libgobject2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -64,6 +58,8 @@ EXPOSE 8000
 
 CMD ["gunicorn", "resume_builder_pro.wsgi:application", "--bind", "0.0.0.0:8000"]
 ```
+
+> **Note:** xhtml2pdf is a pure Python library and requires no system-level dependencies, unlike WeasyPrint which needs libraries such as libpango. This keeps the Docker image lightweight.
 
 ### docker-compose.yml (Development)
 
@@ -95,7 +91,7 @@ services:
 
 ## 10.6 Static and Media Files
 
-- **Static files:** Collected via `collectstatic` and served by WhiteNoise middleware
+- **Static files:** Collected via `collectstatic` and served by WhiteNoise middleware, which handles caching headers and efficient delivery without requiring a separate CDN for basic deployments
 - **Media files:** User uploads (profile photos, template previews) stored on disk; for production, consider S3-compatible storage
 
 ## 10.7 Database Migration
@@ -109,9 +105,9 @@ Migrations are automatically applied during deployment via the build command.
 
 ## 10.8 Security Checklist (Pre-Deployment)
 
-- [ ] `DEBUG = False` in production
-- [ ] `DJANGO_SECRET_KEY` set to a strong, unique value
-- [ ] `ALLOWED_HOSTS` restricted to actual domain(s)
+- [ ] `DEBUG` reads from `DJANGO_DEBUG` environment variable (defaults to `False` in production)
+- [ ] `DJANGO_SECRET_KEY` set to a strong, unique value via environment variable
+- [ ] `ALLOWED_HOSTS` reads from `DJANGO_ALLOWED_HOSTS` environment variable, restricted to actual domain(s)
 - [ ] `SECURE_SSL_REDIRECT = True`
 - [ ] `SESSION_COOKIE_SECURE = True`
 - [ ] `CSRF_COOKIE_SECURE = True`
@@ -120,6 +116,7 @@ Migrations are automatically applied during deployment via the build command.
 - [ ] `SECURE_HSTS_PRELOAD = True`
 - [ ] `X_FRAME_OPTIONS = 'DENY'`
 - [ ] `SECURE_CONTENT_TYPE_NOSNIFF = True`
+- [ ] WhiteNoise middleware configured for static file serving
 - [ ] PostgreSQL database provisioned (not SQLite)
 - [ ] `.gitignore` excludes `db.sqlite3`, `media/`, `__pycache__/`, `.env`
 

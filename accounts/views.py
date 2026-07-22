@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.utils.html import escape
 from .forms import RegistrationForm, ProfileForm, CustomPasswordChangeForm
 from .models import UserProfile
 
