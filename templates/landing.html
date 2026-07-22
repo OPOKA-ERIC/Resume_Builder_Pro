@@ -7,26 +7,80 @@
 <section class="hero-section">
     <div class="container position-relative" style="z-index: 2;">
         <div class="row align-items-center">
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <h1 class="hero-title animate-fade-in-up">
-                    Build Your Dream Resume<br>
-                    <span style="color: var(--accent);">In Minutes</span>
+                    Build Your Dream Resume
+                    <br>In <span class="typewriter-cursor"></span>
                 </h1>
                 <p class="hero-subtitle animate-fade-in-up delay-1">
-                    Create professional, polished resumes that stand out. Step-by-step guidance, beautiful templates, and instant PDF export.
+                    Create professional, polished resumes that stand out. Step-by-step guidance, beautiful templates, and instant PDF export &mdash; all free.
                 </p>
                 <div class="hero-cta d-flex gap-3 mt-4 animate-fade-in-up delay-2">
                     <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg">
                         <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
                     </a>
                     <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        <i class="bi bi-play-circle me-2"></i>See How It Works
                     </a>
                 </div>
             </div>
-            <div class="col-lg-5 d-none d-lg-block text-center animate-fade-in delay-3">
-                <div style="font-size: 12rem; line-height: 1; opacity: 0.15; animation: float 4s ease-in-out infinite;">
-                    &#128196;
+            <div class="col-lg-6 d-none d-lg-block text-center animate-fade-in delay-3">
+                <div class="hero-mockup">
+                    <div class="hero-floating-badge badge-top">
+                        <i class="bi bi-patch-check-fill badge-check"></i> ATS Optimized
+                    </div>
+                    <div class="hero-floating-badge badge-bottom">
+                        <i class="bi bi-star-fill badge-star"></i> Professional
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-name">Your Name</div>
+                        <div class="mockup-role">Software Engineer</div>
+                        <div class="mockup-line mockup-line-full"></div>
+                        <div class="mockup-line mockup-line-long"></div>
+                        <div class="mockup-line mockup-line-medium"></div>
+                        <div class="mockup-skills">
+                            <div class="mockup-skill-dot"></div>
+                            <div class="mockup-skill-dot"></div>
+                            <div class="mockup-skill-dot"></div>
+                            <div class="mockup-skill-dot"></div>
+                        </div>
+                        <div class="mockup-line mockup-line-full" style="margin-top: 0.5rem;"></div>
+                        <div class="mockup-line mockup-line-long"></div>
+                        <div class="mockup-line mockup-line-short"></div>
+                    </div>
+                    <div class="hero-mockup-shadow"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="container mb-5 animate-fade-in-up">
+    <div class="stats-section">
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="1000">0</div>
+                    <div class="stat-label">Resumes Created</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="3">0</div>
+                    <div class="stat-label">Pro Templates</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="7">0</div>
+                    <div class="stat-label">Easy Steps</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="100">0</div>
+                    <div class="stat-label">% Free</div>
                 </div>
             </div>
         </div>
@@ -109,12 +163,80 @@
     </div>
 </section>
 
+<!-- Testimonials Section -->
+<section class="container mb-5">
+    <div class="text-center mb-5 animate-fade-in-up">
+        <h2 class="fw-bold" style="font-size: 2rem;">Loved by Students</h2>
+        <div class="divider"></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4 animate-fade-in-up delay-1">
+            <div class="testimonial-card h-100">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-text">"Built my first professional resume in under 10 minutes. The step-by-step wizard made it so easy!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">SK</div>
+                    <div>
+                        <div class="testimonial-name">Sarah K.</div>
+                        <div class="testimonial-role">Computer Science Student</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 animate-fade-in-up delay-2">
+            <div class="testimonial-card h-100">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-text">"The templates are gorgeous and the PDF export is flawless. Got callbacks from 3 companies!"</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">JM</div>
+                    <div>
+                        <div class="testimonial-name">James M.</div>
+                        <div class="testimonial-role">Fresh Graduate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 animate-fade-in-up delay-3">
+            <div class="testimonial-card h-100">
+                <div class="testimonial-stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="testimonial-text">"Finally, a resume builder that's actually free and looks this good. Highly recommended for students."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">AO</div>
+                    <div>
+                        <div class="testimonial-name">Amos O.</div>
+                        <div class="testimonial-role">Engineering Student</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="container mb-5 animate-fade-in-up">
     <div class="card-gradient text-center" style="border-radius: var(--radius-xl); padding: 3.5rem 2rem;">
         <h2 class="fw-bold mb-3" style="font-size: 2rem;">Ready to Build Your Resume?</h2>
         <p class="mb-4" style="color: rgba(255,255,255,0.8); max-width: 450px; margin: 0 auto;">
-            Join us and create your professional resume today. It's free and takes just a few minutes.
+            Join thousands of students who created their professional resumes with us. It's free.
         </p>
         <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg fw-bold">
             <i class="bi bi-rocket-takeoff me-2"></i>Get Started Now

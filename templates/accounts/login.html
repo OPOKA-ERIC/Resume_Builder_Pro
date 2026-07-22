@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Login - Resume Builder Pro{% endblock %}
+{% block main_class %}{% endblock %}
 
 {% block content %}
-<div class="auth-page">
-    <div class="auth-card animate-fade-in-up">
-        <div class="auth-card-header">
-            <div class="auth-icon">
-                <i class="bi bi-box-arrow-in-right"></i>
-            </div>
-            <h3>Welcome Back</h3>
-            <p>Sign in to your account</p>
-        </div>
-        <div class="auth-card-body">
+<div class="auth-split animate-fade-in-up">
+    <div class="auth-split-left">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your saved resumes, templates, and continue building your professional profile.</p>
+        <ul class="auth-split-features">
+            <li><i class="bi bi-check-circle-fill"></i> Access all your saved resumes</li>
+            <li><i class="bi bi-check-circle-fill"></i> Continue editing from where you left off</li>
+            <li><i class="bi bi-check-circle-fill"></i> Download resumes as PDF anytime</li>
+            <li><i class="bi bi-check-circle-fill"></i> Switch templates instantly</li>
+        </ul>
+    </div>
+    <div class="auth-split-right">
+        <div class="auth-split-form">
+            <h3>Sign In</h3>
+            <p class="auth-subtitle">Enter your credentials to continue</p>
             <form method="post" novalidate>
                 {% csrf_token %}
                 <div class="mb-3">

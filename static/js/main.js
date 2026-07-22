@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // === Animate elements on scroll (simple intersection observer) ===
+    // === Animate elements on scroll (IntersectionObserver) ===
     const animateElements = document.querySelectorAll('.animate-fade-in-up, .animate-fade-in, .animate-slide-right, .animate-slide-left');
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(function (entries) {
@@ -76,6 +76,81 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.animationPlayState = 'paused';
             observer.observe(el);
         });
+    }
+
+    // === Typewriter effect for hero subtitle ===
+    const typewriterEl = document.querySelector('.typewriter-cursor');
+    if (typewriterEl && typewriterEl.parentElement) {
+        const phrases = [
+            'Minutes.',
+            'No Design Skills Needed.',
+            'For Free.',
+            'Like a Pro.'
+        ];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        const typeTarget = typewriterEl.parentElement;
+
+        function typeEffect() {
+            const current = phrases[phraseIdx];
+            if (isDeleting) {
+                charIdx--;
+                if (charIdx < 0) {
+                    isDeleting = false;
+                    phraseIdx = (phraseIdx + 1) % phrases.length;
+                    setTimeout(typeEffect, 400);
+                    return;
+                }
+            } else {
+                charIdx++;
+                if (charIdx > current.length) {
+                    isDeleting = true;
+                    setTimeout(typeEffect, 2000);
+                    return;
+                }
+            }
+            // Find or create a text node before the cursor
+            let textNode = null;
+            for (const node of typeTarget.childNodes) {
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                    textNode = node;
+                    break;
+                }
+            }
+            // Rebuild the inner HTML: text + cursor span
+            const text = current.substring(0, charIdx);
+            const cursorHtml = typewriterEl.outerHTML;
+            typeTarget.innerHTML = text + cursorHtml;
+            setTimeout(typeEffect, isDeleting ? 50 : 100);
+        }
+        typeEffect();
+    }
+
+    // === Counter animation for stats ===
+    const counters = document.querySelectorAll('.stat-number[data-count]');
+    if (counters.length > 0 && 'IntersectionObserver' in window) {
+        const counterObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-count'), 10);
+                    let current = 0;
+                    const duration = 2000;
+                    const step = Math.max(1, Math.floor(target / (duration / 16)));
+                    const timer = setInterval(function () {
+                        current += step;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        el.textContent = current.toLocaleString() + (target === 100 ? '' : '+');
+                    }, 16);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(function (c) { counterObserver.observe(c); });
     }
 });
 

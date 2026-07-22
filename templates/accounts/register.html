@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Register - Resume Builder Pro{% endblock %}
+{% block main_class %}{% endblock %}
 
 {% block content %}
-<div class="auth-page">
-    <div class="auth-card animate-fade-in-up">
-        <div class="auth-card-header">
-            <div class="auth-icon">
-                <i class="bi bi-person-plus"></i>
-            </div>
-            <h3>Create Account</h3>
-            <p>Start building your resume today</p>
-        </div>
-        <div class="auth-card-body">
+<div class="auth-split animate-fade-in-up">
+    <div class="auth-split-left" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);">
+        <h2>Create Your Account</h2>
+        <p>Start building professional resumes in minutes. It's free, fast, and easy to use.</p>
+        <ul class="auth-split-features">
+            <li><i class="bi bi-check-circle-fill"></i> Step-by-step guided resume builder</li>
+            <li><i class="bi bi-check-circle-fill"></i> Multiple professional templates</li>
+            <li><i class="bi bi-check-circle-fill"></i> Instant PDF download</li>
+            <li><i class="bi bi-check-circle-fill"></i> Save and edit resumes anytime</li>
+        </ul>
+    </div>
+    <div class="auth-split-right">
+        <div class="auth-split-form">
+            <h3>Get Started</h3>
+            <p class="auth-subtitle">Create your free account</p>
             <form method="post" novalidate>
                 {% csrf_token %}
 
