@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -209,6 +210,23 @@ def resume_preview(request, resume_id):
         'resume': resume,
         'pdf_html': pdf_html,
     })
+
+
+@login_required
+def resume_preview_frame(request, resume_id):
+    """Return the rendered resume HTML as a standalone page (for iframe src)."""
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+    if resume.template and resume.template.html_file:
+        try:
+            from django.template.loader import render_to_string
+            html = render_to_string(resume.template.html_file, {
+                'resume': resume,
+                'user': request.user,
+            })
+            return HttpResponse(html, content_type='text/html')
+        except Exception:
+            pass
+    return HttpResponse('<p>No template selected.</p>', content_type='text/html')
 
 
 @login_required
