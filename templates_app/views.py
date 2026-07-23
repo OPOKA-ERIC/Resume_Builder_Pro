@@ -77,11 +77,8 @@ def template_preview(request, template_id):
 
     # Render the actual template HTML with sample data
     try:
-        from django.utils.html import escape as html_escape
-        from django.utils.safestring import mark_safe
         pdf_html = render_to_string(template.html_file, ctx)
-        # Escape for use inside srcdoc="" attribute (browser will decode it)
-        ctx['pdf_html'] = mark_safe(html_escape(pdf_html))
+        ctx['pdf_html'] = pdf_html
     except Exception:
         ctx['pdf_html'] = None
 
