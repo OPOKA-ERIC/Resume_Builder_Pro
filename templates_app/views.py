@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -83,3 +84,15 @@ def template_preview(request, template_id):
         ctx['pdf_html'] = None
 
     return render(request, 'templates_app/preview.html', ctx)
+
+
+def template_preview_frame(request, template_id):
+    """Return the rendered template HTML as a standalone page (for iframe src)."""
+    template = get_object_or_404(ResumeTemplate, id=template_id)
+    ctx = _sample_context()
+    ctx['template'] = template
+    try:
+        html = render_to_string(template.html_file, ctx)
+    except Exception:
+        html = '<p>Failed to render template.</p>'
+    return HttpResponse(html, content_type='text/html')
