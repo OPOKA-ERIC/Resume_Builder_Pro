@@ -106,7 +106,6 @@ def template_preview_frame(request, template_id):
     ctx['template'] = template
     try:
         html = render_to_string(template.html_file, ctx)
-        html = html.replace('</head>', '<style>body{zoom:0.65;}</style></head>')
     except Exception:
         html = '<p>Failed to render template.</p>'
     return HttpResponse(html, content_type='text/html')
