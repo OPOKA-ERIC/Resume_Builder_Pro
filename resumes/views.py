@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import Resume, Education, Experience, Skill, Project, Certification, Language, Reference
 from .forms import (
     ResumeForm, EducationForm, ExperienceForm, SkillForm,
@@ -213,6 +214,7 @@ def resume_preview(request, resume_id):
 
 
 @login_required
+@xframe_options_sameorigin
 def resume_preview_frame(request, resume_id):
     """Return the rendered resume HTML as a standalone page (for iframe src)."""
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
