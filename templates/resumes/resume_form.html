@@ -1,41 +1,61 @@
 {% extends "base.html" %}
-{% block title %}{{ action }} Resume - Resume Builder Pro{% endblock %}
+{% block title %}Create Resume - Resume Builder Pro{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-lg-7">
+    <div class="col-lg-8">
         <div class="animate-fade-in-up">
-            <div class="d-flex align-items-center mb-3">
+            <div class="d-flex align-items-center mb-4">
                 <a href="{% url 'resumes:dashboard' %}" class="btn btn-sm btn-outline-secondary me-3">
                     <i class="bi bi-arrow-left"></i>
                 </a>
-                <h3 class="mb-0">{{ action }} Resume</h3>
-            </div>
-
-            <div class="card">
-                <div class="card-body p-4">
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        {% for field in form %}
-                            <div class="mb-3">
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field }}
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                        <div class="d-flex gap-2 mt-4 pt-3 border-top">
-                            <button type="submit" class="btn btn-primary btn-icon">
-                                <i class="bi bi-arrow-right"></i> Save & Continue
-                            </button>
-                            <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary btn-icon">
-                                <i class="bi bi-x-lg"></i> Cancel
-                            </a>
-                        </div>
-                    </form>
+                <div>
+                    <h3 class="mb-0"><i class="bi bi-plus-circle me-2" style="color: var(--primary);"></i>Create New Resume</h3>
+                    <small class="text-muted">Choose how you'd like to start</small>
                 </div>
             </div>
+
+            <div class="row g-4">
+                <!-- Option 1: Use a Template -->
+                <div class="col-md-6">
+                    <a href="{% url 'templates_app:gallery' %}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(79,70,229,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
+                            <div class="card-body text-center p-4">
+                                <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-50) 0%, #ede9fe 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                    <i class="bi bi-palette" style="font-size: 1.8rem; color: var(--primary);"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">Use a Template</h5>
+                                <p class="text-muted mb-3" style="font-size: 0.9rem;">Choose from 27+ professionally designed templates. Pre-filled with sample data you can edit.</p>
+                                <span class="btn btn-primary btn-icon">
+                                    <i class="bi bi-eye"></i> Browse Templates
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Option 2: Start from Scratch -->
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--secondary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(14,165,233,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
+                        <div class="card-body text-center p-4">
+                            <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                <i class="bi bi-pencil-square" style="font-size: 1.8rem; color: var(--secondary);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Start from Scratch</h5>
+                            <p class="text-muted mb-3" style="font-size: 0.9rem;">Build your resume step by step with our guided wizard. Full control over every detail.</p>
+                            <button type="button" class="btn btn-outline-primary btn-icon" onclick="document.getElementById('scratchForm').submit();">
+                                <i class="bi bi-arrow-right"></i> Start Building
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden form for scratch creation -->
+            <form id="scratchForm" method="post" action="{% url 'resumes:resume_create' %}" class="d-none">
+                {% csrf_token %}
+                <input type="hidden" name="title" value="My Professional Resume">
+            </form>
         </div>
     </div>
 </div>

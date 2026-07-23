@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
             }
-            // Find or create a text node before the cursor
             let textNode = null;
             for (const node of typeTarget.childNodes) {
                 if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
@@ -118,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     break;
                 }
             }
-            // Rebuild the inner HTML: text + cursor span
             const text = current.substring(0, charIdx);
             const cursorHtml = typewriterEl.outerHTML;
             typeTarget.innerHTML = text + cursorHtml;
@@ -151,6 +149,56 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }, { threshold: 0.5 });
         counters.forEach(function (c) { counterObserver.observe(c); });
+    }
+
+    // Wizard form validation
+    const wizardForm = document.querySelector('.wizard-form');
+    if (wizardForm) {
+        wizardForm.addEventListener('submit', function (e) {
+            let isValid = true;
+            const requiredFields = wizardForm.querySelectorAll('[required]');
+            requiredFields.forEach(function (field) {
+                const errorDiv = field.parentNode.querySelector('.field-error');
+                if (errorDiv) errorDiv.remove();
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                    const error = document.createElement('div');
+                    error.className = 'text-danger small field-error';
+                    error.textContent = 'This field is required.';
+                    field.parentNode.appendChild(error);
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Confirm before leaving wizard with unsaved changes
+    let formChanged = false;
+    const wizardForms = document.querySelectorAll('.wizard-form, .section-edit-form');
+    wizardForms.forEach(function (form) {
+        form.addEventListener('change', function () { formChanged = true; });
+        form.addEventListener('submit', function () { formChanged = false; });
+    });
+    window.addEventListener('beforeunload', function (e) {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    // Smooth progress bar animation
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        const targetWidth = progressBar.style.width;
+        progressBar.style.width = '0%';
+        setTimeout(function () {
+            progressBar.style.width = targetWidth;
+        }, 100);
     }
 });
 

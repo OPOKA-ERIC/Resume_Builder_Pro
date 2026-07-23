@@ -12,19 +12,31 @@ class ResumeForm(forms.ModelForm):
 
 
 class EducationForm(forms.ModelForm):
+    end_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+    )
+
     class Meta:
         model = Education
         fields = ['institution', 'qualification', 'start_date', 'end_date', 'description']
+        labels = {
+            'description': 'Responsibilities',
+        }
         widgets = {
             'institution': forms.TextInput(attrs={'class': 'form-control'}),
             'qualification': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe your responsibilities...'}),
         }
 
 
 class ExperienceForm(forms.ModelForm):
+    end_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+    )
+
     class Meta:
         model = Experience
         fields = ['company', 'role', 'start_date', 'end_date', 'description']
@@ -32,7 +44,6 @@ class ExperienceForm(forms.ModelForm):
             'company': forms.TextInput(attrs={'class': 'form-control'}),
             'role': forms.TextInput(attrs={'class': 'form-control'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 

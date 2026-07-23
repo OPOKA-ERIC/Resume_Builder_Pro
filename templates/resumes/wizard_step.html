@@ -97,11 +97,19 @@
                     </div>
                 {% endif %}
 
-                <form method="post" novalidate data-wizard-step="{{ step }}">
+                <form method="post" novalidate class="wizard-form" data-wizard-step="{{ step }}">
                     {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 px-3 mb-3">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
                     {% for field in form %}
                         <div class="mb-3">
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+                            </label>
                             {{ field }}
                             {% if field.errors %}
                                 <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}</div>
@@ -110,6 +118,11 @@
                     {% endfor %}
 
                     <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                        {% if step == 'education' or step == 'experience' or step == 'skills' or step == 'projects' or step == 'certifications' or step == 'languages' or step == 'references' %}
+                            <button type="submit" name="add_another" value="1" class="btn btn-success btn-icon">
+                                <i class="bi bi-plus-lg"></i> Add Another {{ step|title }}
+                            </button>
+                        {% endif %}
                         <button type="submit" class="btn btn-primary btn-icon">
                             {% if step_index < steps|length|add:'-1' %}
                                 <i class="bi bi-arrow-right"></i> Save & Next
@@ -117,9 +130,13 @@
                                 <i class="bi bi-check-lg"></i> Finish
                             {% endif %}
                         </button>
-                        {% if step_index > 0 %}
-                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=prev_step %}" class="btn btn-outline-secondary btn-icon">
-                                <i class="bi bi-arrow-left"></i> Back
+                        {% if previous_step %}
+                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=previous_step %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to {{ previous_step|title }}
+                            </a>
+                        {% elif step_index > 0 %}
+                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=steps|first %}" class="btn btn-outline-secondary btn-icon">
+                                <i class="bi bi-arrow-counterclockwise"></i> Start Over
                             </a>
                         {% endif %}
                         <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-danger btn-icon ms-auto">

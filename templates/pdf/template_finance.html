@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Resume</title>
+<style>
+    @page {
+        size: A4;
+        margin: 18mm 18mm 18mm 18mm;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 10.5px;
+        color: #1e293b;
+        line-height: 1.5;
+    }
+    .top-header {
+        background-color: #1e3a5f;
+        padding: 16px 22px;
+        color: #ffffff;
+    }
+    .top-name {
+        font-size: 24px;
+        font-weight: 600;
+        color: #f8fafc;
+        letter-spacing: 0.3px;
+    }
+    .top-title {
+        font-size: 12px;
+        color: #93c5fd;
+        margin-top: 3px;
+    }
+    .top-contact {
+        font-size: 10px;
+        color: #bfdbfe;
+        margin-top: 6px;
+    }
+    .top-contact span {
+        margin-right: 10px;
+    }
+    .thin-line {
+        height: 3px;
+        background-color: #fbbf24;
+    }
+    .content-area {
+        padding: 0 12px;
+    }
+    .section {
+        margin-top: 14px;
+        margin-bottom: 6px;
+    }
+    .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1e3a5f;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 4px 0;
+        border-bottom: 1px solid #cbd5e1;
+        margin-bottom: 8px;
+    }
+    .entry {
+        margin-bottom: 9px;
+    }
+    .entry-row {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .entry-role {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0f172a;
+        vertical-align: top;
+    }
+    .entry-dates {
+        font-size: 9.5px;
+        color: #64748b;
+        text-align: right;
+        vertical-align: top;
+        white-space: nowrap;
+        width: 120px;
+        font-family: 'Courier New', monospace;
+    }
+    .entry-org {
+        font-size: 10.5px;
+        color: #1e3a5f;
+        margin-top: 1px;
+    }
+    .entry-desc {
+        font-size: 10.5px;
+        color: #334155;
+        margin-top: 3px;
+        line-height: 1.6;
+        white-space: pre-line;
+    }
+    .skills-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .skills-table td {
+        padding: 3px 4px;
+        vertical-align: top;
+        width: 33.33%;
+    }
+    .skill-row-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 4px;
+    }
+    .skill-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #1e293b;
+        width: 110px;
+        vertical-align: middle;
+    }
+    .skill-bar-cell {
+        vertical-align: middle;
+    }
+    .skill-bar-bg {
+        background-color: #e2e8f0;
+        height: 8px;
+        width: 100%;
+        border-radius: 4px;
+    }
+    .skill-bar-fill {
+        height: 8px;
+        background-color: #1e3a5f;
+        border-radius: 4px;
+    }
+    .skill-pct {
+        font-size: 9px;
+        color: #64748b;
+        text-align: right;
+        width: 36px;
+        font-family: 'Courier New', monospace;
+        vertical-align: middle;
+    }
+    .cert-entry {
+        margin-bottom: 4px;
+        font-size: 10.5px;
+        color: #334155;
+    }
+    .cert-title {
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .lang-cell {
+        padding: 3px 12px 3px 0;
+        font-size: 10.5px;
+        color: #334155;
+    }
+    .lang-level {
+        font-size: 9px;
+        color: #64748b;
+    }
+    .ref-entry {
+        margin-bottom: 5px;
+        font-size: 10.5px;
+        color: #334155;
+    }
+    .ref-name {
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .proj-link {
+        font-size: 9.5px;
+        color: #1e3a5f;
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="top-name">{{ user.get_full_name|default:user.username }}</div>
+        <div class="top-title">{{ resume.title }}</div>
+        <div class="top-contact">
+            <span>{{ user.email }}</span>
+            {% if user.profile.phone %}<span>{{ user.profile.phone }}</span>{% endif %}
+            {% if user.profile.address %}<span>{{ user.profile.address }}</span>{% endif %}
+        </div>
+    </div>
+    <div class="thin-line"></div>
+
+    <div class="content-area">
+        {% if resume.experiences.all %}
+        <div class="section">
+            <div class="section-title">Professional Experience</div>
+            {% for item in resume.experiences.all %}
+            <div class="entry">
+                <table class="entry-row">
+                    <tr>
+                        <td class="entry-role">{{ item.role }}</td>
+                        <td class="entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                    </tr>
+                </table>
+                <div class="entry-org">{{ item.company }}</div>
+                {% if item.description %}
+                <div class="entry-desc">{{ item.description }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.educations.all %}
+        <div class="section">
+            <div class="section-title">Education</div>
+            {% for item in resume.educations.all %}
+            <div class="entry">
+                <table class="entry-row">
+                    <tr>
+                        <td class="entry-role">{{ item.qualification }}</td>
+                        <td class="entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                    </tr>
+                </table>
+                <div class="entry-org">{{ item.institution }}</div>
+                {% if item.description %}
+                <div class="entry-desc">{{ item.description }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.skills.all %}
+        <div class="section">
+            <div class="section-title">Core Competencies</div>
+            {% for item in resume.skills.all %}
+            <table class="skill-row-table">
+                <tr>
+                    <td class="skill-label">{{ item.name }}</td>
+                    <td class="skill-bar-cell">
+                        <div class="skill-bar-bg">
+                            {% if item.proficiency_level == "Expert" %}
+                            <div class="skill-bar-fill" style="width: 95%;"></div>
+                            {% elif item.proficiency_level == "Advanced" %}
+                            <div class="skill-bar-fill" style="width: 80%;"></div>
+                            {% elif item.proficiency_level == "Intermediate" %}
+                            <div class="skill-bar-fill" style="width: 60%;"></div>
+                            {% elif item.proficiency_level == "Beginner" %}
+                            <div class="skill-bar-fill" style="width: 40%;"></div>
+                            {% else %}
+                            <div class="skill-bar-fill" style="width: 70%;"></div>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="skill-pct">
+                        {% if item.proficiency_level == "Expert" %}95%{% elif item.proficiency_level == "Advanced" %}80%{% elif item.proficiency_level == "Intermediate" %}60%{% elif item.proficiency_level == "Beginner" %}40%{% else %}70%{% endif %}
+                    </td>
+                </tr>
+            </table>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.projects.all %}
+        <div class="section">
+            <div class="section-title">Projects</div>
+            {% for item in resume.projects.all %}
+            <div class="entry">
+                <div class="entry-role">{{ item.name }}</div>
+                {% if item.description %}
+                <div class="entry-desc">{{ item.description }}</div>
+                {% endif %}
+                {% if item.link %}
+                <div style="margin-top: 2px;"><a href="{{ item.link }}" class="proj-link">{{ item.link }}</a></div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.certifications.all %}
+        <div class="section">
+            <div class="section-title">Certifications &amp; Licenses</div>
+            {% for item in resume.certifications.all %}
+            <div class="cert-entry">
+                <span class="cert-title">{{ item.title }}</span>{% if item.issuer %} — {{ item.issuer }}{% endif %}{% if item.date_awarded %}, {{ item.date_awarded|date:"M Y" }}{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if resume.languages.all %}
+        <div class="section">
+            <div class="section-title">Languages</div>
+            <table class="skills-table">
+                <tr>
+                    {% for item in resume.languages.all %}
+                    <td class="lang-cell">
+                        <strong>{{ item.name }}</strong><br>
+                        <span class="lang-level">{{ item.proficiency_level }}</span>
+                    </td>
+                    {% if forloop.counter|divisibleby:"3" %}
+                </tr>
+                <tr>
+                    {% endif %}
+                    {% endfor %}
+                    <td></td><td></td><td></td>
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if resume.references.all %}
+        <div class="section">
+            <div class="section-title">References</div>
+            {% for item in resume.references.all %}
+            <div class="ref-entry">
+                <span class="ref-name">{{ item.name }}</span> — {{ item.relationship }}{% if item.contact %} | {{ item.contact }}{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
