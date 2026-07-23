@@ -7,11 +7,20 @@ from resumes.models import Resume
 
 logger = logging.getLogger(__name__)
 
+TEMPLATE_MAP = {
+    'Professional': 'pdf/resume_professional.html',
+    'Modern': 'pdf/resume_modern.html',
+    'Creative': 'pdf/resume_creative.html',
+}
+
 
 def generate_pdf_html(resume):
-    """Render resume data into HTML for PDF conversion."""
+    """Render resume data into HTML for PDF conversion using the selected template."""
     user = resume.user
-    return render_to_string('pdf/resume_pdf.html', {
+    template_name = 'pdf/resume_pdf.html'
+    if resume.template and resume.template.name in TEMPLATE_MAP:
+        template_name = TEMPLATE_MAP[resume.template.name]
+    return render_to_string(template_name, {
         'resume': resume,
         'user': user,
     })

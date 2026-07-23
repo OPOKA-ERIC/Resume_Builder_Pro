@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:resume_id>/wizard/<str:step>/', views.wizard_step, name='wizard_step'),
     path('<int:resume_id>/templates/', views.template_select, name='template_select'),
     path('<int:resume_id>/preview/', views.resume_preview, name='resume_preview'),
+    path('<int:resume_id>/<str:section>/<int:item_id>/edit/', views.section_edit, name='section_edit'),
+    path('<int:resume_id>/<str:section>/<int:item_id>/delete/', views.section_delete, name='section_delete'),
 ]

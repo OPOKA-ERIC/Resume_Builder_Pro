@@ -42,7 +42,10 @@
                 </button>
             </form>
             <div class="text-center mt-4">
-                <p class="mb-0 text-muted">
+                <p class="mb-0">
+                    <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot your password?</a>
+                </p>
+                <p class="mb-0 text-muted mt-2">
                     Don't have an account? <a href="{% url 'accounts:register' %}" class="auth-link">Create one</a>
                 </p>
             </div>
