@@ -3,6 +3,19 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from .models import ResumeTemplate
+import datetime
+
+
+class _QuerySet:
+    """Wraps a plain list to mimic Django queryset with .all() and iteration."""
+    def __init__(self, items):
+        self._items = list(items)
+    def all(self):
+        return self
+    def __iter__(self):
+        return iter(self._items)
+    def __bool__(self):
+        return bool(self._items)
 
 
 def _sample_context():
@@ -18,49 +31,47 @@ def _sample_context():
         email='alex.johnson@email.com',
         profile=Obj(phone='+1 (555) 123-4567', address='San Francisco, CA'),
     )
-    # Override get_full_name to return string
-    sample_user.get_full_name = lambda: 'Alex Johnson'
 
     sample_resume = Obj(
         title='Software Engineer',
-        educations=[
+        educations=_QuerySet([
             Obj(institution='Stanford University', qualification='B.S. Computer Science',
-                start_date=Obj(strftime=lambda fmt: 'Sep 2018'), end_date=Obj(strftime=lambda fmt: 'Jun 2022'),
+                start_date=datetime.date(2018, 9, 1), end_date=datetime.date(2022, 6, 1),
                 description='GPA 3.8/4.0. Dean\'s List. Coursework: Data Structures, Algorithms, Machine Learning.'),
-        ],
-        experiences=[
+        ]),
+        experiences=_QuerySet([
             Obj(company='Google', role='Software Engineer',
-                start_date=Obj(strftime=lambda fmt: 'Jul 2022'), end_date=None,
+                start_date=datetime.date(2022, 7, 1), end_date=None,
                 description='Developed and maintained core search infrastructure serving 5B+ daily queries. Led migration to microservices architecture, reducing latency by 40%. Mentored 3 junior engineers.'),
             Obj(company='Microsoft', role='Software Engineering Intern',
-                start_date=Obj(strftime=lambda fmt: 'Jun 2021'), end_date=Obj(strftime=lambda fmt: 'Sep 2021'),
+                start_date=datetime.date(2021, 6, 1), end_date=datetime.date(2021, 9, 1),
                 description='Built internal dashboard tools using React and Python. Automated testing pipeline, increasing coverage from 60% to 85%.'),
-        ],
-        skills=[
+        ]),
+        skills=_QuerySet([
             Obj(name='Python', proficiency_level='expert'),
             Obj(name='JavaScript', proficiency_level='advanced'),
             Obj(name='React', proficiency_level='advanced'),
             Obj(name='Django', proficiency_level='advanced'),
             Obj(name='SQL', proficiency_level='intermediate'),
             Obj(name='AWS', proficiency_level='intermediate'),
-        ],
-        projects=[
+        ]),
+        projects=_QuerySet([
             Obj(name='Open Source Contribution', description='Active contributor to Django web framework with 50+ merged PRs.', link='https://github.com/django/django'),
             Obj(name='AI Resume Builder', description='Full-stack web application using Django, React, and GPT API for intelligent resume generation.', link='https://github.com/alexj/resume-builder'),
-        ],
-        certifications=[
-            Obj(title='AWS Certified Solutions Architect', issuer='Amazon Web Services', date_awarded=Obj(strftime=lambda fmt: 'Mar 2023')),
-            Obj(title='Google Cloud Professional', issuer='Google', date_awarded=Obj(strftime=lambda fmt: 'Jan 2023')),
-        ],
-        languages=[
+        ]),
+        certifications=_QuerySet([
+            Obj(title='AWS Certified Solutions Architect', issuer='Amazon Web Services', date_awarded=datetime.date(2023, 3, 15)),
+            Obj(title='Google Cloud Professional', issuer='Google', date_awarded=datetime.date(2023, 1, 20)),
+        ]),
+        languages=_QuerySet([
             Obj(name='English', proficiency_level='native'),
             Obj(name='Spanish', proficiency_level='fluent'),
             Obj(name='Mandarin', proficiency_level='basic'),
-        ],
-        references=[
+        ]),
+        references=_QuerySet([
             Obj(name='Dr. Sarah Chen', relationship='Professor, Stanford University', contact='sarah.chen@stanford.edu'),
             Obj(name='Mark Williams', relationship='Engineering Manager, Google', contact='mark.w@google.com'),
-        ],
+        ]),
     )
     return {'resume': sample_resume, 'user': sample_user}
 
