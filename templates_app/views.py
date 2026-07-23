@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import ResumeTemplate
 import datetime
 
@@ -97,6 +98,7 @@ def template_preview(request, template_id):
     return render(request, 'templates_app/preview.html', ctx)
 
 
+@xframe_options_sameorigin
 def template_preview_frame(request, template_id):
     """Return the rendered template HTML as a standalone page (for iframe src)."""
     template = get_object_or_404(ResumeTemplate, id=template_id)
