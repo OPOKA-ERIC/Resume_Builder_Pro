@@ -1,32 +1,56 @@
 {% extends "base.html" %}
-{% block title %}{{ template.name }} - Resume Builder Pro{% endblock %}
+{% block title %}{{ template.name }} Template - Resume Builder Pro{% endblock %}
+{% block main_class %}{% endblock %}
 
 {% block content %}
 <div class="animate-fade-in-up">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3" style="padding: 0 15px;">
         <div>
-            <a href="{% url 'templates_app:gallery' %}" class="text-muted text-decoration-none mb-2 d-inline-block">
+            <a href="{% url 'templates_app:gallery' %}" class="text-muted text-decoration-none mb-1 d-inline-block">
                 <i class="bi bi-arrow-left"></i> Back to Templates
             </a>
-            <h3 class="mb-1">{{ template.name }}</h3>
-            <p class="text-muted mb-0">{{ template.description }}</p>
+            <h3 class="mb-0">{{ template.name }} <span class="badge bg-primary-subtle text-primary" style="font-size: 0.7rem;">Template</span></h3>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">{{ template.description }}</p>
         </div>
-        <a href="{% url 'resumes:dashboard' %}" class="btn btn-primary btn-icon">
-            <i class="bi bi-plus-lg"></i> Use Template
-        </a>
+        <div class="d-flex gap-2">
+            <form method="post" action="{% url 'resumes:create_from_template' template.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-icon">
+                    <i class="bi bi-rocket-takeoff"></i> Use This Template
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="card overflow-hidden">
-        {% if template.preview_image %}
-            <img src="{{ template.preview_image.url }}" alt="{{ template.name }}" class="w-100" style="max-height: 700px; object-fit: contain; background: var(--gray-100);">
-        {% else %}
+    {% if pdf_html %}
+        <div class="card overflow-hidden border-0 shadow-sm" style="margin: 0 15px; border-radius: var(--radius-lg);">
+            <div style="background: var(--gray-100); padding: 8px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 8px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></div>
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div>
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></div>
+                <span style="font-size: 0.75rem; color: var(--gray-500); margin-left: 8px;">{{ template.name }} &mdash; Sample Preview</span>
+            </div>
+            <iframe srcdoc="{{ pdf_html|escape }}" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+    {% else %}
+        <div class="card overflow-hidden" style="margin: 0 15px;">
             <div class="d-flex align-items-center justify-content-center" style="height: 500px; background: var(--gray-50);">
                 <div class="text-center">
                     <i class="bi bi-file-earmark-text" style="font-size: 4rem; color: var(--gray-300);"></i>
-                    <p class="text-muted mt-3">Preview image not available for this template.</p>
+                    <p class="text-muted mt-3">Preview is being generated...</p>
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4 mb-4" style="padding: 0 15px;">
+        <form method="post" action="{% url 'resumes:create_from_template' template.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg btn-icon">
+                <i class="bi bi-rocket-takeoff"></i> Create Resume with {{ template.name }} Template
+            </button>
+        </form>
+        <p class="text-muted mt-2" style="font-size: 0.85rem;">This will create a new resume pre-filled with sample data that you can edit</p>
     </div>
 </div>
 {% endblock %}

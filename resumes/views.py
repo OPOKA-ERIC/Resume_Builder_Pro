@@ -2,11 +2,89 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.utils import timezone
 from .models import Resume, Education, Experience, Skill, Project, Certification, Language, Reference
 from .forms import (
     ResumeForm, EducationForm, ExperienceForm, SkillForm,
     ProjectForm, CertificationForm, LanguageForm, ReferenceForm
 )
+
+
+def _sample_data():
+    """Return sample data dicts for pre-filling a resume from a template."""
+    return {
+        'educations': [
+            {'institution': 'Stanford University', 'qualification': 'B.S. Computer Science',
+             'start_date': '2018-09-01', 'end_date': '2022-06-01',
+             'description': "GPA 3.8/4.0. Dean's List. Coursework: Data Structures, Algorithms, Machine Learning."},
+        ],
+        'experiences': [
+            {'company': 'Google', 'role': 'Software Engineer',
+             'start_date': '2022-07-01', 'end_date': None,
+             'description': 'Developed and maintained core search infrastructure serving 5B+ daily queries. Led migration to microservices architecture, reducing latency by 40%. Mentored 3 junior engineers.'},
+            {'company': 'Microsoft', 'role': 'Software Engineering Intern',
+             'start_date': '2021-06-01', 'end_date': '2021-09-01',
+             'description': 'Built internal dashboard tools using React and Python. Automated testing pipeline, increasing coverage from 60% to 85%.'},
+        ],
+        'skills': [
+            {'name': 'Python', 'proficiency_level': 'expert'},
+            {'name': 'JavaScript', 'proficiency_level': 'advanced'},
+            {'name': 'React', 'proficiency_level': 'advanced'},
+            {'name': 'Django', 'proficiency_level': 'advanced'},
+            {'name': 'SQL', 'proficiency_level': 'intermediate'},
+            {'name': 'AWS', 'proficiency_level': 'intermediate'},
+        ],
+        'projects': [
+            {'name': 'Open Source Contribution', 'description': 'Active contributor to Django web framework with 50+ merged PRs.', 'link': 'https://github.com/django/django'},
+            {'name': 'AI Resume Builder', 'description': 'Full-stack web application using Django, React, and GPT API.', 'link': 'https://github.com/alexj/resume-builder'},
+        ],
+        'certifications': [
+            {'title': 'AWS Certified Solutions Architect', 'issuer': 'Amazon Web Services', 'date_awarded': '2023-03-15'},
+            {'title': 'Google Cloud Professional', 'issuer': 'Google', 'date_awarded': '2023-01-20'},
+        ],
+        'languages': [
+            {'name': 'English', 'proficiency_level': 'native'},
+            {'name': 'Spanish', 'proficiency_level': 'fluent'},
+            {'name': 'Mandarin', 'proficiency_level': 'basic'},
+        ],
+        'references': [
+            {'name': 'Dr. Sarah Chen', 'relationship': 'Professor, Stanford University', 'contact': 'sarah.chen@stanford.edu'},
+            {'name': 'Mark Williams', 'relationship': 'Engineering Manager, Google', 'contact': 'mark.w@google.com'},
+        ],
+    }
+
+
+@login_required
+def create_from_template(request, template_id):
+    """Create a new resume pre-filled with sample data from a template."""
+    from templates_app.models import ResumeTemplate
+    template = get_object_or_404(ResumeTemplate, id=template_id, is_active=True)
+
+    resume = Resume.objects.create(
+        user=request.user,
+        title='My Professional Resume',
+        template=template,
+    )
+
+    data = _sample_data()
+
+    for edu in data['educations']:
+        Education.objects.create(resume=resume, **edu)
+    for exp in data['experiences']:
+        Experience.objects.create(resume=resume, **exp)
+    for skill in data['skills']:
+        Skill.objects.create(resume=resume, **skill)
+    for proj in data['projects']:
+        Project.objects.create(resume=resume, **proj)
+    for cert in data['certifications']:
+        Certification.objects.create(resume=resume, **cert)
+    for lang in data['languages']:
+        Language.objects.create(resume=resume, **lang)
+    for ref in data['references']:
+        Reference.objects.create(resume=resume, **ref)
+
+    messages.success(request, f'Resume created with {template.name} template! You can now edit the sample data.')
+    return redirect('resumes:resume_preview', resume_id=resume.id)
 
 
 @login_required
@@ -21,15 +99,10 @@ def dashboard(request):
 @login_required
 def resume_create(request):
     if request.method == 'POST':
-        form = ResumeForm(request.POST)
-        if form.is_valid():
-            resume = form.save(commit=False)
-            resume.user = request.user
-            resume.save()
-            return redirect('resumes:wizard_step', resume_id=resume.id, step='education')
-    else:
-        form = ResumeForm()
-    return render(request, 'resumes/resume_form.html', {'form': form, 'action': 'Create'})
+        title = request.POST.get('title', 'My Professional Resume')
+        resume = Resume.objects.create(user=request.user, title=title)
+        return redirect('resumes:wizard_step', resume_id=resume.id, step='education')
+    return render(request, 'resumes/resume_form.html', {'action': 'Create'})
 
 
 @login_required

@@ -6,6 +6,7 @@ app_name = 'resumes'
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('create/', views.resume_create, name='resume_create'),
+    path('create-from-template/<int:template_id>/', views.create_from_template, name='create_from_template'),
     path('<int:resume_id>/edit/', views.resume_edit, name='resume_edit'),
     path('<int:resume_id>/delete/', views.resume_delete, name='resume_delete'),
     path('<int:resume_id>/wizard/<str:step>/', views.wizard_step, name='wizard_step'),
