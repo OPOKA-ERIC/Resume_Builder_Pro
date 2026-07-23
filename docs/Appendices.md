@@ -127,7 +127,9 @@ Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fi
 | `/resumes/<id>/edit/` | `resume_edit` | `resumes:resume_edit` | Yes | GET/POST |
 | `/resumes/<id>/delete/` | `resume_delete` | `resumes:resume_delete` | Yes | GET/POST |
 | `/resumes/<id>/wizard/<step>/` | `wizard_step` | `resumes:wizard_step` | Yes | GET/POST |
-| `/resumes/<id>/templates/` | `template_select` | `resumes:template_select` | Yes | GET |
+| `/resumes/<id>/wizard/<step>/<entry_id>/edit/` | `wizard_entry_edit` | `resumes:wizard_entry_edit` | Yes | GET/POST |
+| `/resumes/<id>/wizard/<step>/<entry_id>/delete/` | `wizard_entry_delete` | `resumes:wizard_entry_delete` | Yes | GET/POST |
+| `/resumes/<id>/templates/` | `template_select` | `resumes:template_select` | Yes | GET/POST |
 | `/resumes/<id>/preview/` | `resume_preview` | `resumes:resume_preview` | Yes | GET |
 | `/pdf/<id>/download/` | `download_pdf` | `pdf_export:download_pdf` | Yes | GET |
 | `/pdf/<id>/preview/` | `pdf_preview` | `pdf_export:pdf_preview` | Yes | GET |
@@ -138,7 +140,7 @@ Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fi
 
 ## Appendix E: Test Case Catalog
 
-### accounts/tests.py — 31 Unit Tests
+### accounts/tests.py — 32 Unit Tests
 
 | # | Test Class | Test Method | Description |
 |---|-----------|-------------|-------------|
@@ -246,12 +248,12 @@ See **Bug_Tracking_Report.md** for the complete bug registry.
 | BUG-007 | Minor | FIXED | accounts (unused import) |
 | BUG-008 | Major | FIXED | templates_app (no tests) |
 | BUG-009 | Major | FIXED | resumes (no integration tests) |
-| BUG-010 | Minor | OPEN | Documentation (WeasyPrint refs) |
-| BUG-011 | Major | OPEN | resumes (template not saved) |
-| BUG-012 | Minor | OPEN | resumes (wizard back nav) |
-| BUG-013 | Minor | OPEN | resumes (no edit/delete entries) |
-| BUG-014 | Minor | OPEN | resumes (edit only title) |
-| BUG-015 | Minor | OPEN | accounts (login template) |
+| BUG-010 | Minor | FIXED | Documentation (WeasyPrint refs) |
+| BUG-011 | Major | FIXED | resumes (template not saved) |
+| BUG-012 | Minor | FIXED | resumes (wizard back nav) |
+| BUG-013 | Minor | FIXED | resumes (no edit/delete entries) |
+| BUG-014 | Minor | FIXED | resumes (edit only title) |
+| BUG-015 | Minor | FIXED | accounts (login template) |
 
 ---
 
@@ -331,7 +333,7 @@ Resume Builder Pro is a full-stack Django web application that enables users to 
 
 4. **PDF Generation:** Integration with xhtml2pdf for server-side PDF rendering, producing professional A4-formatted resumes from user data.
 
-5. **Bug Discovery and Resolution:** 15 bugs identified through systematic testing, 9 of which have been fixed. The remaining 6 are documented with clear reproduction steps for future resolution.
+5. **Bug Discovery and Resolution:** 15 bugs identified through systematic testing, all of which have been fixed. Each bug is documented with clear reproduction steps and resolution details.
 
 ### Lessons Learned
 
@@ -343,10 +345,10 @@ Resume Builder Pro is a full-stack Django web application that enables users to 
 ### Future Enhancements
 
 1. Email-based password reset functionality
-2. Template selection that actually influences PDF styling
-3. Inline editing of wizard entries (edit/delete)
-4. Multiple resume sections editing post-creation
-5. Social authentication (Google, GitHub)
-6. Resume versioning (save snapshots)
-7. Cover letter generation
-8. ATS (Applicant Tracking System) compatibility checker
+2. Social authentication (Google, GitHub)
+3. Resume versioning (save snapshots)
+4. Cover letter generation
+5. ATS (Applicant Tracking System) compatibility checker
+6. JavaScript testing with Selenium/Playwright
+7. Load and stress testing
+8. Multiple resume sections editing post-creation

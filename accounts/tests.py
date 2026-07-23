@@ -182,7 +182,7 @@ class LoginViewTest(TestCase):
     def test_get_login(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Login')
+        self.assertContains(response, 'Sign In')
 
     def test_successful_login(self):
         response = self.client.post(self.url, {
@@ -242,7 +242,8 @@ class ProfileViewTest(TestCase):
     def test_get_profile(self):
         response = self.client.get(reverse('accounts:profile'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'My Profile')
+        self.assertContains(response, 'Profile')
+        self.assertContains(response, 'Save Changes')
 
     def test_update_profile(self):
         response = self.client.post(reverse('accounts:profile'), {

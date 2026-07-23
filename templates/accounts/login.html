@@ -20,22 +20,35 @@
             <p class="auth-subtitle">Enter your credentials to continue</p>
             <form method="post" novalidate>
                 {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <div class="mb-3">
-                    <label for="id_username" class="form-label">Username</label>
+                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
                     <div class="input-group-icon">
                         <i class="bi bi-person input-icon"></i>
-                        <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required autofocus>
+                        {{ form.username }}
                     </div>
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.username.errors.0 }}</div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
-                    <label for="id_password" class="form-label">Password</label>
+                    <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
                     <div class="input-group-icon">
                         <i class="bi bi-lock input-icon"></i>
-                        <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
+                        {{ form.password }}
                         <button type="button" class="password-toggle" onclick="togglePassword(this)" title="Show password">
                             <i class="bi bi-eye"></i>
                         </button>
                     </div>
+                    {% if form.password.errors %}
+                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.password.errors.0 }}</div>
+                    {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3 btn-icon">
                     <i class="bi bi-box-arrow-in-right"></i> Sign In

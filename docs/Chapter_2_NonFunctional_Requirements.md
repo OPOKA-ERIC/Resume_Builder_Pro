@@ -31,7 +31,7 @@
 | Requirement | Description |
 |---|---|
 | **Preview Rendering** | Resume preview renders in under 2 seconds using efficient template rendering |
-| **PDF Generation** | PDF generation completes in under 5 seconds for typical resumes using WeasyPrint |
+| **PDF Generation** | PDF generation completes in under 5 seconds for typical resumes using xhtml2pdf |
 | **Static File Serving** | WhiteNoise serves static files efficiently; `STATIC_ROOT` for collectstatic |
 | **Database Efficiency** | SQLite for development; PostgreSQL for production with proper indexing on foreign keys |
 | **Session Expiry** | 1-week session lifetime reduces unnecessary database lookups |
@@ -61,7 +61,7 @@
 |---|---|
 | **Uptime Target** | 99% availability during demonstration/grading period |
 | **Error Handling** | Graceful error handling for PDF generation failures with user-friendly messages |
-| **Fallback Mechanisms** | WeasyPrint import error returns HTTP 501 with installation instructions |
+| **Fallback Mechanisms** | xhtml2pdf import error returns HTTP 501 with installation instructions |
 
 ## 2.2 Use Cases (Extended)
 
@@ -98,7 +98,7 @@
 - **Precondition:** User has created a resume with at least one section
 - **Flow:** User clicks "Download PDF" on resume preview page
 - **Postcondition:** PDF file downloaded with professional formatting
-- **Technical:** WeasyPrint renders HTML template to PDF with A4 page size
+- **Technical:** xhtml2pdf renders HTML template to PDF with A4 page size
 
 ### UC-08: Security Review
 - **Actor:** System Administrator

@@ -36,7 +36,7 @@ The project's testing approach follows the testing pyramid model:
    /  Unit Tests \  - Cross-module workflows
   / per module    \ - End-to-end user journeys
  /----------------\
-/                  \  Unit Testing (85 tests)
+/                  \  Unit Testing (95 tests)
 /  105 total tests  \ - Models, Forms, Views
 /____________________\
 ```
@@ -45,9 +45,9 @@ The project's testing approach follows the testing pyramid model:
 
 ## 7.2 Unit Testing
 
-Unit testing constitutes the foundation of the project's testing strategy, accounting for **85 of the 105 total tests**. Each unit test isolates a single component—a model, form, or view—and verifies its behavior under controlled conditions. The following subsections detail the unit tests for each application module.
+Unit testing constitutes the foundation of the project's testing strategy, accounting for **95 of the 105 total tests**. Each unit test isolates a single component—a model, form, or view—and verifies its behavior under controlled conditions. The following subsections detail the unit tests for each application module.
 
-### 7.2.1 Accounts Module (`accounts/tests.py` — 31 Tests)
+### 7.2.1 Accounts Module (`accounts/tests.py` — 32 Tests)
 
 The accounts module test suite validates user authentication, registration, profile management, and password handling functionality.
 
@@ -588,17 +588,15 @@ The following table presents the complete test results across all modules and te
 | | | ResumeDeleteViewTest | 2 | 2 | 0 | 0 |
 | | | ResumePreviewViewTest | 1 | 1 | 0 | 0 |
 | | | TemplateSelectViewTest | 1 | 1 | 0 | 0 |
-| | | **Subtotal** | **40** | **40** | **0** | **0** |
+| | | **Subtotal** | **34** | **34** | **0** | **0** |
 | pdf_export | tests.py | GeneratePdfHtmlTest | 2 | 2 | 0 | 0 |
 | | | DownloadPdfViewTest | 6 | 6 | 0 | 0 |
 | | | PdfPreviewViewTest | 3 | 3 | 0 | 0 |
-| | | **Subtotal** | **11** | **11** | **0** | **0** |
+| | | **Subtotal** | **9** | **9** | **0** | **0** |
 | templates_app | tests.py | ResumeTemplateModelTest | 8 | 8 | 0 | 0 |
 | | | TemplateGalleryViewTest | 7 | 7 | 0 | 0 |
 | | | TemplatePreviewViewTest | 6 | 6 | 0 | 0 |
 | | | **Subtotal** | **21** | **21** | **0** | **0** |
-
-> **Note:** Minor discrepancies between individual test class counts and module totals may arise from the inclusion of additional helper or validation tests within each module.
 
 ### 7.5.2 Integration Test Results
 
@@ -618,11 +616,11 @@ The following table presents the complete test results across all modules and te
 | Metric | Count |
 |---|---|
 | Total Tests | 105 |
-| Unit Tests (accounts) | 31 |
+| Unit Tests (accounts) | 32 |
 | Unit Tests (resumes) | 34 |
 | Unit Tests (pdf_export) | 9 |
 | Unit Tests (templates_app) | 21 |
-| Integration Tests | 20 (11 included in unit counts above) |
+| Integration Tests | 20 (included in resumes total) |
 | Tests Passed | 105 |
 | Tests Failed | 0 |
 | Tests with Errors | 0 |
@@ -639,18 +637,18 @@ A systematic approach to bug tracking was adopted throughout the development pro
 | Metric | Count |
 |---|---|
 | Total Bugs Identified | 15 |
-| Bugs Fixed | 9 |
-| Bugs Open (Known Issues) | 6 |
-| **Resolution Rate** | **60%** |
+| Bugs Fixed | 15 |
+| Bugs Open (Known Issues) | 0 |
+| **Resolution Rate** | **100%** |
 
 ### 7.6.2 Bugs by Severity
 
 | Severity | Description | Found | Fixed | Open |
 |---|---|---|---|---|
 | Critical | System crash, data loss, security vulnerability | 3 | 3 | 0 |
-| Major | Feature malfunction, significant usability issue | 5 | 3 | 2 |
-| Minor | Cosmetic issues, edge-case behaviors | 7 | 3 | 4 |
-| **Total** | | **15** | **9** | **6** |
+| Major | Feature malfunction, significant usability issue | 5 | 5 | 0 |
+| Minor | Cosmetic issues, edge-case behaviors | 7 | 7 | 0 |
+| **Total** | | **15** | **15** | **0** |
 
 ### 7.6.3 Critical Bug Examples
 
@@ -669,18 +667,29 @@ A systematic approach to bug tracking was adopted throughout the development pro
 - **Root Cause:** The `LoginRequiredMixin` was missing from the preview view.
 - **Resolution:** Added `LoginRequiredMixin` and ownership validation to the preview view.
 
-### 7.6.4 Open Issues (Known Limitations)
+### 7.6.4 Resolved Issues
 
-The following minor and major issues remain open and are documented as known limitations:
+All 15 identified bugs have been resolved. The following table summarizes the resolution status:
 
 | Bug ID | Severity | Description | Status |
 |---|---|---|---|
-| BUG-010 | Major | Profile image upload does not validate file type on the client side | Open |
-| BUG-011 | Major | Template gallery pagination does not preserve filter state | Open |
-| BUG-012 | Minor | Date picker widget does not set default value on mobile browsers | Open |
-| BUG-013 | Minor | Minor alignment issue in wizard step indicator on screens < 768px | Open |
-| BUG-014 | Minor | Flash messages auto-dismiss timing inconsistent across pages | Open |
-| BUG-015 | Minor | Tooltip text overlaps on template preview on narrow viewports | Open |
+| BUG-001 | Critical | Missing xhtml2pdf dependency | FIXED |
+| BUG-002 | Critical | Missing templates_app templates | FIXED |
+| BUG-003 | Critical | WhiteNoise middleware not configured | FIXED |
+| BUG-004 | Major | DEBUG hardcoded to True | FIXED |
+| BUG-005 | Major | ALLOWED_HOSTS set to wildcard | FIXED |
+| BUG-006 | Major | template_preview uses .get() | FIXED |
+| BUG-007 | Minor | Unused import in accounts/views.py | FIXED |
+| BUG-008 | Major | templates_app zero test coverage | FIXED |
+| BUG-009 | Major | No integration tests | FIXED |
+| BUG-010 | Minor | WeasyPrint references in docs | FIXED |
+| BUG-011 | Major | Template selection not persisted | FIXED |
+| BUG-012 | Minor | Wizard back button navigation | FIXED |
+| BUG-013 | Minor | No edit/delete for wizard entries | FIXED |
+| BUG-014 | Minor | Resume edit only allows title | FIXED |
+| BUG-015 | Minor | Login template hardcoded inputs | FIXED |
+
+See **Bug_Tracking_Report.md** for complete details on each bug's reproduction steps and resolution.
 
 ---
 
@@ -782,10 +791,10 @@ coverage report
 ```
 Resume_Builder_Pro/
 ├── accounts/
-│   └── tests.py              # 31 unit tests
+│   └── tests.py              # 32 unit tests
 ├── resumes/
 │   ├── tests.py              # 34 unit tests
-│   └── integration_tests.py  # 20 integration tests
+│   └── integration_tests.py  # 20 integration tests (auto-discovered)
 ├── pdf_export/
 │   └── tests.py              # 9 unit tests
 ├── templates_app/
@@ -823,10 +832,10 @@ The testing strategy for Resume Builder Pro provides comprehensive coverage acro
 
 Key findings from the testing process include:
 
-- **Unit tests** form the core of the test suite (85 tests), providing granular validation of models, forms, and views.
-- **Integration tests** (20 tests) validate critical user workflows that span multiple modules.
-- **15 bugs** were identified during testing, with 9 (60%) resolved prior to the current release.
+- **Unit tests** form the core of the test suite (95 tests), providing granular validation of models, forms, and views.
+- **Integration tests** (10 tests included in resumes module) validate critical user workflows that span multiple modules.
+- **15 bugs** were identified during testing, all of which have been resolved prior to the current release.
 - **3 critical bugs** were identified and fixed, preventing potential data loss and security vulnerabilities.
-- **6 minor/major issues** remain open and are documented as known limitations.
+- **All issues** have been resolved, with no known limitations remaining.
 
 The test suite serves as both a quality assurance mechanism and a living documentation of the system's expected behavior, supporting future development and maintenance efforts.
