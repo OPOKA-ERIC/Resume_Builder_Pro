@@ -2,19 +2,20 @@
 {% block title %}Preview - {{ resume.title }}{% endblock %}
 
 {% block content %}
-<div class="resume-preview-container">
-    <!-- Action Bar -->
-    <div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+<div class="resume-preview-container animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="mb-1"><i class="bi bi-eye me-2" style="color: var(--primary);"></i>{{ resume.title }}</h3>
-            <small class="text-muted">Preview your resume before downloading</small>
+            <small class="text-muted">
+                Template: <strong>{{ resume.template.name|default:"Default" }}</strong> &mdash; Preview your resume before downloading
+            </small>
         </div>
         <div class="d-flex gap-2">
             <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="btn btn-success btn-icon">
                 <i class="bi bi-download"></i> Download PDF
             </a>
-            <a href="{% url 'resumes:resume_edit' resume.id %}" class="btn btn-outline-primary btn-icon">
-                <i class="bi bi-pencil"></i> Edit
+            <a href="{% url 'resumes:template_select' resume.id %}" class="btn btn-outline-primary btn-icon">
+                <i class="bi bi-palette"></i> Change Template
             </a>
             <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary btn-icon">
                 <i class="bi bi-grid-1x2"></i> Dashboard
@@ -22,183 +23,202 @@
         </div>
     </div>
 
-    <!-- Resume Preview Card -->
-    <div class="resume-preview animate-fade-in-up delay-1">
-        <!-- Header -->
-        <div class="resume-preview-header">
-            <h2>{{ user.get_full_name|default:user.username }}</h2>
-            <div class="resume-preview-contact">
-                {% if user.email %}
-                    <span><i class="bi bi-envelope"></i> {{ user.email }}</span>
-                {% endif %}
-                {% if user.profile.phone %}
-                    <span><i class="bi bi-phone"></i> {{ user.profile.phone }}</span>
-                {% endif %}
-                {% if user.profile.address %}
-                    <span><i class="bi bi-geo-alt"></i> {{ user.profile.address }}</span>
-                {% endif %}
+    {% if pdf_html %}
+        <div class="card overflow-hidden border-0 shadow-sm animate-fade-in-up delay-1" style="border-radius: var(--radius-lg);">
+            <div style="background: var(--gray-100); padding: 8px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 8px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></div>
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div>
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></div>
+                <span style="font-size: 0.75rem; color: var(--gray-500); margin-left: 8px;">{{ resume.template.name }} &mdash; {{ resume.title }}</span>
+            </div>
+            <iframe srcdoc="{{ pdf_html|escape }}" style="width: 100%; height: 900px; border: none;"></iframe>
+        </div>
+    {% else %}
+        <div class="card overflow-hidden border-0 shadow-sm animate-fade-in-up delay-1" style="border-radius: var(--radius-lg);">
+            <div class="d-flex align-items-center justify-content-center" style="height: 500px; background: var(--gray-50);">
+                <div class="text-center">
+                    <i class="bi bi-file-earmark-text" style="font-size: 4rem; color: var(--gray-300);"></i>
+                    <p class="text-muted mt-3">No template selected or template failed to load.</p>
+                    <a href="{% url 'resumes:template_select' resume.id %}" class="btn btn-primary mt-2">
+                        <i class="bi bi-palette me-1"></i> Choose a Template
+                    </a>
+                </div>
             </div>
         </div>
+    {% endif %}
 
-        <!-- Body -->
-        <div class="resume-preview-body">
-            {% if resume.educations.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-book"></i> Education</h4>
+    <!-- Edit Sections -->
+    <div class="mt-4 animate-fade-in-up delay-2">
+        <h5 class="mb-3"><i class="bi bi-pencil-square me-2" style="color: var(--primary);"></i>Edit Sections</h5>
+
+        {% if resume.educations.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-book me-2 text-primary"></i>Education</h6>
+                </div>
+                <div class="card-body p-0">
                     {% for edu in resume.educations.all %}
-                        <div class="resume-entry">
-                            <div class="resume-entry-header">
-                                <div>
-                                    <h5 class="resume-entry-title">{{ edu.institution }}</h5>
-                                    <div class="resume-entry-subtitle">{{ edu.qualification }}</div>
-                                </div>
-                                <span class="resume-entry-date">{{ edu.start_date|date:"M Y" }} &mdash; {{ edu.end_date|date:"M Y"|default:"Present" }}</span>
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div>
+                                <strong>{{ edu.institution }}</strong> &mdash; {{ edu.qualification }}
+                                <div class="text-muted small">{{ edu.start_date|date:"M Y" }} &mdash; {{ edu.end_date|date:"M Y"|default:"Present" }}</div>
                             </div>
-                            {% if edu.description %}<p class="resume-entry-description">{{ edu.description }}</p>{% endif %}
-                            <div class="mt-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'education' edu.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resumes:section_edit' resume.id 'education' edu.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                                 <form method="post" action="{% url 'resumes:section_delete' resume.id 'education' edu.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.experiences.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-briefcase"></i> Work Experience</h4>
+        {% if resume.experiences.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-briefcase me-2 text-primary"></i>Experience</h6>
+                </div>
+                <div class="card-body p-0">
                     {% for exp in resume.experiences.all %}
-                        <div class="resume-entry">
-                            <div class="resume-entry-header">
-                                <div>
-                                    <h5 class="resume-entry-title">{{ exp.role }}</h5>
-                                    <div class="resume-entry-subtitle">{{ exp.company }}</div>
-                                </div>
-                                <span class="resume-entry-date">{{ exp.start_date|date:"M Y" }} &mdash; {{ exp.end_date|date:"M Y"|default:"Present" }}</span>
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div>
+                                <strong>{{ exp.role }}</strong> @ {{ exp.company }}
+                                <div class="text-muted small">{{ exp.start_date|date:"M Y" }} &mdash; {{ exp.end_date|date:"M Y"|default:"Present" }}</div>
                             </div>
-                            {% if exp.description %}<p class="resume-entry-description">{{ exp.description }}</p>{% endif %}
-                            <div class="mt-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'experience' exp.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resumes:section_edit' resume.id 'experience' exp.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                                 <form method="post" action="{% url 'resumes:section_delete' resume.id 'experience' exp.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.skills.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-tools"></i> Skills</h4>
+        {% if resume.skills.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-tools me-2 text-primary"></i>Skills</h6>
+                </div>
+                <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
                         {% for skill in resume.skills.all %}
-                            <span class="resume-skill-badge">
-                                {{ skill.name }}
-                                <small class="opacity-75">&middot; {{ skill.proficiency_level }}</small>
-                                <a href="{% url 'resumes:section_edit' resume.id 'skills' skill.id %}" class="text-white ms-1" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <span class="badge bg-primary-subtle text-primary d-flex align-items-center gap-1">
+                                {{ skill.name }} <small class="opacity-75">&middot; {{ skill.proficiency_level }}</small>
+                                <a href="{% url 'resumes:section_edit' resume.id 'skills' skill.id %}" class="text-primary ms-1" title="Edit"><i class="bi bi-pencil small"></i></a>
+                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'skills' skill.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-danger border-0 bg-transparent p-0 ms-1" title="Delete"><i class="bi bi-x-circle small"></i></button>
+                                </form>
                             </span>
                         {% endfor %}
                     </div>
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.projects.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-folder2-open"></i> Projects</h4>
+        {% if resume.projects.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-folder2-open me-2 text-primary"></i>Projects</h6>
+                </div>
+                <div class="card-body p-0">
                     {% for project in resume.projects.all %}
-                        <div class="resume-entry">
-                            <div class="resume-entry-header">
-                                <h5 class="resume-entry-title">{{ project.name }}</h5>
-                                {% if project.link %}<a href="{{ project.link }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-link-45deg"></i> Link</a>{% endif %}
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div>
+                                <strong>{{ project.name }}</strong>
+                                {% if project.link %}<a href="{{ project.link }}" class="text-muted small ms-2" target="_blank"><i class="bi bi-link-45deg"></i></a>{% endif %}
                             </div>
-                            {% if project.description %}<p class="resume-entry-description">{{ project.description }}</p>{% endif %}
-                            <div class="mt-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'projects' project.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'projects' project.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resumes:section_edit' resume.id 'projects' project.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'projects' project.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.certifications.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-award"></i> Certifications</h4>
+        {% if resume.certifications.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-award me-2 text-primary"></i>Certifications</h6>
+                </div>
+                <div class="card-body p-0">
                     {% for cert in resume.certifications.all %}
-                        <div class="resume-entry">
-                            <div class="resume-entry-header">
-                                <div>
-                                    <h5 class="resume-entry-title">{{ cert.title }}</h5>
-                                    <div class="resume-entry-subtitle">{{ cert.issuer }}</div>
-                                </div>
-                                <span class="resume-entry-date">{{ cert.date_awarded|date:"M Y" }}</span>
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div>
+                                <strong>{{ cert.title }}</strong> &mdash; {{ cert.issuer }}
+                                <div class="text-muted small">{{ cert.date_awarded|date:"M Y" }}</div>
                             </div>
-                            <div class="mt-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'certifications' cert.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'certifications' cert.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resumes:section_edit' resume.id 'certifications' cert.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'certifications' cert.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                 </form>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.languages.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-translate"></i> Languages</h4>
+        {% if resume.languages.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-translate me-2 text-primary"></i>Languages</h6>
+                </div>
+                <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
                         {% for lang in resume.languages.all %}
-                            <span class="resume-lang-badge">
-                                {{ lang.name }}
-                                <small class="opacity-75">&middot; {{ lang.proficiency_level }}</small>
-                                <a href="{% url 'resumes:section_edit' resume.id 'languages' lang.id %}" class="text-white ms-1" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <span class="badge bg-secondary-subtle text-secondary d-flex align-items-center gap-1">
+                                {{ lang.name }} <small class="opacity-75">&middot; {{ lang.proficiency_level }}</small>
+                                <a href="{% url 'resumes:section_edit' resume.id 'languages' lang.id %}" class="text-secondary ms-1" title="Edit"><i class="bi bi-pencil small"></i></a>
+                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'languages' lang.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-danger border-0 bg-transparent p-0 ms-1" title="Delete"><i class="bi bi-x-circle small"></i></button>
+                                </form>
                             </span>
                         {% endfor %}
                     </div>
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
 
-            {% if resume.references.all %}
-                <div class="resume-section">
-                    <h4 class="resume-section-title"><i class="bi bi-people"></i> References</h4>
-                    <div class="row g-3">
-                        {% for ref in resume.references.all %}
-                            <div class="col-md-6">
-                                <div class="p-3" style="background: var(--gray-50); border-radius: var(--radius-sm); border-left: 3px solid var(--primary);">
-                                    <strong>{{ ref.name }}</strong>
-                                    <div class="text-muted small">{{ ref.relationship }}</div>
-                                    <div class="text-muted small"><i class="bi bi-envelope me-1"></i>{{ ref.contact }}</div>
-                                </div>
-                                <div class="mt-1">
-                                    <a href="{% url 'resumes:section_edit' resume.id 'references' ref.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <form method="post" action="{% url 'resumes:section_delete' resume.id 'references' ref.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+        {% if resume.references.all %}
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-people me-2 text-primary"></i>References</h6>
                 </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Bottom Actions -->
-    <div class="text-center mt-4 mb-3 animate-fade-in-up delay-2">
-        <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="btn btn-success btn-lg btn-icon">
-            <i class="bi bi-download"></i> Download as PDF
-        </a>
+                <div class="card-body p-0">
+                    {% for ref in resume.references.all %}
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
+                            <div>
+                                <strong>{{ ref.name }}</strong>
+                                <div class="text-muted small">{{ ref.relationship }} &mdash; {{ ref.contact }}</div>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resumes:section_edit' resume.id 'references' ref.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'references' ref.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

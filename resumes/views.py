@@ -193,7 +193,22 @@ def template_select(request, resume_id):
 @login_required
 def resume_preview(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
-    return render(request, 'resumes/preview.html', {'resume': resume})
+
+    pdf_html = None
+    if resume.template and resume.template.html_file:
+        try:
+            from django.template.loader import render_to_string
+            pdf_html = render_to_string(resume.template.html_file, {
+                'resume': resume,
+                'user': request.user,
+            })
+        except Exception:
+            pdf_html = None
+
+    return render(request, 'resumes/preview.html', {
+        'resume': resume,
+        'pdf_html': pdf_html,
+    })
 
 
 @login_required
