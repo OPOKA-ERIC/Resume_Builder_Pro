@@ -585,6 +585,32 @@ Manual testing was performed across Chrome, Firefox, and Edge browsers at both d
 | Browser Compatibility | Chrome, Firefox, Edge |
 | Responsive Design | Desktop, Tablet, Mobile |
 
+#### 7.4.1 Manual Testing Evidence (Screenshots)
+
+All screenshots are stored in the `test/` directory of the repository.
+
+| # | Screenshot | Description | Timestamp |
+|---|-----------|-------------|-----------|
+| 1 | `homepage.png` | Landing page — hero banner, feature summary, and Call-to-Action buttons | July 23, 2026 |
+| 2 | `Screenshot 2026-07-23 110055.png` | User registration page — form with username, email, and password fields | 11:00 AM |
+| 3 | `Screenshot 2026-07-23 111023.png` | User login page — authentication form with validation messages | 11:10 AM |
+| 4 | `Screenshot 2026-07-23 111059.png` | Dashboard — empty state with "No resumes yet" message and create button | 11:10 AM |
+| 5 | `Screenshot 2026-07-23 111241.png` | Create resume page — option to use a template or start from scratch | 11:12 AM |
+| 6 | `Screenshot 2026-07-23 111322.png` | Resume wizard — Education step with form fields and progress indicator | 11:13 AM |
+| 7 | `Screenshot 2026-07-23 111347.png` | Resume wizard — Experience step with company, role, and date fields | 11:13 AM |
+| 8 | `Screenshot 2026-07-23 111430.png` | Resume wizard — Skills step with proficiency level selector | 11:14 AM |
+| 9 | `Screenshot 2026-07-23 111608.png` | Resume wizard — Projects step with name, description, and link fields | 11:16 AM |
+| 10 | `Screenshot 2026-07-23 113033.png` | Template selection page — gallery grid of 27 CV templates | 11:30 AM |
+| 11 | `Screenshot 2026-07-23 113330.png` | Template preview — iframe preview of selected template with sample data | 11:33 AM |
+| 12 | `Screenshot 2026-07-23 113420.png` | Resume preview — full rendered resume using selected template | 11:34 AM |
+| 13 | `Screenshot 2026-07-23 113555.png` | PDF preview — rendered PDF output of the completed resume | 11:35 AM |
+| 14 | `Screenshot 2026-07-23 113622.png` | PDF download — generated PDF file opened in browser | 11:36 AM |
+| 15 | `Screenshot 2026-07-23 113705.png` | User profile page — profile management with photo upload | 11:37 AM |
+| 16 | `Screenshot 2026-07-23 113741.png` | Password change page — old/new/confirm password form | 11:37 AM |
+| 17 | `Screenshot 2026-07-23 113807.png` | Django admin panel — template management with 27 templates loaded | 11:38 AM |
+| 18 | `Screenshot 2026-07-23 113833.png` | Template gallery page — public gallery with preview cards | 11:38 AM |
+| 19 | `Screenshot 2026-07-23 114921.png` | Dashboard with resumes — populated dashboard showing saved resumes | 11:49 AM |
+
 ### 7.5 Test Results Summary
 
 | Module | Tests | Passed | Failed | Pass Rate |
