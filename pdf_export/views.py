@@ -9,9 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 def generate_pdf_html(resume):
-    """Render resume data into HTML for PDF conversion."""
+    """Render resume data into HTML for PDF conversion using the selected template."""
     user = resume.user
-    return render_to_string('pdf/resume_pdf.html', {
+    template_path = 'pdf/resume_pdf.html'
+    if resume.template and resume.template.html_file:
+        template_path = resume.template.html_file
+    return render_to_string(template_path, {
         'resume': resume,
         'user': user,
     })

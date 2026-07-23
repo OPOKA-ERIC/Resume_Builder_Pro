@@ -54,6 +54,7 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
+@require_http_methods(["GET", "POST"])
 def logout_view(request):
     if request.user.is_authenticated:
         logger.info(f"User logged out: {request.user.username}")

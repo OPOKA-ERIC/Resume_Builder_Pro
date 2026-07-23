@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@page { size: A4; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #333; line-height: 1.5; }
+.wrapper { width: 100%; }
+.sidebar { width: 200px; background: #f1f5f9; padding: 25px 16px; vertical-align: top; border-right: 4px solid #475569; }
+.main { padding: 25px 30px; vertical-align: top; }
+.sidebar .name { font-size: 17pt; font-weight: 800; color: #1e293b; margin-bottom: 4px; line-height: 1.2; }
+.sidebar .role { font-size: 8.5pt; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+.sidebar-section { margin-bottom: 14px; }
+.sidebar-title { font-size: 8pt; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; padding-bottom: 3px; border-bottom: 2px solid #475569; }
+.sidebar-item { font-size: 8.5pt; color: #444; margin-bottom: 4px; padding: 3px 0; }
+.main .section { margin-bottom: 16px; }
+.section-title { font-size: 11pt; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #475569; padding-bottom: 3px; margin-bottom: 8px; }
+.entry { margin-bottom: 10px; }
+.entry-row { width: 100%; }
+.entry-role { font-weight: 700; font-size: 10.5pt; color: #1e293b; }
+.entry-date { text-align: right; font-size: 8.5pt; color: #94a3b8; }
+.entry-org { font-size: 9.5pt; color: #64748b; }
+.entry-desc { font-size: 9.5pt; color: #475569; margin-top: 3px; }
+.project-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; margin-bottom: 8px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<table class="wrapper" cellpadding="0" cellspacing="0"><tr>
+<td class="sidebar">
+    <div class="name">{{ user.get_full_name|default:user.username }}</div>
+    <div class="role">Architect</div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">Contact</div>
+        {% if user.email %}<div class="sidebar-item">{{ user.email }}</div>{% endif %}
+        {% if user.profile.phone %}<div class="sidebar-item">{{ user.profile.phone }}</div>{% endif %}
+        {% if user.profile.address %}<div class="sidebar-item">{{ user.profile.address }}</div>{% endif %}
+    </div>
+
+    {% if resume.skills.all %}
+    <div class="sidebar-section">
+        <div class="sidebar-title">Skills</div>
+        {% for item in resume.skills.all %}
+        <div class="sidebar-item">{{ item.name }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.languages.all %}
+    <div class="sidebar-section">
+        <div class="sidebar-title">Languages</div>
+        {% for item in resume.languages.all %}
+        <div class="sidebar-item">{{ item.name }} — {{ item.proficiency_level|title }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.certifications.all %}
+    <div class="sidebar-section">
+        <div class="sidebar-title">Certifications</div>
+        {% for item in resume.certifications.all %}
+        <div class="sidebar-item">{{ item.title }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.references.all %}
+    <div class="sidebar-section">
+        <div class="sidebar-title">References</div>
+        {% for item in resume.references.all %}
+        <div class="sidebar-item"><strong>{{ item.name }}</strong><br>{{ item.relationship }}<br>{{ item.contact }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</td>
+<td class="main">
+    {% if resume.experiences.all %}
+    <div class="section">
+        <div class="section-title">Experience</div>
+        {% for item in resume.experiences.all %}
+        <div class="entry">
+            <table class="entry-row"><tr><td class="entry-role">{{ item.role }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+            <div class="entry-org">{{ item.company }}</div>
+            {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.educations.all %}
+    <div class="section">
+        <div class="section-title">Education</div>
+        {% for item in resume.educations.all %}
+        <div class="entry">
+            <table class="entry-row"><tr><td class="entry-role">{{ item.qualification }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+            <div class="entry-org">{{ item.institution }}</div>
+            {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if resume.projects.all %}
+    <div class="section">
+        <div class="section-title">Design Projects</div>
+        {% for item in resume.projects.all %}
+        <div class="project-box">
+            <div class="entry-role">{{ item.name }}</div>
+            {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+            {% if item.link %}<div class="entry-desc" style="color:#475569;">{{ item.link }}</div>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</td>
+</tr></table>
+</body>
+</html>

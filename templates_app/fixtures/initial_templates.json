@@ -34,5 +34,293 @@
       "is_active": true,
       "created_at": "2026-07-21T00:00:00Z"
     }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 4,
+    "fields": {
+      "name": "Minimalist",
+      "description": "Ultra-clean design with generous whitespace, thin dividers, and light gray section headers. Lets your content speak for itself.",
+      "preview_image": null,
+      "html_file": "pdf/template_minimalist.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 5,
+    "fields": {
+      "name": "Executive",
+      "description": "Dark navy header with gold accents and serif typography. A formal, traditional layout for senior professionals and executives.",
+      "preview_image": null,
+      "html_file": "pdf/template_executive.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 6,
+    "fields": {
+      "name": "Creative",
+      "description": "A colorful coral sidebar with contact info, skills, and languages. The main area showcases experience and education. Perfect for creative roles.",
+      "preview_image": null,
+      "html_file": "pdf/template_creative.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 7,
+    "fields": {
+      "name": "Tech",
+      "description": "Dark-themed with monospace fonts and teal accents. Features code-style section headers and tag-based skills. Built for developers and engineers.",
+      "preview_image": null,
+      "html_file": "pdf/template_tech.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 8,
+    "fields": {
+      "name": "Academic",
+      "description": "Formal serif layout designed for researchers and academics. Emphasizes education, publications, and areas of expertise.",
+      "preview_image": null,
+      "html_file": "pdf/template_academic.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 9,
+    "fields": {
+      "name": "Elegant",
+      "description": "Refined design with italic serif name, burgundy color scheme, and decorative dividers. A classic sophisticated look for any profession.",
+      "preview_image": null,
+      "html_file": "pdf/template_elegant.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 10,
+    "fields": {
+      "name": "Bold",
+      "description": "Heavy typography with strong contrast and amber accents. Thick colored left borders on sections make a powerful visual statement.",
+      "preview_image": null,
+      "html_file": "pdf/template_bold.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 11,
+    "fields": {
+      "name": "Swiss",
+      "description": "Grid-based minimalist design inspired by Swiss typography. Clean two-column layout with red accent and strong typographic hierarchy.",
+      "preview_image": null,
+      "html_file": "pdf/template_swiss.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 12,
+    "fields": {
+      "name": "Corporate",
+      "description": "Professional blue and gray color scheme with structured corporate lines. A polished, business-ready layout for established professionals.",
+      "preview_image": null,
+      "html_file": "pdf/template_corporate.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 13,
+    "fields": {
+      "name": "Startup",
+      "description": "Modern casual feel with green accents and dashed dividers. Pill-style skills and an approachable design for the startup ecosystem.",
+      "preview_image": null,
+      "html_file": "pdf/template_startup.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 14,
+    "fields": {
+      "name": "Writer",
+      "description": "Typography-focused editorial design with Georgia serif, warm brown accents, and a literary feel. Perfect for writers and editors.",
+      "preview_image": null,
+      "html_file": "pdf/template_writer.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 15,
+    "fields": {
+      "name": "Finance",
+      "description": "Conservative dark blue with yellow accent bar and percentage-based skill bars. A numbers-focused layout for finance professionals.",
+      "preview_image": null,
+      "html_file": "pdf/template_finance.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 16,
+    "fields": {
+      "name": "Engineer",
+      "description": "Technical structured look with orange accents and monospace elements. Grid-based skills with bracket styling for engineers.",
+      "preview_image": null,
+      "html_file": "pdf/template_engineer.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 17,
+    "fields": {
+      "name": "Medical",
+      "description": "Clean clinical white with teal accents. Professional medical look with clear sections for certifications and clinical qualifications.",
+      "preview_image": null,
+      "html_file": "pdf/template_medical.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 18,
+    "fields": {
+      "name": "Marketing",
+      "description": "Bold colorful design with magenta accents and colored section backgrounds. Dynamic skill bars and chip-style languages.",
+      "preview_image": null,
+      "html_file": "pdf/template_marketing.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 19,
+    "fields": {
+      "name": "Designer",
+      "description": "Creative two-column layout with dark sidebar for skills and contact. Colorful skill tags and a portfolio-style presentation.",
+      "preview_image": null,
+      "html_file": "pdf/template_designer.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 20,
+    "fields": {
+      "name": "Graduate",
+      "description": "Designed for fresh graduates with education section prominent at top. Clean layout with blue accents, ideal for internships and entry-level.",
+      "preview_image": null,
+      "html_file": "pdf/template_graduate.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 21,
+    "fields": {
+      "name": "Photographer",
+      "description": "Visual-first layout with dark header and warm amber accents. Portfolio-style description formatting for visual artists and photographers.",
+      "preview_image": null,
+      "html_file": "pdf/template_photographer.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 22,
+    "fields": {
+      "name": "Consultant",
+      "description": "Professional indigo scheme with skill progress bars and achievement-focused formatting. Results-driven layout for consultants.",
+      "preview_image": null,
+      "html_file": "pdf/template_consultant.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 23,
+    "fields": {
+      "name": "Lawyer",
+      "description": "Very formal dark charcoal with serif typography and traditional layout. Conservative professional look for legal professionals.",
+      "preview_image": null,
+      "html_file": "pdf/template_lawyer.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 24,
+    "fields": {
+      "name": "Architect",
+      "description": "Structured grid-like layout with slate sidebar and clean geometric feel. Precise spacing for architects and designers.",
+      "preview_image": null,
+      "html_file": "pdf/template_architect.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 25,
+    "fields": {
+      "name": "Journalist",
+      "description": "Editorial newspaper feel with black, white, and red accents. Serif headlines and dateline-style dates for media professionals.",
+      "preview_image": null,
+      "html_file": "pdf/template_journalist.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 26,
+    "fields": {
+      "name": "Researcher",
+      "description": "Modern academic design with deep purple accents. Publications-friendly with pill-style skills and clear research hierarchy.",
+      "preview_image": null,
+      "html_file": "pdf/template_researcher.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 27,
+    "fields": {
+      "name": "Flat",
+      "description": "Ultra-modern flat design with solid blue header bars, skill progress bars, and chip-style languages. Minimal and contemporary.",
+      "preview_image": null,
+      "html_file": "pdf/template_flat.html",
+      "is_active": true,
+      "created_at": "2026-07-21T00:00:00Z"
+    }
   }
 ]
