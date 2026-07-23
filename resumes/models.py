@@ -25,8 +25,8 @@ class Education(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='educations')
     institution = models.CharField(max_length=200)
     qualification = models.CharField(max_length=200)
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
+    start_year = models.IntegerField()
+    end_year = models.IntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -41,8 +41,8 @@ class Experience(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='experiences')
     company = models.CharField(max_length=200)
     role = models.CharField(max_length=200)
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
+    start_year = models.IntegerField()
+    end_year = models.IntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
@@ -91,7 +91,7 @@ class Certification(models.Model):
     resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='certifications')
     title = models.CharField(max_length=200)
     issuer = models.CharField(max_length=200)
-    date_awarded = models.DateField()
+    year_awarded = models.IntegerField()
 
     def __str__(self):
         return self.title

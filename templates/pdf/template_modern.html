@@ -74,7 +74,7 @@
                 {% for cert in resume.certifications.all %}
                 <div class="sidebar-item">
                     <div class="sidebar-item-label">{{ cert.title }}</div>
-                    <div class="sidebar-item-sub">{{ cert.issuer }} &#8211; {{ cert.date_awarded|date:"M Y" }}</div>
+                    <div class="sidebar-item-sub">{{ cert.issuer }} &#8211; {{ cert.year_awarded }}</div>
                 </div>
                 {% endfor %}
             </div>
@@ -102,7 +102,7 @@
                 <div class="entry">
                     <div class="entry-header">
                         <div class="entry-title">{{ edu.institution }}</div>
-                        <div class="entry-date">{{ edu.start_date|date:"M Y" }} &#8211; {{ edu.end_date|date:"M Y"|default:"Present" }}</div>
+                        <div class="entry-date">{{ edu.start_year }} &#8211; {{ edu.end_year|default:"Present" }}</div>
                     </div>
                     <div class="entry-sub">{{ edu.qualification }}</div>
                     {% if edu.description %}<div class="entry-desc">{{ edu.description }}</div>{% endif %}
@@ -118,7 +118,7 @@
                 <div class="entry">
                     <div class="entry-header">
                         <div class="entry-title">{{ exp.role }}</div>
-                        <div class="entry-date">{{ exp.start_date|date:"M Y" }} &#8211; {{ exp.end_date|date:"M Y"|default:"Present" }}</div>
+                        <div class="entry-date">{{ exp.start_year }} &#8211; {{ exp.end_year|default:"Present" }}</div>
                     </div>
                     <div class="entry-sub">{{ exp.company }}</div>
                     {% if exp.description %}<div class="entry-desc">{{ exp.description }}</div>{% endif %}

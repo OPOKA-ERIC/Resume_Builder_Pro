@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import ResumeTemplate
-import datetime
 
 
 class _QuerySet:
@@ -37,15 +36,15 @@ def _sample_context():
         title='Software Engineer',
         educations=_QuerySet([
             Obj(institution='Stanford University', qualification='B.S. Computer Science',
-                start_date=datetime.date(2018, 9, 1), end_date=datetime.date(2022, 6, 1),
+                start_year=2018, end_year=2022,
                 description='GPA 3.8/4.0. Dean\'s List. Coursework: Data Structures, Algorithms, Machine Learning.'),
         ]),
         experiences=_QuerySet([
             Obj(company='Google', role='Software Engineer',
-                start_date=datetime.date(2022, 7, 1), end_date=None,
+                start_year=2022, end_year=None,
                 description='Developed and maintained core search infrastructure serving 5B+ daily queries. Led migration to microservices architecture, reducing latency by 40%. Mentored 3 junior engineers.'),
             Obj(company='Microsoft', role='Software Engineering Intern',
-                start_date=datetime.date(2021, 6, 1), end_date=datetime.date(2021, 9, 1),
+                start_year=2021, end_year=2021,
                 description='Built internal dashboard tools using React and Python. Automated testing pipeline, increasing coverage from 60% to 85%.'),
         ]),
         skills=_QuerySet([
@@ -61,8 +60,8 @@ def _sample_context():
             Obj(name='AI Resume Builder', description='Full-stack web application using Django, React, and GPT API for intelligent resume generation.', link='https://github.com/alexj/resume-builder'),
         ]),
         certifications=_QuerySet([
-            Obj(title='AWS Certified Solutions Architect', issuer='Amazon Web Services', date_awarded=datetime.date(2023, 3, 15)),
-            Obj(title='Google Cloud Professional', issuer='Google', date_awarded=datetime.date(2023, 1, 20)),
+            Obj(title='AWS Certified Solutions Architect', issuer='Amazon Web Services', year_awarded=2023),
+            Obj(title='Google Cloud Professional', issuer='Google', year_awarded=2023),
         ]),
         languages=_QuerySet([
             Obj(name='English', proficiency_level='native'),

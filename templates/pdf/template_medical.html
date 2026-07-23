@@ -203,7 +203,7 @@
                 <table class="entry-table">
                     <tr>
                         <td class="entry-role">{{ item.qualification }}</td>
-                        <td class="entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                        <td class="entry-dates">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td>
                     </tr>
                 </table>
                 <div class="entry-org">{{ item.institution }}</div>
@@ -225,7 +225,7 @@
                         <div class="cert-box">
                             <div class="cert-name">{{ item.title }}</div>
                             <div class="cert-detail">
-                                {% if item.issuer %}{{ item.issuer }}{% endif %}{% if item.date_awarded %} &bull; {{ item.date_awarded|date:"M Y" }}{% endif %}
+                                {% if item.issuer %}{{ item.issuer }}{% endif %}{% if item.year_awarded %} &bull; {{ item.year_awarded }}{% endif %}
                             </div>
                         </div>
                     </td>
@@ -248,7 +248,7 @@
                 <table class="entry-table">
                     <tr>
                         <td class="entry-role">{{ item.role }}</td>
-                        <td class="entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                        <td class="entry-dates">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td>
                     </tr>
                 </table>
                 <div class="entry-org">{{ item.company }}</div>

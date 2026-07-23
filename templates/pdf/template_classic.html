@@ -43,7 +43,7 @@
         <div class="entry">
             <div class="entry-row">
                 <div><div class="entry-title">{{ edu.institution }}</div><div class="entry-sub">{{ edu.qualification }}</div></div>
-                <div class="entry-date">{{ edu.start_date|date:"M Y" }} &#8211; {{ edu.end_date|date:"M Y"|default:"Present" }}</div>
+                <div class="entry-date">{{ edu.start_year }} &#8211; {{ edu.end_year|default:"Present" }}</div>
             </div>
             {% if edu.description %}<div class="entry-desc">{{ edu.description }}</div>{% endif %}
         </div>
@@ -58,7 +58,7 @@
         <div class="entry">
             <div class="entry-row">
                 <div><div class="entry-title">{{ exp.role }}</div><div class="entry-sub">{{ exp.company }}</div></div>
-                <div class="entry-date">{{ exp.start_date|date:"M Y" }} &#8211; {{ exp.end_date|date:"M Y"|default:"Present" }}</div>
+                <div class="entry-date">{{ exp.start_year }} &#8211; {{ exp.end_year|default:"Present" }}</div>
             </div>
             {% if exp.description %}<div class="entry-desc">{{ exp.description }}</div>{% endif %}
         </div>
@@ -97,7 +97,7 @@
         <div class="entry">
             <div class="entry-row">
                 <div><div class="entry-title">{{ cert.title }}</div><div class="entry-sub">{{ cert.issuer }}</div></div>
-                <div class="entry-date">{{ cert.date_awarded|date:"M Y" }}</div>
+                <div class="entry-date">{{ cert.year_awarded }}</div>
             </div>
         </div>
         {% endfor %}

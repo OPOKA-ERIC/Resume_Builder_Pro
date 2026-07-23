@@ -297,7 +297,7 @@
                         <table class="main-entry-table">
                             <tr>
                                 <td class="main-entry-role">{{ item.role }}</td>
-                                <td class="main-entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                                <td class="main-entry-dates">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td>
                             </tr>
                         </table>
                         <div class="main-entry-org">{{ item.company }}</div>
@@ -317,7 +317,7 @@
                         <table class="main-entry-table">
                             <tr>
                                 <td class="main-entry-role">{{ item.qualification }}</td>
-                                <td class="main-entry-dates">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td>
+                                <td class="main-entry-dates">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td>
                             </tr>
                         </table>
                         <div class="main-entry-org">{{ item.institution }}</div>
@@ -351,7 +351,7 @@
                     <div class="main-section-title">Certifications</div>
                     {% for item in resume.certifications.all %}
                     <div class="main-cert-entry">
-                        <span class="main-cert-title">{{ item.title }}</span>{% if item.issuer %} — {{ item.issuer }}{% endif %}{% if item.date_awarded %}, {{ item.date_awarded|date:"M Y" }}{% endif %}
+                        <span class="main-cert-title">{{ item.title }}</span>{% if item.issuer %} — {{ item.issuer }}{% endif %}{% if item.year_awarded %}, {{ item.year_awarded }}{% endif %}
                     </div>
                     {% endfor %}
                 </div>

@@ -43,7 +43,7 @@ body { font-family: Georgia, 'Times New Roman', serif; font-size: 10.5pt; color:
     <div class="section-title">Education</div>
     {% for item in resume.educations.all %}
     <div class="entry">
-        <table class="entry-header"><tr><td class="entry-main">{{ item.qualification }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+        <table class="entry-header"><tr><td class="entry-main">{{ item.qualification }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
         <div class="entry-sub">{{ item.institution }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -56,7 +56,7 @@ body { font-family: Georgia, 'Times New Roman', serif; font-size: 10.5pt; color:
     <div class="section-title">Academic & Professional Experience</div>
     {% for item in resume.experiences.all %}
     <div class="entry">
-        <table class="entry-header"><tr><td class="entry-main">{{ item.role }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+        <table class="entry-header"><tr><td class="entry-main">{{ item.role }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
         <div class="entry-sub">{{ item.company }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -94,7 +94,7 @@ body { font-family: Georgia, 'Times New Roman', serif; font-size: 10.5pt; color:
     {% for item in resume.certifications.all %}
     <div class="entry">
         <span class="entry-main">{{ item.title }}</span><br>
-        <span class="entry-sub">{{ item.issuer }} — {{ item.date_awarded|date:"M Y" }}</span>
+        <span class="entry-sub">{{ item.issuer }} — {{ item.year_awarded }}</span>
     </div>
     {% endfor %}
 </div>

@@ -17,15 +17,15 @@ def _sample_data():
     return {
         'educations': [
             {'institution': 'Stanford University', 'qualification': 'B.S. Computer Science',
-             'start_date': '2018-09-01', 'end_date': '2022-06-01',
+             'start_year': 2018, 'end_year': 2022,
              'description': "GPA 3.8/4.0. Dean's List. Coursework: Data Structures, Algorithms, Machine Learning."},
         ],
         'experiences': [
             {'company': 'Google', 'role': 'Software Engineer',
-             'start_date': '2022-07-01', 'end_date': None,
+             'start_year': 2022, 'end_year': None,
              'description': 'Developed and maintained core search infrastructure serving 5B+ daily queries. Led migration to microservices architecture, reducing latency by 40%. Mentored 3 junior engineers.'},
             {'company': 'Microsoft', 'role': 'Software Engineering Intern',
-             'start_date': '2021-06-01', 'end_date': '2021-09-01',
+             'start_year': 2021, 'end_year': 2021,
              'description': 'Built internal dashboard tools using React and Python. Automated testing pipeline, increasing coverage from 60% to 85%.'},
         ],
         'skills': [
@@ -41,8 +41,8 @@ def _sample_data():
             {'name': 'AI Resume Builder', 'description': 'Full-stack web application using Django, React, and GPT API.', 'link': 'https://github.com/alexj/resume-builder'},
         ],
         'certifications': [
-            {'title': 'AWS Certified Solutions Architect', 'issuer': 'Amazon Web Services', 'date_awarded': '2023-03-15'},
-            {'title': 'Google Cloud Professional', 'issuer': 'Google', 'date_awarded': '2023-01-20'},
+            {'title': 'AWS Certified Solutions Architect', 'issuer': 'Amazon Web Services', 'year_awarded': 2023},
+            {'title': 'Google Cloud Professional', 'issuer': 'Google', 'year_awarded': 2023},
         ],
         'languages': [
             {'name': 'English', 'proficiency_level': 'native'},
