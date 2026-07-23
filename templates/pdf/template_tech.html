@@ -40,7 +40,7 @@ body { font-family: 'Courier New', Courier, monospace; font-size: 10pt; color: #
     {% for item in resume.experiences.all %}
     <div class="entry">
         <div class="entry-role">{{ item.role }}</div>
-        <div class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</div>
+        <div class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</div>
         <div class="entry-org">{{ item.company }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -54,7 +54,7 @@ body { font-family: 'Courier New', Courier, monospace; font-size: 10pt; color: #
     {% for item in resume.educations.all %}
     <div class="entry">
         <div class="entry-role">{{ item.qualification }}</div>
-        <div class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</div>
+        <div class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</div>
         <div class="entry-org">{{ item.institution }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -89,7 +89,7 @@ body { font-family: 'Courier New', Courier, monospace; font-size: 10pt; color: #
     <div class="section-title">// Certifications</div>
     {% for item in resume.certifications.all %}
     <div class="entry">
-        <span class="entry-role">{{ item.title }}</span> <span class="entry-date">{{ item.date_awarded|date:"M Y" }}</span><br>
+        <span class="entry-role">{{ item.title }}</span> <span class="entry-date">{{ item.year_awarded }}</span><br>
         <span class="entry-org">{{ item.issuer }}</span>
     </div>
     {% endfor %}

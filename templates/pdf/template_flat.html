@@ -41,7 +41,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; color: #333
     <div class="section-header">Experience</div>
     {% for item in resume.experiences.all %}
     <div class="entry">
-        <table class="entry-row"><tr><td class="entry-role">{{ item.role }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+        <table class="entry-row"><tr><td class="entry-role">{{ item.role }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
         <div class="entry-org">{{ item.company }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -54,7 +54,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; color: #333
     <div class="section-header">Education</div>
     {% for item in resume.educations.all %}
     <div class="entry">
-        <table class="entry-row"><tr><td class="entry-role">{{ item.qualification }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+        <table class="entry-row"><tr><td class="entry-role">{{ item.qualification }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
         <div class="entry-org">{{ item.institution }}</div>
         {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
     </div>
@@ -97,7 +97,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; color: #333
     {% for item in resume.certifications.all %}
     <div class="entry">
         <span class="entry-role">{{ item.title }}</span> — {{ item.issuer }}
-        <span class="entry-date" style="float:right;">{{ item.date_awarded|date:"M Y" }}</span>
+        <span class="entry-date" style="float:right;">{{ item.year_awarded }}</span>
     </div>
     {% endfor %}
 </div>

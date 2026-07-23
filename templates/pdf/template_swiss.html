@@ -78,7 +78,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #333; 
         <div class="section-title">Experience</div>
         {% for item in resume.experiences.all %}
         <div class="entry">
-            <table class="entry-row"><tr><td class="entry-role">{{ item.role }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+            <table class="entry-row"><tr><td class="entry-role">{{ item.role }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
             <div class="entry-org">{{ item.company }}</div>
             {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
         </div>
@@ -91,7 +91,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #333; 
         <div class="section-title">Education</div>
         {% for item in resume.educations.all %}
         <div class="entry">
-            <table class="entry-row"><tr><td class="entry-role">{{ item.qualification }}</td><td class="entry-date">{{ item.start_date|date:"M Y" }} — {% if item.end_date %}{{ item.end_date|date:"M Y" }}{% else %}Present{% endif %}</td></tr></table>
+            <table class="entry-row"><tr><td class="entry-role">{{ item.qualification }}</td><td class="entry-date">{{ item.start_year }} — {% if item.end_year %}{{ item.end_year }}{% else %}Present{% endif %}</td></tr></table>
             <div class="entry-org">{{ item.institution }}</div>
             {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
         </div>

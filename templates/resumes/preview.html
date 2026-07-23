@@ -61,7 +61,7 @@
                         <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
                             <div>
                                 <strong>{{ edu.institution }}</strong> &mdash; {{ edu.qualification }}
-                                <div class="text-muted small">{{ edu.start_date|date:"M Y" }} &mdash; {{ edu.end_date|date:"M Y"|default:"Present" }}</div>
+                                <div class="text-muted small">{{ edu.start_year }} &mdash; {{ edu.end_year|default:"Present" }}</div>
                             </div>
                             <div class="d-flex gap-1">
                                 <a href="{% url 'resumes:section_edit' resume.id 'education' edu.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
@@ -86,7 +86,7 @@
                         <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
                             <div>
                                 <strong>{{ exp.role }}</strong> @ {{ exp.company }}
-                                <div class="text-muted small">{{ exp.start_date|date:"M Y" }} &mdash; {{ exp.end_date|date:"M Y"|default:"Present" }}</div>
+                                <div class="text-muted small">{{ exp.start_year }} &mdash; {{ exp.end_year|default:"Present" }}</div>
                             </div>
                             <div class="d-flex gap-1">
                                 <a href="{% url 'resumes:section_edit' resume.id 'experience' exp.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
@@ -158,7 +158,7 @@
                         <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
                             <div>
                                 <strong>{{ cert.title }}</strong> &mdash; {{ cert.issuer }}
-                                <div class="text-muted small">{{ cert.date_awarded|date:"M Y" }}</div>
+                                <div class="text-muted small">{{ cert.year_awarded }}</div>
                             </div>
                             <div class="d-flex gap-1">
                                 <a href="{% url 'resumes:section_edit' resume.id 'certifications' cert.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
