@@ -198,10 +198,13 @@ def resume_preview(request, resume_id):
     if resume.template and resume.template.html_file:
         try:
             from django.template.loader import render_to_string
-            pdf_html = render_to_string(resume.template.html_file, {
+            from django.utils.html import escape as html_escape
+            from django.utils.safestring import mark_safe
+            raw_html = render_to_string(resume.template.html_file, {
                 'resume': resume,
                 'user': request.user,
             })
+            pdf_html = mark_safe(html_escape(raw_html))
         except Exception:
             pdf_html = None
 
