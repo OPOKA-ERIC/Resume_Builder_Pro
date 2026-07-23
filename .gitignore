@@ -31,3 +31,8 @@ Thumbs.db
 *.egg-info/
 dist/
 build/
+
+# MS Office temp files
+~$*.docx
+~$*.xlsx
+~$*.pptx

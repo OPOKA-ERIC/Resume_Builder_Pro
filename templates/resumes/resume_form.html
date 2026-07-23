@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Create Resume - Resume Builder Pro{% endblock %}
+{% block title %}{{ action }} Resume - Resume Builder Pro{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -10,8 +10,13 @@
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <div>
-                    <h3 class="mb-0"><i class="bi bi-plus-circle me-2" style="color: var(--primary);"></i>Create New Resume</h3>
-                    <small class="text-muted">Choose how you'd like to start</small>
+                    {% if action == 'Edit' %}
+                        <h3 class="mb-0"><i class="bi bi-pencil-square me-2" style="color: var(--primary);"></i>Edit Resume</h3>
+                        <small class="text-muted">Update your resume title</small>
+                    {% else %}
+                        <h3 class="mb-0"><i class="bi bi-plus-circle me-2" style="color: var(--primary);"></i>Create New Resume</h3>
+                        <small class="text-muted">Choose how you'd like to start</small>
+                    {% endif %}
                 </div>
             </div>
 

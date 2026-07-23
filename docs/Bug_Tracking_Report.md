@@ -185,11 +185,12 @@
 | Test Suite | Tests | Passed | Failed |
 |-----------|-------|--------|--------|
 | accounts (Unit) | 32 | 32 | 0 |
-| resumes (Unit + Integration) | 41 | 41 | 0 |
-| pdf_export (Unit) | 9 | 9 | 0 |
+| resumes (Unit) | 41 | 41 | 0 |
+| resumes (Integration) | 20 | 20 | 0 |
+| pdf_export (Unit) | 11 | 11 | 0 |
 | templates_app (Unit) | 21 | 21 | 0 |
-| **Total** | **105** | **105** | **0** |
+| **Total** | **125** | **125** | **0** |
 
 *Note: The resumes test suite includes both unit tests (tests.py) and integration tests (integration_tests.py) which are auto-discovered by Django's test runner.*
 
-**Final verified count:** 105 tests, all passing.
+**Final verified count:** 125 tests, all passing.
