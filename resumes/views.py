@@ -172,9 +172,6 @@ def wizard_step(request, resume_id, step):
 def template_select(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
     from templates_app.models import ResumeTemplate
-    from templates_app.views import _sample_context
-    from django.template.loader import render_to_string
-
     templates = ResumeTemplate.objects.filter(is_active=True)
 
     if request.method == 'POST':
@@ -187,18 +184,9 @@ def template_select(request, resume_id):
                 messages.success(request, f'Template "{template.name}" selected.')
         return redirect('resumes:resume_preview', resume_id=resume.id)
 
-    sample_ctx = _sample_context()
-    template_previews = []
-    for t in templates:
-        try:
-            html = render_to_string(t.html_file, sample_ctx)
-            template_previews.append({'template': t, 'preview_html': html})
-        except Exception:
-            template_previews.append({'template': t, 'preview_html': None})
-
     return render(request, 'resumes/template_select.html', {
         'resume': resume,
-        'template_previews': template_previews,
+        'templates': templates,
     })
 
 
