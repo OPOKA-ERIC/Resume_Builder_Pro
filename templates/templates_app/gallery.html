@@ -7,375 +7,577 @@
         <h2 class="fw-bold"><i class="bi bi-palette me-2" style="color: var(--primary);"></i>Resume Templates</h2>
         <div class="divider"></div>
         <p class="text-muted mt-3" style="max-width: 550px; margin: 0 auto;">
-            {{ templates|length }} professionally designed templates to choose from. Each one is crafted to make your resume stand out.
+            {{ templates|length }} professionally designed templates. Click any template to see a full preview with sample data.
         </p>
     </div>
 
     {% if templates %}
         <div class="row g-3">
-            {% for template in templates %}
+            {% for t in templates %}
                 <div class="col-6 col-md-4 col-lg-3 animate-fade-in-up delay-{{ forloop.counter }}">
-                    <a href="{% url 'templates_app:preview' template.id %}" class="text-decoration-none">
+                    <a href="{% url 'templates_app:preview' t.id %}" class="text-decoration-none">
                         <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(0,0,0,0.12)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
-                            <div style="min-height: 180px; position: relative; overflow: hidden; background: white; border-bottom: 1px solid #f3f4f6;">
-                                {% if template.html_file == 'pdf/template_classic.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 6px; width: 60%; background: #333; border-radius: 2px; margin: 0 auto 8px;"></div>
-                                        <div style="height: 3px; width: 40%; background: #ccc; margin: 0 auto 12px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #ddd; margin-bottom: 4px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #eee; margin-bottom: 4px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 95%; background: #eee; margin-bottom: 10px; border-radius: 1px;"></div>
-                                        <div style="height: 4px; width: 30%; background: #333; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #ddd; margin-bottom: 3px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #eee; margin-bottom: 3px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 70%; background: #eee; border-radius: 1px;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_modern.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="width: 35%; background: #1e293b; padding: 10px 8px;">
-                                            <div style="height: 4px; width: 70%; background: rgba(255,255,255,0.3); border-radius: 2px; margin-bottom: 6px;"></div>
-                                            <div style="height: 3px; width: 60%; background: rgba(255,255,255,0.15); margin-bottom: 10px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 80%; background: rgba(255,255,255,0.1); margin-bottom: 4px; border-radius: 1px;"></div>
-                                            <div style="height: 2px; width: 70%; background: rgba(255,255,255,0.1); margin-bottom: 4px; border-radius: 1px;"></div>
-                                            <div style="height: 2px; width: 75%; background: rgba(255,255,255,0.1); margin-bottom: 10px; border-radius: 1px;"></div>
-                                            <div style="height: 5px; width: 50%; background: #e8725c; border-radius: 3px; margin-bottom: 4px;"></div>
-                                            <div style="height: 5px; width: 65%; background: #e8725c; border-radius: 3px; margin-bottom: 4px;"></div>
-                                            <div style="height: 5px; width: 55%; background: #e8725c; border-radius: 3px;"></div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 80%; background: #1e293b; margin-bottom: 8px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px; border-radius: 1px;"></div>
-                                            <div style="height: 2px; width: 90%; background: #f3f4f6; margin-bottom: 8px; border-radius: 1px;"></div>
-                                            <div style="height: 3px; width: 50%; background: #0ea5e9; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px; border-radius: 1px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6; border-radius: 1px;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_compact.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="flex: 1; padding: 10px; border-right: 2px solid #eee;">
-                                            <div style="height: 3px; width: 70%; background: #333; margin-bottom: 8px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #ddd; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #eee; margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 50%; background: #0ea5e9; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #ddd; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #eee;"></div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 60%; background: #333; margin-bottom: 8px; border-radius: 2px;"></div>
-                                            <div style="display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 10px;">
-                                                <div style="height: 5px; width: 25px; background: #0ea5e9; border-radius: 3px;"></div>
-                                                <div style="height: 5px; width: 30px; background: #0ea5e9; border-radius: 3px;"></div>
-                                                <div style="height: 5px; width: 20px; background: #0ea5e9; border-radius: 3px;"></div>
-                                                <div style="height: 5px; width: 28px; background: #0ea5e9; border-radius: 3px;"></div>
-                                            </div>
-                                            <div style="height: 2px; width: 100%; background: #ddd; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 90%; background: #eee;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_creative.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="width: 35%; background: #e8725c; padding: 10px 8px;">
-                                            <div style="height: 4px; width: 70%; background: rgba(255,255,255,0.4); border-radius: 2px; margin-bottom: 10px;"></div>
-                                            <div style="height: 2px; width: 80%; background: rgba(255,255,255,0.2); margin-bottom: 4px;"></div>
-                                            <div style="height: 2px; width: 70%; background: rgba(255,255,255,0.2); margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 60%; background: white; border-radius: 2px; margin-bottom: 3px;"></div>
-                                            <div style="height: 3px; width: 50%; background: white; border-radius: 2px; margin-bottom: 3px;"></div>
-                                            <div style="height: 3px; width: 55%; background: white; border-radius: 2px;"></div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 70%; background: #e8725c; margin-bottom: 8px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 90%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 45%; background: #e8725c; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #f3f4f6;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_tech.html' %}
-                                    <div style="padding: 12px; background: #0f172a; min-height: 180px;">
-                                        <div style="height: 5px; width: 50%; background: #0d9488; border-radius: 2px; margin-bottom: 10px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #1e293b; margin-bottom: 4px;"></div>
-                                        <div style="height: 2px; width: 70%; background: #1e293b; margin-bottom: 10px;"></div>
-                                        <div style="height: 3px; width: 40%; background: #0d9488; border-left: 2px solid #0d9488; padding-left: 6px; margin-bottom: 8px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #1e293b; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #1e293b; margin-bottom: 10px;"></div>
-                                        <div style="display: flex; gap: 4px;">
-                                            <div style="height: 5px; width: 25px; background: #1e293b; border: 1px solid #0d9488; border-radius: 2px;"></div>
-                                            <div style="height: 5px; width: 30px; background: #1e293b; border: 1px solid #0d9488; border-radius: 2px;"></div>
-                                            <div style="height: 5px; width: 20px; background: #1e293b; border: 1px solid #0d9488; border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_executive.html' %}
-                                    <div>
-                                        <div style="height: 28px; background: #1e3a5f; padding: 6px 12px;">
-                                            <div style="height: 4px; width: 50%; background: white; border-radius: 2px;"></div>
-                                        </div>
-                                        <div style="height: 3px; background: #c9a84c;"></div>
-                                        <div style="padding: 10px 12px;">
-                                            <div style="height: 3px; width: 60%; background: #1e3a5f; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 90%; background: #f3f4f6; margin-bottom: 6px;"></div>
-                                            <div style="height: 3px; width: 40%; background: #c9a84c; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_elegant.html' %}
-                                    <div style="padding: 12px; text-align: center;">
-                                        <div style="height: 6px; width: 40%; background: #7c2d3e; margin: 0 auto 4px; border-radius: 2px;"></div>
-                                        <div style="height: 3px; width: 25%; background: #d4b5b9; margin: 0 auto 12px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #eee; margin: 0 auto 3px;"></div>
-                                        <div style="height: 2px; width: 70%; background: #f3f4f6; margin: 0 auto 10px;"></div>
-                                        <div style="height: 3px; width: 35%; background: #7c2d3e; margin: 0 auto 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #eee; margin: 0 auto 3px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #f3f4f6; margin: 0 auto;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_bold.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 7px; width: 45%; background: #111; border-radius: 2px; margin-bottom: 6px;"></div>
-                                        <div style="height: 3px; width: 20%; background: #f59e0b; margin-bottom: 10px; border-radius: 2px;"></div>
-                                        <div style="height: 3px; width: 50%; background: #111; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-left: 8px; border-left: 3px solid #f59e0b; padding-left: 4px; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6; margin-left: 8px; border-left: 3px solid #f59e0b; padding-left: 4px; margin-bottom: 6px;"></div>
-                                        <div style="display: flex; gap: 3px;">
-                                            <div style="height: 5px; width: 20px; background: #111; border-radius: 2px;"></div>
-                                            <div style="height: 5px; width: 25px; background: #111; border-radius: 2px;"></div>
-                                            <div style="height: 5px; width: 18px; background: #111; border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_swiss.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="width: 35%; background: #f8f9fa; border-right: 3px solid #dc2626; padding: 10px 8px;">
-                                            <div style="height: 5px; width: 70%; background: #111; margin-bottom: 10px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #ccc; margin-bottom: 4px;"></div>
-                                            <div style="height: 2px; width: 70%; background: #ddd; margin-bottom: 8px;"></div>
-                                            <div style="height: 2px; width: 75%; background: #ccc; margin-bottom: 4px;"></div>
-                                            <div style="height: 2px; width: 65%; background: #ddd;"></div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 60%; background: #dc2626; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 90%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 40%; background: #dc2626; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #f3f4f6;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_minimalist.html' %}
-                                    <div style="padding: 14px; text-align: center;">
-                                        <div style="height: 6px; width: 35%; background: #222; margin: 0 auto 8px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 50%; background: #e5e5e5; margin: 0 auto 14px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #eee; margin: 0 auto 4px;"></div>
-                                        <div style="height: 2px; width: 75%; background: #f3f4f6; margin: 0 auto 4px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #eee; margin: 0 auto 12px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #eee; margin: 0 auto 4px;"></div>
-                                        <div style="height: 2px; width: 70%; background: #f3f4f6; margin: 0 auto;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_corporate.html' %}
-                                    <div>
-                                        <div style="height: 25px; background: #1e40af; padding: 6px 12px;"></div>
-                                        <div style="padding: 10px 12px;">
-                                            <div style="height: 3px; width: 55%; background: #1e40af; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #dbeafe; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #eff6ff; margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 40%; background: #1e40af; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #dbeafe; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #eff6ff;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_startup.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 40%; background: #16a34a; margin-bottom: 10px; border-radius: 3px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                        <div style="display: flex; gap: 3px; margin-bottom: 8px;">
-                                            <div style="height: 5px; width: 22px; background: #dcfce7; color: #16a34a; border-radius: 10px;"></div>
-                                            <div style="height: 5px; width: 28px; background: #dcfce7; color: #16a34a; border-radius: 10px;"></div>
-                                            <div style="height: 5px; width: 18px; background: #dcfce7; color: #16a34a; border-radius: 10px;"></div>
-                                        </div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #f3f4f6;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_writer.html' %}
-                                    <div style="padding: 12px; text-align: center;">
-                                        <div style="height: 6px; width: 30%; background: #92400e; margin: 0 auto 4px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 40%; background: #ddd; margin: 0 auto 12px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 80%; background: #eee; margin: 0 auto 3px;"></div>
-                                        <div style="height: 2px; width: 70%; background: #f3f4f6; margin: 0 auto 8px;"></div>
-                                        <div style="height: 3px; width: 35%; background: #92400e; margin: 0 auto 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #eee; margin: 0 auto;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_finance.html' %}
-                                    <div>
-                                        <div style="height: 22px; background: #1e3a5f; padding: 5px 12px;"></div>
-                                        <div style="height: 3px; background: #eab308;"></div>
-                                        <div style="padding: 10px 12px;">
-                                            <div style="height: 3px; width: 50%; background: #1e3a5f; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                            <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px; margin-bottom: 3px;"><div style="height: 100%; width: 75%; background: #1e3a5f; border-radius: 2px;"></div></div>
-                                            <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px;"><div style="height: 100%; width: 60%; background: #1e3a5f; border-radius: 2px;"></div></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_engineer.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 45%; background: #ea580c; margin-bottom: 10px; border-radius: 2px;"></div>
-                                        <div style="font-family: monospace; height: 2px; width: 90%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="font-family: monospace; height: 2px; width: 80%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
-                                            <div style="height: 8px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 2px;"></div>
-                                            <div style="height: 8px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 2px;"></div>
-                                            <div style="height: 8px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 2px;"></div>
-                                            <div style="height: 8px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_medical.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 20px; background: #0891b2; border-radius: 4px; margin-bottom: 10px;"></div>
-                                        <div style="height: 3px; width: 50%; background: #0891b2; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                        <div style="height: 8px; width: 90%; background: #ecfeff; border: 1px solid #a5f3fc; border-radius: 3px; margin-bottom: 4px;"></div>
-                                        <div style="height: 8px; width: 90%; background: #ecfeff; border: 1px solid #a5f3fc; border-radius: 3px;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_marketing.html' %}
-                                    <div>
-                                        <div style="height: 28px; background: #c026d3; padding: 6px 12px;">
-                                            <div style="height: 4px; width: 50%; background: white; border-radius: 2px;"></div>
-                                        </div>
-                                        <div style="padding: 10px 12px; background: #fdf4ff;">
-                                            <div style="height: 3px; width: 50%; background: #c026d3; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #e9d5ff; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3e8ff; margin-bottom: 6px;"></div>
-                                            <div style="height: 4px; width: 70%; background: #e5e7eb; border-radius: 2px; margin-bottom: 3px;"><div style="height: 100%; width: 80%; background: #c026d3; border-radius: 2px;"></div></div>
-                                            <div style="height: 4px; width: 70%; background: #e5e7eb; border-radius: 2px;"><div style="height: 100%; width: 60%; background: #c026d3; border-radius: 2px;"></div></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_designer.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="width: 35%; background: #1f2937; padding: 10px 8px;">
-                                            <div style="height: 4px; width: 60%; background: rgba(255,255,255,0.3); margin-bottom: 10px; border-radius: 2px;"></div>
-                                            <div style="display: flex; flex-wrap: wrap; gap: 3px;">
-                                                <div style="height: 5px; width: 18px; background: #e8725c; border-radius: 2px;"></div>
-                                                <div style="height: 5px; width: 22px; background: #0ea5e9; border-radius: 2px;"></div>
-                                                <div style="height: 5px; width: 16px; background: #16a34a; border-radius: 2px;"></div>
-                                                <div style="height: 5px; width: 20px; background: #f59e0b; border-radius: 2px;"></div>
-                                            </div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 70%; background: #1f2937; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                            <div style="height: 3px; width: 45%; background: #1f2937; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_graduate.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 40%; background: #2563eb; margin-bottom: 8px; border-radius: 2px;"></div>
-                                        <div style="height: 20px; background: #eff6ff; border-left: 3px solid #2563eb; padding: 4px 8px; margin-bottom: 10px;">
-                                            <div style="height: 2px; width: 60%; background: #93c5fd; border-radius: 1px;"></div>
-                                        </div>
-                                        <div style="height: 3px; width: 50%; background: #2563eb; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_photographer.html' %}
-                                    <div>
-                                        <div style="height: 35px; background: #111827; padding: 8px 12px;">
-                                            <div style="height: 4px; width: 40%; background: white; border-radius: 2px; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 30%; background: #d97706; border-radius: 2px;"></div>
-                                        </div>
-                                        <div style="padding: 10px 12px;">
-                                            <div style="height: 3px; width: 50%; background: #111827; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 6px;"></div>
-                                            <div style="display: flex; gap: 3px;">
-                                                <div style="height: 5px; width: 20px; background: #fef3c7; border-radius: 2px;"></div>
-                                                <div style="height: 5px; width: 25px; background: #fef3c7; border-radius: 2px;"></div>
-                                                <div style="height: 5px; width: 18px; background: #fef3c7; border-radius: 2px;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_consultant.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 45%; background: #4f46e5; margin-bottom: 10px; border-radius: 2px;"></div>
-                                        <div style="height: 3px; width: 60%; background: #4f46e5; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #c7d2fe; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #e0e7ff; margin-bottom: 8px;"></div>
-                                        <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px; margin-bottom: 3px;"><div style="height: 100%; width: 85%; background: #4f46e5; border-radius: 2px;"></div></div>
-                                        <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px;"><div style="height: 100%; width: 65%; background: #4f46e5; border-radius: 2px;"></div></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_lawyer.html' %}
-                                    <div style="padding: 12px; text-align: center;">
-                                        <div style="height: 6px; width: 40%; background: #374151; margin: 0 auto 4px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 30%; background: #ccc; margin: 0 auto 12px; border-radius: 1px;"></div>
-                                        <div style="height: 3px; width: 50%; background: #374151; margin: 0 auto 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #eee; margin: 0 auto 3px;"></div>
-                                        <div style="height: 2px; width: 75%; background: #f3f4f6; margin: 0 auto;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_architect.html' %}
-                                    <div style="display: flex; min-height: 180px;">
-                                        <div style="width: 35%; background: #f1f5f9; border-right: 4px solid #475569; padding: 10px 8px;">
-                                            <div style="height: 4px; width: 70%; background: #1e293b; margin-bottom: 10px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 80%; background: #94a3b8; margin-bottom: 4px;"></div>
-                                            <div style="height: 2px; width: 70%; background: #cbd5e1; margin-bottom: 4px;"></div>
-                                            <div style="height: 2px; width: 75%; background: #94a3b8;"></div>
-                                        </div>
-                                        <div style="flex: 1; padding: 10px;">
-                                            <div style="height: 3px; width: 60%; background: #475569; margin-bottom: 6px; border-radius: 2px;"></div>
-                                            <div style="height: 2px; width: 100%; background: #e2e8f0; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f1f5f9; margin-bottom: 8px;"></div>
-                                            <div style="height: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px; margin-bottom: 4px;"></div>
-                                            <div style="height: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 2px;"></div>
-                                        </div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_journalist.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 7px; width: 50%; background: #111; margin-bottom: 4px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 40%; background: #999; margin-bottom: 8px; border-radius: 1px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #ccc; margin-bottom: 8px; border-radius: 1px;"></div>
-                                        <div style="height: 3px; width: 45%; background: #dc2626; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_researcher.html' %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 45%; background: #6d28d9; margin-bottom: 4px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 30%; background: #a78bfa; margin-bottom: 10px; border-radius: 2px;"></div>
-                                        <div style="height: 3px; width: 55%; background: #6d28d9; margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #ddd6fe; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 90%; background: #ede9fe; margin-bottom: 8px;"></div>
-                                        <div style="height: 8px; background: #f5f3ff; border-left: 3px solid #6d28d9; padding: 2px 6px; margin-bottom: 3px;"></div>
-                                        <div style="height: 8px; background: #f5f3ff; border-left: 3px solid #6d28d9; padding: 2px 6px;"></div>
-                                    </div>
-                                {% elif template.html_file == 'pdf/template_flat.html' %}
-                                    <div>
-                                        <div style="height: 28px; background: #3b82f6; padding: 6px 12px;">
-                                            <div style="height: 4px; width: 45%; background: white; border-radius: 2px;"></div>
-                                        </div>
-                                        <div style="padding: 10px 12px;">
-                                            <div style="height: 8px; background: #3b82f6; color: white; padding: 2px 8px; font-size: 6px; margin-bottom: 8px; border-radius: 2px; width: 50%;"></div>
-                                            <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                            <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 6px;"></div>
-                                            <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px; margin-bottom: 3px;"><div style="height: 100%; width: 70%; background: #3b82f6; border-radius: 2px;"></div></div>
-                                            <div style="height: 4px; width: 80%; background: #e5e7eb; border-radius: 2px;"><div style="height: 100%; width: 55%; background: #3b82f6; border-radius: 2px;"></div></div>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div style="padding: 12px;">
-                                        <div style="height: 5px; width: 50%; background: var(--primary); margin-bottom: 10px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee; margin-bottom: 3px;"></div>
-                                        <div style="height: 2px; width: 85%; background: #f3f4f6; margin-bottom: 8px;"></div>
-                                        <div style="height: 3px; width: 40%; background: var(--primary); margin-bottom: 6px; border-radius: 2px;"></div>
-                                        <div style="height: 2px; width: 100%; background: #eee;"></div>
-                                    </div>
-                                {% endif %}
+
+{# ======================== CLASSIC ======================== #}
+{% if t.html_file == 'pdf/template_classic.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 6pt; color: #333; line-height: 1.4; border-bottom: 1px solid #f3f4f6;">
+                                <div style="text-align: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #333;">
+                                    <div style="font-size: 9pt; font-weight: 700; color: #1a1a1a;">Alex Johnson</div>
+                                    <div style="font-size: 5.5pt; color: #888;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="font-size: 6.5pt; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; border-bottom: 1px solid #ddd; padding-bottom: 2px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 6pt;">Software Engineer</div>
+                                <div style="font-style: italic; color: #666; font-size: 5.5pt;">Google | 2022 - Present</div>
+                                <div style="color: #555; font-size: 5.5pt; margin-bottom: 6px;">Developed core search infrastructure serving 5B+ daily queries.</div>
+                                <div style="font-size: 6.5pt; font-weight: 700; color: #1a1a1a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; border-bottom: 1px solid #ddd; padding-bottom: 2px;">Education</div>
+                                <div style="font-weight: 700; font-size: 6pt;">B.S. Computer Science</div>
+                                <div style="font-style: italic; color: #666; font-size: 5.5pt;">Stanford University | 2018 - 2022</div>
                             </div>
+
+{# ======================== MODERN ======================== #}
+{% elif t.html_file == 'pdf/template_modern.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="width: 35%; background: #1e293b; color: white; padding: 10px 8px;">
+                                    <div style="font-size: 7pt; font-weight: 700; margin-bottom: 2px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #94a3b8; margin-bottom: 8px;">Software Engineer</div>
+                                    <div style="font-size: 5pt; font-weight: 700; color: #e8725c; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">Contact</div>
+                                    <div style="font-size: 4.5pt; color: #cbd5e1; margin-bottom: 2px;">alex@email.com</div>
+                                    <div style="font-size: 4.5pt; color: #cbd5e1; margin-bottom: 6px;">(555) 123-4567</div>
+                                    <div style="font-size: 5pt; font-weight: 700; color: #e8725c; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">Skills</div>
+                                    <div style="font-size: 4.5pt; color: #cbd5e1; margin-bottom: 2px;">Python</div>
+                                    <div style="font-size: 4.5pt; color: #cbd5e1; margin-bottom: 2px;">JavaScript</div>
+                                    <div style="font-size: 4.5pt; color: #cbd5e1;">React</div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 6.5pt; font-weight: 700; color: #1e293b; text-transform: uppercase; margin-bottom: 4px; border-bottom: 2px solid #0ea5e9; padding-bottom: 2px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #64748b; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #475569; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure, 5B+ queries.</div>
+                                    <div style="font-size: 6.5pt; font-weight: 700; color: #1e293b; text-transform: uppercase; margin-bottom: 4px; border-bottom: 2px solid #0ea5e9; padding-bottom: 2px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #64748b; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== COMPACT ======================== #}
+{% elif t.html_file == 'pdf/template_compact.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="flex: 1; padding: 10px 8px; border-right: 1px solid #eee;">
+                                    <div style="font-size: 8pt; font-weight: 700; color: #1e293b; margin-bottom: 6px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; font-weight: 700; color: #0ea5e9; text-transform: uppercase; margin-bottom: 3px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #555; font-size: 5pt; margin-bottom: 5px;">Core search infrastructure.</div>
+                                    <div style="font-size: 5pt; font-weight: 700; color: #0ea5e9; text-transform: uppercase; margin-bottom: 3px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. CS</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2022</div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 5pt; font-weight: 700; color: #0ea5e9; text-transform: uppercase; margin-bottom: 3px;">Skills</div>
+                                    <div style="display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 6px;">
+                                        <span style="background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">Python</span>
+                                        <span style="background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">JS</span>
+                                        <span style="background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">React</span>
+                                    </div>
+                                    <div style="font-size: 5pt; font-weight: 700; color: #0ea5e9; text-transform: uppercase; margin-bottom: 3px;">Languages</div>
+                                    <div style="font-size: 5pt; color: #555;">English (Native)</div>
+                                    <div style="font-size: 5pt; color: #555;">Spanish (Fluent)</div>
+                                </div>
+                            </div>
+
+{# ======================== MINIMALIST ======================== #}
+{% elif t.html_file == 'pdf/template_minimalist.html' %}
+                            <div style="min-height: 200px; background: white; padding: 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.4; text-align: center; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 10pt; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; color: #222; margin-bottom: 4px;">Alex Johnson</div>
+                                <div style="height: 1px; background: #e5e5e5; width: 40%; margin: 6px auto; border-radius: 1px;"></div>
+                                <div style="font-size: 4.5pt; color: #999; margin-bottom: 10px;">alex@email.com | (555) 123-4567</div>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; border-bottom: 1px solid #e5e5e5; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 600; font-size: 5.5pt; color: #222;">Software Engineer</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #555; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #999; border-bottom: 1px solid #e5e5e5; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 600; font-size: 5.5pt; color: #222;">B.S. Computer Science</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== EXECUTIVE ======================== #}
+{% elif t.html_file == 'pdf/template_executive.html' %}
+                            <div style="min-height: 200px; font-family: Georgia, serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #1e3a5f; color: white; padding: 10px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.8;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="height: 3px; background: #c9a84c;"></div>
+                                <div style="padding: 10px 14px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e3a5f; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #c9a84c; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1e3a5f;">Software Engineer</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure, 5B+ queries.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e3a5f; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #c9a84c; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1e3a5f;">B.S. Computer Science</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== CREATIVE ======================== #}
+{% elif t.html_file == 'pdf/template_creative.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="width: 35%; background: #e8725c; color: white; padding: 10px 8px;">
+                                    <div style="font-size: 7pt; font-weight: 700; margin-bottom: 2px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.8; margin-bottom: 8px;">Software Engineer</div>
+                                    <div style="font-size: 5pt; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">Skills</div>
+                                    <div style="font-size: 4.5pt; margin-bottom: 2px;">Python</div>
+                                    <div style="font-size: 4.5pt; margin-bottom: 2px;">JavaScript</div>
+                                    <div style="font-size: 4.5pt; margin-bottom: 2px;">React</div>
+                                    <div style="font-size: 4.5pt;">Django</div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #e8725c; text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #555; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #e8725c; text-transform: uppercase; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== TECH ======================== #}
+{% elif t.html_file == 'pdf/template_tech.html' %}
+                            <div style="min-height: 200px; background: #0f172a; padding: 12px; font-family: 'Courier New', monospace; font-size: 5.5pt; color: #e2e8f0; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 8pt; font-weight: 700; color: #0d9488; margin-bottom: 4px;">&gt; Alex Johnson</div>
+                                <div style="font-size: 4.5pt; color: #94a3b8; margin-bottom: 8px;">alex@email.com | (555) 123-4567</div>
+                                <div style="font-size: 5.5pt; font-weight: 700; color: #0d9488; text-transform: uppercase; letter-spacing: 1px; border-left: 2px solid #0d9488; padding-left: 5px; margin-bottom: 4px;">// Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt; color: #f1f5f9; padding-left: 8px; border-left: 1px solid #1e293b;">Software Engineer</div>
+                                <div style="font-size: 5pt; color: #0d9488; padding-left: 8px;">2022 - Present</div>
+                                <div style="font-size: 5pt; color: #64748b; padding-left: 8px; margin-bottom: 2px;">Google</div>
+                                <div style="font-size: 5pt; color: #cbd5e1; padding-left: 8px; margin-bottom: 6px;">Core search infrastructure.</div>
+                                <div style="display: flex; gap: 3px; margin-top: 4px;">
+                                    <span style="background: #1e293b; color: #0d9488; border: 1px solid #0d9488; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">Python</span>
+                                    <span style="background: #1e293b; color: #0d9488; border: 1px solid #0d9488; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">JS</span>
+                                    <span style="background: #1e293b; color: #0d9488; border: 1px solid #0d9488; padding: 1px 4px; border-radius: 2px; font-size: 4.5pt;">React</span>
+                                </div>
+                            </div>
+
+{# ======================== ACADEMIC ======================== #}
+{% elif t.html_file == 'pdf/template_academic.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="text-align: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #333;">
+                                    <div style="font-size: 9pt; font-weight: 700; color: #1a1a1a;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #666; font-style: italic;">Curriculum Vitae</div>
+                                    <div style="font-size: 4.5pt; color: #777;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #1a1a1a; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="font-style: italic; color: #666; font-size: 5pt;">Stanford University | 2018 - 2022</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">GPA 3.8/4.0. Dean's List.</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #1a1a1a; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="font-style: italic; color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                            </div>
+
+{# ======================== ELEGANT ======================== #}
+{% elif t.html_file == 'pdf/template_elegant.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 5.5pt; color: #333; line-height: 1.5; text-align: center; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 11pt; font-style: italic; color: #7c2d3e; margin-bottom: 2px;">Alex Johnson</div>
+                                <div style="width: 30px; height: 1px; background: #7c2d3e; margin: 4px auto;"></div>
+                                <div style="font-size: 4.5pt; color: #888; margin-bottom: 10px;">alex@email.com | (555) 123-4567</div>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #7c2d3e; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 4px;">Experience</div>
+                                    <div style="height: 1px; background: #d4b5b9; margin-bottom: 6px;"></div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #2d1a1e;">Software Engineer</div>
+                                    <div style="font-style: italic; color: #999; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #7c2d3e; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 4px;">Education</div>
+                                    <div style="height: 1px; background: #d4b5b9; margin-bottom: 6px;"></div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #2d1a1e;">B.S. Computer Science</div>
+                                    <div style="font-style: italic; color: #999; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== BOLD ======================== #}
+{% elif t.html_file == 'pdf/template_bold.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #222; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 11pt; font-weight: 900; text-transform: uppercase; color: #111; letter-spacing: -0.5px; margin-bottom: 2px;">Alex Johnson</div>
+                                <div style="height: 3px; width: 25px; background: #f59e0b; margin-bottom: 8px;"></div>
+                                <div style="font-size: 5pt; color: #666; margin-bottom: 8px;">alex@email.com | (555) 123-4567</div>
+                                <div style="font-size: 6.5pt; font-weight: 900; text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                <div style="height: 2px; background: #111; margin-bottom: 6px;"></div>
+                                <div style="border-left: 3px solid #f59e0b; padding-left: 6px; margin-bottom: 6px;">
+                                    <div style="font-weight: 900; font-size: 5.5pt; text-transform: uppercase;">Software Engineer</div>
+                                    <div style="color: #555; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt;">Core search infrastructure.</div>
+                                </div>
+                                <div style="font-size: 6.5pt; font-weight: 900; text-transform: uppercase; margin-bottom: 4px;">Skills</div>
+                                <div style="display: flex; gap: 2px;">
+                                    <span style="background: #111; color: white; padding: 1px 5px; font-size: 4.5pt; font-weight: 700;">Python</span>
+                                    <span style="background: #111; color: white; padding: 1px 5px; font-size: 4.5pt; font-weight: 700;">JS</span>
+                                    <span style="background: #111; color: white; padding: 1px 5px; font-size: 4.5pt; font-weight: 700;">React</span>
+                                </div>
+                            </div>
+
+{# ======================== SWISS ======================== #}
+{% elif t.html_file == 'pdf/template_swiss.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="width: 35%; background: #f8f9fa; border-right: 3px solid #dc2626; padding: 10px 8px;">
+                                    <div style="font-size: 7pt; font-weight: 800; color: #111; margin-bottom: 8px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #444; margin-bottom: 2px;">alex@email.com</div>
+                                    <div style="font-size: 5pt; color: #444; margin-bottom: 6px;">(555) 123-4567</div>
+                                    <div style="font-size: 5pt; font-weight: 800; color: #dc2626; text-transform: uppercase; margin-bottom: 3px;">Skills</div>
+                                    <div style="font-size: 4.5pt; color: #444; margin-bottom: 2px;">Python</div>
+                                    <div style="font-size: 4.5pt; color: #444; margin-bottom: 2px;">JavaScript</div>
+                                    <div style="font-size: 4.5pt; color: #444;">React</div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 6pt; font-weight: 800; color: #111; text-transform: uppercase; border-bottom: 2px solid #dc2626; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #999; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 800; color: #111; text-transform: uppercase; border-bottom: 2px solid #dc2626; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #999; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== CORPORATE ======================== #}
+{% elif t.html_file == 'pdf/template_corporate.html' %}
+                            <div style="min-height: 200px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #1e40af; color: white; padding: 10px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.8;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="padding: 10px 14px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e40af; text-transform: uppercase; border-bottom: 2px solid #1e40af; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e40af; text-transform: uppercase; border-bottom: 2px solid #1e40af; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== STARTUP ======================== #}
+{% elif t.html_file == 'pdf/template_startup.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 9pt; font-weight: 700; color: #16a34a; margin-bottom: 6px;">Alex Johnson</div>
+                                <div style="font-size: 5pt; color: #666; margin-bottom: 8px;">alex@email.com | (555) 123-4567</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #16a34a; text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                <div style="display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 6px;">
+                                    <span style="background: #dcfce7; color: #16a34a; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">Python</span>
+                                    <span style="background: #dcfce7; color: #16a34a; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">JS</span>
+                                    <span style="background: #dcfce7; color: #16a34a; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">React</span>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #16a34a; text-transform: uppercase; margin-bottom: 4px;">Education</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                            </div>
+
+{# ======================== WRITER ======================== #}
+{% elif t.html_file == 'pdf/template_writer.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 5.5pt; color: #333; line-height: 1.6; text-align: center; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 10pt; font-weight: 700; color: #1a1a1a; margin-bottom: 2px;">Alex Johnson</div>
+                                <div style="height: 1px; background: #ddd; width: 30%; margin: 4px auto 8px;"></div>
+                                <div style="font-size: 4.5pt; color: #777; margin-bottom: 10px;">alex@email.com | (555) 123-4567</div>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="font-style: italic; color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== FINANCE ======================== #}
+{% elif t.html_file == 'pdf/template_finance.html' %}
+                            <div style="min-height: 200px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #1e3a5f; color: white; padding: 8px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                </div>
+                                <div style="height: 3px; background: #eab308;"></div>
+                                <div style="padding: 10px 14px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e3a5f; text-transform: uppercase; border-bottom: 1px solid #1e3a5f; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 4px;">Core search infrastructure.</div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 2px;"><div style="height: 100%; width: 80%; background: #1e3a5f; border-radius: 2px;"></div></div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 6px;"><div style="height: 100%; width: 60%; background: #1e3a5f; border-radius: 2px;"></div></div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1e3a5f; text-transform: uppercase; border-bottom: 1px solid #1e3a5f; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== ENGINEER ======================== #}
+{% elif t.html_file == 'pdf/template_engineer.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 9pt; font-weight: 700; color: #ea580c; margin-bottom: 6px;">Alex Johnson</div>
+                                <div style="font-size: 5pt; color: #888; margin-bottom: 8px;">alex@email.com | (555) 123-4567</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #ea580c; text-transform: uppercase; margin-bottom: 4px;">[ Experience ]</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 6px;">
+                                    <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 4px; font-size: 4.5pt; color: #ea580c;">Python</div>
+                                    <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 4px; font-size: 4.5pt; color: #ea580c;">JS</div>
+                                    <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 4px; font-size: 4.5pt; color: #ea580c;">React</div>
+                                    <div style="background: #fff7ed; border: 1px solid #fed7aa; padding: 2px 4px; font-size: 4.5pt; color: #ea580c;">Django</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #ea580c; text-transform: uppercase; margin-bottom: 4px;">[ Education ]</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                            </div>
+
+{# ======================== MEDICAL ======================== #}
+{% elif t.html_file == 'pdf/template_medical.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #0891b2; color: white; padding: 8px 12px; border-radius: 4px; margin-bottom: 8px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.85;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #0891b2; text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                <div style="background: #ecfeff; border: 1px solid #a5f3fc; padding: 4px 8px; margin-bottom: 4px; border-radius: 3px;">
+                                    <div style="font-weight: 700; font-size: 5pt; color: #0891b2;">AWS Certified Solutions Architect</div>
+                                    <div style="font-size: 4.5pt; color: #666;">Amazon Web Services | Mar 2023</div>
+                                </div>
+                                <div style="background: #ecfeff; border: 1px solid #a5f3fc; padding: 4px 8px; border-radius: 3px;">
+                                    <div style="font-weight: 700; font-size: 5pt; color: #0891b2;">Google Cloud Professional</div>
+                                    <div style="font-size: 4.5pt; color: #666;">Google | Jan 2023</div>
+                                </div>
+                            </div>
+
+{# ======================== MARKETING ======================== #}
+{% elif t.html_file == 'pdf/template_marketing.html' %}
+                            <div style="min-height: 200px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #c026d3; color: white; padding: 10px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.85;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="padding: 10px 14px; background: #fdf4ff;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #c026d3; text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 4px;">Core search infrastructure.</div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 2px;"><div style="height: 100%; width: 85%; background: #c026d3; border-radius: 2px;"></div></div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 6px;"><div style="height: 100%; width: 65%; background: #c026d3; border-radius: 2px;"></div></div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #c026d3; text-transform: uppercase; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== DESIGNER ======================== #}
+{% elif t.html_file == 'pdf/template_designer.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="width: 35%; background: #1f2937; color: white; padding: 10px 8px;">
+                                    <div style="font-size: 7pt; font-weight: 700; margin-bottom: 2px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #9ca3af; margin-bottom: 6px;">Software Engineer</div>
+                                    <div style="font-size: 4.5pt; color: #d1d5db; margin-bottom: 2px;">alex@email.com</div>
+                                    <div style="font-size: 4.5pt; color: #d1d5db; margin-bottom: 6px;">(555) 123-4567</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 2px;">
+                                        <span style="background: #e8725c; padding: 1px 4px; border-radius: 2px; font-size: 4pt;">Python</span>
+                                        <span style="background: #0ea5e9; padding: 1px 4px; border-radius: 2px; font-size: 4pt;">JS</span>
+                                        <span style="background: #16a34a; padding: 1px 4px; border-radius: 2px; font-size: 4pt;">React</span>
+                                        <span style="background: #f59e0b; padding: 1px 4px; border-radius: 2px; font-size: 4pt;">Django</span>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1f2937; text-transform: uppercase; border-bottom: 2px solid #1f2937; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #1f2937; text-transform: uppercase; border-bottom: 2px solid #1f2937; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== GRADUATE ======================== #}
+{% elif t.html_file == 'pdf/template_graduate.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="text-align: center; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 3px solid #2563eb;">
+                                    <div style="font-size: 9pt; font-weight: 700; color: #1e40af;">Alex Johnson</div>
+                                    <div style="font-size: 4.5pt; color: #666;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="background: #eff6ff; border-left: 3px solid #2563eb; padding: 4px 8px; margin-bottom: 8px;">
+                                    <div style="font-weight: 700; font-size: 5pt; color: #1e40af;">Fresh Graduate eager to contribute</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #2563eb; text-transform: uppercase; margin-bottom: 4px;">Education</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">GPA 3.8/4.0. Dean's List.</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #2563eb; text-transform: uppercase; margin-bottom: 4px;">Skills</div>
+                                <div style="display: flex; gap: 2px;">
+                                    <span style="background: #dbeafe; color: #1e40af; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">Python</span>
+                                    <span style="background: #dbeafe; color: #1e40af; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">JS</span>
+                                    <span style="background: #dbeafe; color: #1e40af; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">React</span>
+                                </div>
+                            </div>
+
+{# ======================== PHOTOGRAPHER ======================== #}
+{% elif t.html_file == 'pdf/template_photographer.html' %}
+                            <div style="min-height: 200px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #111827; color: white; padding: 10px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 300; letter-spacing: 1px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #d97706; text-transform: uppercase; letter-spacing: 1.5px;">Photographer</div>
+                                    <div style="font-size: 4.5pt; color: #9ca3af; margin-top: 3px;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="padding: 10px 14px;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #111827; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #d97706; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="display: flex; gap: 2px; flex-wrap: wrap;">
+                                        <span style="background: #fef3c7; color: #92400e; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">Lightroom</span>
+                                        <span style="background: #fef3c7; color: #92400e; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">Photoshop</span>
+                                        <span style="background: #fef3c7; color: #92400e; padding: 1px 5px; border-radius: 3px; font-size: 4.5pt;">Premiere</span>
+                                    </div>
+                                </div>
+                            </div>
+
+{# ======================== CONSULTANT ======================== #}
+{% elif t.html_file == 'pdf/template_consultant.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="margin-bottom: 8px; padding-bottom: 6px; border-bottom: 2px solid #4f46e5;">
+                                    <div style="font-size: 9pt; font-weight: 700; color: #312e81;">Alex Johnson</div>
+                                    <div style="font-size: 4.5pt; color: #666;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #4f46e5; text-transform: uppercase; border-bottom: 1px solid #c7d2fe; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 4px;">Core search infrastructure.</div>
+                                <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 2px;"><div style="height: 100%; width: 85%; background: #4f46e5; border-radius: 2px;"></div></div>
+                                <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 6px;"><div style="height: 100%; width: 65%; background: #4f46e5; border-radius: 2px;"></div></div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #4f46e5; text-transform: uppercase; border-bottom: 1px solid #c7d2fe; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                            </div>
+
+{# ======================== LAWYER ======================== #}
+{% elif t.html_file == 'pdf/template_lawyer.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 5.5pt; color: #333; line-height: 1.6; text-align: center; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 10pt; font-weight: 700; color: #374151; letter-spacing: 0.5px; margin-bottom: 2px;">Alex Johnson</div>
+                                <div style="font-size: 5pt; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Attorney at Law</div>
+                                <div style="height: 1px; background: #374151; margin-bottom: 8px;"></div>
+                                <div style="text-align: left;">
+                                    <div style="font-size: 6pt; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #374151; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1f2937;">Software Engineer</div>
+                                    <div style="font-style: italic; color: #9ca3af; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #374151; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="font-size: 6pt; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #374151; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1f2937;">B.S. Computer Science</div>
+                                    <div style="font-style: italic; color: #9ca3af; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== ARCHITECT ======================== #}
+{% elif t.html_file == 'pdf/template_architect.html' %}
+                            <div style="min-height: 200px; display: flex; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="width: 35%; background: #f1f5f9; border-right: 4px solid #475569; padding: 10px 8px;">
+                                    <div style="font-size: 7pt; font-weight: 800; color: #1e293b; margin-bottom: 6px;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #475569; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;">Architect</div>
+                                    <div style="font-size: 4.5pt; color: #64748b; margin-bottom: 6px;">alex@email.com</div>
+                                    <div style="font-size: 5pt; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 3px;">Skills</div>
+                                    <div style="font-size: 4.5pt; color: #475569; margin-bottom: 2px;">AutoCAD</div>
+                                    <div style="font-size: 4.5pt; color: #475569; margin-bottom: 2px;">Revit</div>
+                                    <div style="font-size: 4.5pt; color: #475569;">SketchUp</div>
+                                </div>
+                                <div style="flex: 1; padding: 10px 8px;">
+                                    <div style="font-size: 6pt; font-weight: 800; color: #1e293b; text-transform: uppercase; border-bottom: 2px solid #475569; padding-bottom: 2px; margin-bottom: 4px;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                    <div style="color: #94a3b8; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #475569; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 3px 6px; margin-bottom: 3px; border-radius: 2px;">
+                                        <div style="font-weight: 700; font-size: 5pt;">AI Resume Builder</div>
+                                        <div style="font-size: 4.5pt; color: #64748b;">Full-stack web application</div>
+                                    </div>
+                                </div>
+                            </div>
+
+{# ======================== JOURNALIST ======================== #}
+{% elif t.html_file == 'pdf/template_journalist.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Georgia, serif; font-size: 5.5pt; color: #222; line-height: 1.6; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 10pt; font-weight: 700; color: #111; margin-bottom: 2px;">Alex Johnson</div>
+                                <div style="font-size: 4.5pt; color: #999; font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 6px;">Journalist &mdash; San Francisco, CA</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #dc2626; text-transform: uppercase; margin-bottom: 4px;">Reporting Experience</div>
+                                <div style="height: 2px; background: #111; margin-bottom: 6px;"></div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="font-style: italic; color: #888; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #333; font-size: 5pt; margin-bottom: 6px;">Core search infrastructure.</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #dc2626; text-transform: uppercase; margin-bottom: 4px;">Education</div>
+                                <div style="height: 2px; background: #111; margin-bottom: 6px;"></div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">B.S. Computer Science</div>
+                                <div style="font-style: italic; color: #888; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                            </div>
+
+{# ======================== RESEARCHER ======================== #}
+{% elif t.html_file == 'pdf/template_researcher.html' %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; line-height: 1.5; border-bottom: 1px solid #f3f4f6;">
+                                <div style="margin-bottom: 8px; padding-bottom: 6px; border-bottom: 3px solid #6d28d9;">
+                                    <div style="font-size: 9pt; font-weight: 700; color: #4c1d95;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; color: #7c3aed; text-transform: uppercase; letter-spacing: 1px;">Researcher</div>
+                                    <div style="font-size: 4.5pt; color: #666; margin-top: 2px;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="font-size: 6pt; font-weight: 700; color: #6d28d9; text-transform: uppercase; border-bottom: 1px solid #ddd6fe; padding-bottom: 2px; margin-bottom: 4px;">Education</div>
+                                <div style="font-weight: 700; font-size: 5.5pt; color: #2e1065;">B.S. Computer Science</div>
+                                <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                <div style="color: #444; font-size: 5pt; margin-bottom: 6px;">GPA 3.8/4.0. Dean's List.</div>
+                                <div style="background: #f5f3ff; border-left: 3px solid #6d28d9; padding: 4px 8px; margin-bottom: 4px;">
+                                    <div style="font-weight: 700; font-size: 5pt; color: #6d28d9;">Open Source Contribution</div>
+                                    <div style="font-size: 4.5pt; color: #555;">50+ merged PRs to Django</div>
+                                </div>
+                                <div style="display: flex; gap: 2px; flex-wrap: wrap; margin-top: 4px;">
+                                    <span style="background: #ede9fe; color: #6d28d9; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">Python</span>
+                                    <span style="background: #ede9fe; color: #6d28d9; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">ML</span>
+                                    <span style="background: #ede9fe; color: #6d28d9; padding: 1px 5px; border-radius: 8px; font-size: 4.5pt;">Research</span>
+                                </div>
+                            </div>
+
+{# ======================== FLAT ======================== #}
+{% elif t.html_file == 'pdf/template_flat.html' %}
+                            <div style="min-height: 200px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="background: #3b82f6; color: white; padding: 10px 14px;">
+                                    <div style="font-size: 9pt; font-weight: 700;">Alex Johnson</div>
+                                    <div style="font-size: 5pt; opacity: 0.85;">alex@email.com | (555) 123-4567</div>
+                                </div>
+                                <div style="padding: 10px 14px;">
+                                    <div style="background: #3b82f6; color: white; padding: 3px 10px; font-size: 5.5pt; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; display: inline-block;">Experience</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1e40af;">Software Engineer</div>
+                                    <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                    <div style="color: #444; font-size: 5pt; margin-bottom: 4px;">Core search infrastructure.</div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 2px;"><div style="height: 100%; width: 80%; background: #3b82f6; border-radius: 2px;"></div></div>
+                                    <div style="height: 3px; background: #e5e7eb; border-radius: 2px; margin-bottom: 6px;"><div style="height: 100%; width: 60%; background: #3b82f6; border-radius: 2px;"></div></div>
+                                    <div style="background: #3b82f6; color: white; padding: 3px 10px; font-size: 5.5pt; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; display: inline-block;">Education</div>
+                                    <div style="font-weight: 700; font-size: 5.5pt; color: #1e40af;">B.S. Computer Science</div>
+                                    <div style="color: #666; font-size: 5pt;">Stanford | 2018 - 2022</div>
+                                </div>
+                            </div>
+
+{# ======================== FALLBACK ======================== #}
+{% else %}
+                            <div style="min-height: 200px; background: white; padding: 14px 16px; font-family: Arial, sans-serif; font-size: 5.5pt; color: #333; border-bottom: 1px solid #f3f4f6;">
+                                <div style="font-size: 9pt; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Alex Johnson</div>
+                                <div style="font-size: 5pt; color: #666; margin-bottom: 8px;">alex@email.com | (555) 123-4567</div>
+                                <div style="font-size: 6pt; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">Experience</div>
+                                <div style="font-weight: 700; font-size: 5.5pt;">Software Engineer</div>
+                                <div style="color: #666; font-size: 5pt;">Google | 2022 - Present</div>
+                                <div style="color: #444; font-size: 5pt;">Core search infrastructure.</div>
+                            </div>
+{% endif %}
+
                             <div class="card-body text-center p-3">
-                                <h6 class="fw-bold mb-1" style="font-size: 0.9rem;">{{ template.name }}</h6>
-                                <p class="text-muted mb-0" style="font-size: 0.72rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ template.description }}</p>
+                                <h6 class="fw-bold mb-1" style="font-size: 0.9rem;">{{ t.name }}</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.72rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ t.description }}</p>
                             </div>
                         </div>
                     </a>
@@ -385,16 +587,10 @@
     {% else %}
         <div class="card">
             <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-palette"></i>
-                </div>
+                <div class="empty-state-icon"><i class="bi bi-palette"></i></div>
                 <h4 class="fw-bold mb-2">No templates yet</h4>
-                <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">
-                    Templates will appear here once they are added by an administrator.
-                </p>
-                <a href="{% url 'landing' %}" class="btn btn-outline-secondary btn-icon">
-                    <i class="bi bi-house"></i> Back to Home
-                </a>
+                <p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">Templates will appear here once they are added.</p>
+                <a href="{% url 'landing' %}" class="btn btn-outline-secondary btn-icon"><i class="bi bi-house"></i> Back to Home</a>
             </div>
         </div>
     {% endif %}
