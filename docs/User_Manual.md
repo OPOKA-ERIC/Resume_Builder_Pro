@@ -35,7 +35,7 @@ Resume Builder Pro is a web-based application that enables users to create profe
 
 1. Click **"Login"** in the navigation bar.
 2. Enter your username and password.
-3. Click **"Login"**.
+3. Click **"Sign In"**.
 4. You will be redirected to your **Dashboard**.
 
 > **Note:** Your session remains active for 1 week. You will need to log in again after the session expires or if you clear your browser cookies.
@@ -163,6 +163,19 @@ Click **"Save & Finish"** to complete the wizard.
 
 Each wizard step allows you to add multiple entries. For example, you can add multiple education entries (undergraduate, postgraduate) or multiple work experiences. Entries you have already added are displayed above the form.
 
+### 4.4 Editing and Deleting Entries
+
+Each wizard step displays your previously added entries with edit and delete buttons:
+
+1. **To edit an entry:** Click the pencil icon next to any entry. You will be taken to an edit form pre-filled with the entry's current data. Make your changes and click "Save Changes".
+2. **To delete an entry:** Click the trash icon next to any entry. You will be asked to confirm the deletion. Click "Delete" to permanently remove the entry.
+
+### 4.5 Navigating Between Steps
+
+- **Save & Next:** Saves your current entry and moves to the next step.
+- **Back:** Returns to the previous step (your previously saved entries are preserved).
+- **Save & Exit:** Saves your progress and returns to the Dashboard. You can resume the wizard later from the Dashboard.
+
 ---
 
 ## 5. Viewing and Editing Resumes
@@ -185,7 +198,7 @@ Each card has action buttons:
 2. Modify the resume title.
 3. Click **"Save"** to update.
 
-> **Note:** Currently, only the title can be edited after creation. To modify section data, you would need to create a new resume.
+> **Note:** To edit section data (education, experience, skills, etc.), use the **Preview** button to view your resume, then navigate back to the Dashboard and use the wizard to make changes. You can also access the wizard directly to edit individual entries.
 
 ### 5.3 Deleting a Resume
 
@@ -201,8 +214,8 @@ After completing the wizard, you are directed to the **Template Selection** page
 
 1. Browse the available templates displayed as cards.
 2. Each template card shows a preview image (if available) and description.
-3. Click on a template to see its preview.
-4. Templates control the visual styling of your resume in the PDF output.
+3. Click **"Select & Preview"** on a template to apply it to your resume.
+4. The selected template is saved and will be used when generating the PDF.
 
 You can also browse all templates from the **Template Gallery** link.
 

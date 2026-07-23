@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Delete {{ step|title }} - Resume Builder Pro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card animate-fade-in-up">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Delete {{ step|title }} Entry?</h4>
+                <p class="text-muted mb-4">
+                    {% if step == 'education' %}
+                        Are you sure you want to delete <strong>{{ entry.institution }}</strong>?
+                    {% elif step == 'experience' %}
+                        Are you sure you want to delete <strong>{{ entry.role }}</strong> at {{ entry.company }}?
+                    {% elif step == 'skills' %}
+                        Are you sure you want to delete <strong>{{ entry.name }}</strong>?
+                    {% elif step == 'projects' %}
+                        Are you sure you want to delete <strong>{{ entry.name }}</strong>?
+                    {% elif step == 'certifications' %}
+                        Are you sure you want to delete <strong>{{ entry.title }}</strong>?
+                    {% elif step == 'languages' %}
+                        Are you sure you want to delete <strong>{{ entry.name }}</strong>?
+                    {% elif step == 'references' %}
+                        Are you sure you want to delete <strong>{{ entry.name }}</strong>?
+                    {% endif %}
+                    This action cannot be undone.
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="submit" class="btn btn-danger btn-icon">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                        <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=step %}" class="btn btn-outline-secondary btn-icon">
+                            <i class="bi bi-x-lg"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

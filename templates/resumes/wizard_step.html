@@ -83,6 +83,14 @@
                                             <strong>{{ item.name }}</strong> &mdash; {{ item.relationship }}
                                         {% endif %}
                                     </span>
+                                    <span class="d-flex gap-1">
+                                        <a href="{% url 'resumes:wizard_entry_edit' resume_id=resume.id step=step entry_id=item.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'resumes:wizard_entry_delete' resume_id=resume.id step=step entry_id=item.id %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </span>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -110,8 +118,8 @@
                             {% endif %}
                         </button>
                         {% if step_index > 0 %}
-                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=steps|first %}" class="btn btn-outline-secondary btn-icon">
-                                <i class="bi bi-arrow-counterclockwise"></i> Start Over
+                            <a href="{% url 'resumes:wizard_step' resume_id=resume.id step=prev_step %}" class="btn btn-outline-secondary btn-icon">
+                                <i class="bi bi-arrow-left"></i> Back
                             </a>
                         {% endif %}
                         <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-danger btn-icon ms-auto">
