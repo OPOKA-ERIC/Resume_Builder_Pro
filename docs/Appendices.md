@@ -176,7 +176,7 @@ Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fi
 | 30 | PasswordChangeViewTest | test_successful_password_change | Password updated |
 | 31 | PasswordChangeViewTest | test_wrong_old_password | Wrong password stays on page |
 
-### resumes/tests.py — 34 Unit Tests
+### resumes/tests.py — 41 Unit Tests
 
 | # | Test Class | Test Method | Description |
 |---|-----------|-------------|-------------|
@@ -203,7 +203,7 @@ Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fi
 | 21 | WizardStepViewTest | test_wizard_education_loads | Education step loads |
 | 22-34 | WizardStepViewTest | (12 more tests) | All wizard steps load and save |
 
-### pdf_export/tests.py — 9 Unit Tests
+### pdf_export/tests.py — 11 Unit Tests
 
 | # | Test Class | Test Method | Description |
 |---|-----------|-------------|-------------|
@@ -327,7 +327,7 @@ Resume Builder Pro is a full-stack Django web application that enables users to 
 
 1. **Modular Architecture:** Four well-separated Django apps (accounts, resumes, templates_app, pdf_export) each handling distinct concerns, following the Django best practice of "small, reusable apps."
 
-2. **Comprehensive Test Suite:** 105 automated tests covering unit testing of models, forms, and views across all modules, plus integration tests for end-to-end user workflows. All tests pass consistently.
+2. **Comprehensive Test Suite:** 125 automated tests covering unit testing of models, forms, and views across all modules, plus integration tests for end-to-end user workflows. All tests pass consistently.
 
 3. **Security Implementation:** Password hashing (PBKDF2), CSRF protection, session management with 1-week expiry, authentication guards on all protected views, input validation via Django forms, XSS prevention via template auto-escaping, and clickjacking protection via X-Frame-Options.
 

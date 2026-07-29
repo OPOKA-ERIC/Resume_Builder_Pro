@@ -10,7 +10,7 @@ The testing strategy for Resume Builder Pro was designed around three core princ
 2. **Regression Prevention:** Establishing a robust test suite that can be executed repeatedly to detect unintended side effects introduced by new code changes.
 3. **User Experience Validation:** Confirming that the user interface behaves predictably and provides a seamless experience across all workflows.
 
-The project utilizes Django's built-in testing framework, which extends Python's `unittest` module. This framework provides several advantages, including automatic test database creation and teardown, test case base classes tailored for Django components, and seamless integration with the project's existing ORM and view layer. The test suite comprises **105 tests** distributed across four application modules, all of which pass successfully.
+The project utilizes Django's built-in testing framework, which extends Python's `unittest` module. This framework provides several advantages, including automatic test database creation and teardown, test case base classes tailored for Django components, and seamless integration with the project's existing ORM and view layer. The test suite comprises **125 tests** distributed across four application modules, all of which pass successfully.
 
 ### 7.1.1 Test Execution
 
@@ -37,7 +37,7 @@ The project's testing approach follows the testing pyramid model:
   / per module    \ - End-to-end user journeys
  /----------------\
 /                  \  Unit Testing (95 tests)
-/  105 total tests  \ - Models, Forms, Views
+/  125 total tests  \ - Models, Forms, Views
 /____________________\
 ```
 
@@ -45,7 +45,7 @@ The project's testing approach follows the testing pyramid model:
 
 ## 7.2 Unit Testing
 
-Unit testing constitutes the foundation of the project's testing strategy, accounting for **95 of the 105 total tests**. Each unit test isolates a single component—a model, form, or view—and verifies its behavior under controlled conditions. The following subsections detail the unit tests for each application module.
+Unit testing constitutes the foundation of the project's testing strategy, accounting for **105 of the 125 total tests**. Each unit test isolates a single component—a model, form, or view—and verifies its behavior under controlled conditions. The following subsections detail the unit tests for each application module.
 
 ### 7.2.1 Accounts Module (`accounts/tests.py` — 32 Tests)
 
@@ -138,7 +138,7 @@ Password change tests validate:
 - Redirect upon successful password change
 - Access control requiring authentication
 
-### 7.2.2 Resumes Module (`resumes/tests.py` — 34 Tests)
+### 7.2.2 Resumes Module (`resumes/tests.py` — 41 Tests)
 
 The resumes module contains the largest unit test suite, covering the core resume creation, editing, and management functionality.
 
@@ -259,7 +259,7 @@ The 14 wizard tests cover:
 **TemplateSelectViewTest (1 Test):**
 - Validates the template selection page rendering and POST handling
 
-### 7.2.3 PDF Export Module (`pdf_export/tests.py` — 9 Tests)
+### 7.2.3 PDF Export Module (`pdf_export/tests.py` — 11 Tests)
 
 The PDF export tests verify the HTML generation and PDF download functionality.
 
@@ -615,13 +615,13 @@ The following table presents the complete test results across all modules and te
 
 | Metric | Count |
 |---|---|
-| Total Tests | 105 |
+| Total Tests | 125 |
 | Unit Tests (accounts) | 32 |
-| Unit Tests (resumes) | 34 |
-| Unit Tests (pdf_export) | 9 |
+| Unit Tests (resumes) | 41 |
+| Unit Tests (pdf_export) | 11 |
 | Unit Tests (templates_app) | 21 |
 | Integration Tests | 20 (included in resumes total) |
-| Tests Passed | 105 |
+| Tests Passed | 125 |
 | Tests Failed | 0 |
 | Tests with Errors | 0 |
 | **Pass Rate** | **100%** |
@@ -828,7 +828,7 @@ def setUp(self):
 
 ## Summary
 
-The testing strategy for Resume Builder Pro provides comprehensive coverage across all application modules through a combination of unit tests, integration tests, and manual testing. The automated test suite comprises **105 tests**, all of which pass successfully with a **100% pass rate**. The testing approach follows established best practices including test isolation, consistent setup/teardown procedures, and systematic bug tracking.
+The testing strategy for Resume Builder Pro provides comprehensive coverage across all application modules through a combination of unit tests, integration tests, and manual testing. The automated test suite comprises **125 tests**, all of which pass successfully with a **100% pass rate**. The testing approach follows established best practices including test isolation, consistent setup/teardown procedures, and systematic bug tracking.
 
 Key findings from the testing process include:
 
