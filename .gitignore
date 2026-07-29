@@ -36,3 +36,8 @@ build/
 ~$*.docx
 ~$*.xlsx
 ~$*.pptx
+
+# Documents (large binaries not needed in repo)
+*.pdf
+*.docx
+!docs/*.md

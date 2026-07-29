@@ -246,13 +246,6 @@
                 <tr>
                     {% endif %}
                     {% endfor %}
-                    {% with remaining=resume.skills.all|length|modulo:3 %}
-                    {% if remaining != 0 %}
-                    {% for i in ""|ljust:"" %}
-                    <td></td>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
                 </tr>
             </table>
         </div>

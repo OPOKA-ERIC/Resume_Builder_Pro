@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ resume.title }} - {{ user.get_full_name|default:user.username }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.45;
+            color: #2d2d2d;
+        }
+        .page { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 200px;
+            background: #1a5276;
+            color: #ecf0f1;
+            padding: 25px 15px;
+            flex-shrink: 0;
+        }
+        .sidebar h1 {
+            font-size: 16pt;
+            color: #ffffff;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        .sidebar .subtitle {
+            font-size: 8.5pt;
+            color: #aed6f1;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sidebar .contact-info { font-size: 8.5pt; margin-bottom: 18px; }
+        .sidebar .contact-info p { margin-bottom: 4px; color: #d5e8f0; }
+        .sidebar .contact-info span.label { color: #aed6f1; font-weight: bold; }
+        .sidebar .sidebar-section { margin-bottom: 14px; }
+        .sidebar .sidebar-title {
+            font-size: 9pt;
+            color: #aed6f1;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid #2980b9;
+            padding-bottom: 3px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .sidebar .skill-item {
+            font-size: 8.5pt;
+            margin-bottom: 3px;
+            color: #d5e8f0;
+        }
+        .sidebar .skill-bar {
+            height: 4px;
+            background: #2980b9;
+            border-radius: 2px;
+            margin-top: 2px;
+            margin-bottom: 6px;
+        }
+        .sidebar .lang-item {
+            font-size: 8.5pt;
+            margin-bottom: 3px;
+            color: #d5e8f0;
+        }
+        .main-content {
+            flex: 1;
+            padding: 25px 20px;
+        }
+        .section { margin-bottom: 14px; }
+        .section-title {
+            font-size: 11pt;
+            color: #1a5276;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #1a5276;
+            padding-bottom: 3px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .entry { margin-bottom: 8px; page-break-inside: avoid; }
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .entry-title { font-weight: bold; font-size: 10.5pt; color: #1a5276; }
+        .entry-subtitle { font-style: italic; color: #555; font-size: 9.5pt; }
+        .entry-date { font-size: 8.5pt; color: #888; white-space: nowrap; }
+        .entry-description { margin-top: 2px; font-size: 9.5pt; color: #444; }
+        .reference-entry { margin-bottom: 5px; font-size: 9.5pt; }
+        .reference-entry .ref-name { font-weight: bold; color: #1a5276; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="sidebar">
+            <h1>{{ user.get_full_name|default:user.username }}</h1>
+            <div class="subtitle">Contact</div>
+            <div class="contact-info">
+                {% if user.email %}<p>{{ user.email }}</p>{% endif %}
+                {% if user.profile.phone %}<p>{{ user.profile.phone }}</p>{% endif %}
+                {% if user.profile.address %}<p>{{ user.profile.address }}</p>{% endif %}
+            </div>
+
+            {% if resume.skills.all %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Skills</div>
+                {% for skill in resume.skills.all %}
+                <div class="skill-item">{{ skill.name }}{% if skill.proficiency_level %} ({{ skill.proficiency_level }}){% endif %}</div>
+                <div class="skill-bar" style="width: {% if skill.proficiency_level == 'expert' %}100%{% elif skill.proficiency_level == 'advanced' %}80%{% elif skill.proficiency_level == 'intermediate' %}60%{% else %}40%{% endif %};"></div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if resume.languages.all %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Languages</div>
+                {% for lang in resume.languages.all %}
+                <div class="lang-item">{{ lang.name }}{% if lang.proficiency_level %} &#8211; {{ lang.proficiency_level }}{% endif %}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if resume.certifications.all %}
+            <div class="sidebar-section">
+                <div class="sidebar-title">Certifications</div>
+                {% for cert in resume.certifications.all %}
+                <div class="lang-item">{{ cert.title }}</div>
+                <div class="skill-item" style="font-size:7.5pt;">{{ cert.issuer }} | {{ cert.date_awarded|date:"M Y" }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="main-content">
+            {% if resume.educations.all %}
+            <div class="section">
+                <h2 class="section-title">Education</h2>
+                {% for edu in resume.educations.all %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <div>
+                            <div class="entry-title">{{ edu.institution }}</div>
+                            <div class="entry-subtitle">{{ edu.qualification }}</div>
+                        </div>
+                        <div class="entry-date">{{ edu.start_date|date:"M Y" }} &#8211; {{ edu.end_date|date:"M Y"|default:"Present" }}</div>
+                    </div>
+                    {% if edu.description %}<div class="entry-description">{{ edu.description }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if resume.experiences.all %}
+            <div class="section">
+                <h2 class="section-title">Experience</h2>
+                {% for exp in resume.experiences.all %}
+                <div class="entry">
+                    <div class="entry-header">
+                        <div>
+                            <div class="entry-title">{{ exp.role }}</div>
+                            <div class="entry-subtitle">{{ exp.company }}</div>
+                        </div>
+                        <div class="entry-date">{{ exp.start_date|date:"M Y" }} &#8211; {{ exp.end_date|date:"M Y"|default:"Present" }}</div>
+                    </div>
+                    {% if exp.description %}<div class="entry-description">{{ exp.description }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if resume.projects.all %}
+            <div class="section">
+                <h2 class="section-title">Projects</h2>
+                {% for project in resume.projects.all %}
+                <div class="entry">
+                    <div class="entry-title">{{ project.name }}</div>
+                    {% if project.link %}<div class="entry-subtitle">{{ project.link }}</div>{% endif %}
+                    {% if project.description %}<div class="entry-description">{{ project.description }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if resume.references.all %}
+            <div class="section">
+                <h2 class="section-title">References</h2>
+                {% for ref in resume.references.all %}
+                <div class="reference-entry">
+                    <span class="ref-name">{{ ref.name }}</span> &#8211; {{ ref.relationship }}, {{ ref.contact }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
