@@ -10,6 +10,8 @@ USER_AGENTS = [
     'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0',
 ]
 
+REQUEST_TIMEOUT = 10
+
 
 def _session():
     s = requests.Session()
@@ -18,7 +20,6 @@ def _session():
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.5',
     })
-    s.timeout = 20
     return s
 
 
@@ -52,7 +53,7 @@ def _collapse(text: str) -> str:
 
 def _fetch_linkedin(url: str) -> dict:
     try:
-        resp = _session().get(url)
+        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
         text = _collapse(_extract_text(resp.text))
 
@@ -87,7 +88,7 @@ def _fetch_linkedin(url: str) -> dict:
 
 def _fetch_indeed(url: str) -> dict:
     try:
-        resp = _session().get(url)
+        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
         text = _collapse(_extract_text(resp.text))
 
@@ -120,7 +121,7 @@ def _fetch_indeed(url: str) -> dict:
 
 def _fetch_glassdoor(url: str) -> dict:
     try:
-        resp = _session().get(url)
+        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
         text = _collapse(_extract_text(resp.text))
 
@@ -155,7 +156,7 @@ def _fetch_glassdoor(url: str) -> dict:
 
 def _fetch_generic(url: str) -> dict:
     try:
-        resp = _session().get(url)
+        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, 'html.parser')
         title_tag = soup.find('title')
