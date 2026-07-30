@@ -435,7 +435,7 @@
                 <div class="project-card">
                     <h3>{{ project.name }}</h3>
                     {% if project.description %}<p>{{ project.description|truncatewords:30 }}</p>{% endif %}
-                    {% if project.link %}<a href="{{ project.safe_link }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i> View Project</a>{% endif %}
+                    {% if project.safe_link %}<a href="{{ project.safe_link }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right"></i> View Project</a>{% endif %}
                 </div>
             {% endfor %}
         </div>

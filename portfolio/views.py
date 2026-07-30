@@ -60,8 +60,8 @@ def portfolio_delete(request, portfolio_id):
 
 
 def _normalize_url(url):
-    if not url:
-        return url
+    if not url or not url.strip():
+        return None
     url = url.strip()
     if url.startswith(('http://', 'https://')):
         return url
