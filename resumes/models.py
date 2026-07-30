@@ -6,6 +6,7 @@ from templates_app.models import ResumeTemplate
 class Resume(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
     title = models.CharField(max_length=200)
+    summary = models.TextField(blank=True, help_text='Professional summary / About section for your portfolio')
     template = models.ForeignKey(
         ResumeTemplate, on_delete=models.SET_NULL, null=True, blank=True, related_name='resumes'
     )

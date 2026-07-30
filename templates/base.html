@@ -31,16 +31,21 @@
                         </a>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.app_name == 'resumes' %}active{% endif %}" href="{% url 'resumes:dashboard' %}">
-                                <i class="bi bi-grid-1x2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.app_name == 'accounts' and request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'accounts:profile' %}">
-                                <i class="bi bi-person-circle"></i> Profile
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.app_name == 'resumes' %}active{% endif %}" href="{% url 'resumes:dashboard' %}">
+                            <i class="bi bi-grid-1x2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.app_name == 'portfolio' %}active{% endif %}" href="{% url 'portfolio:list' %}">
+                            <i class="bi bi-share"></i> Portfolios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.app_name == 'accounts' and request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person-circle"></i> Profile
+                        </a>
+                    </li>
                         <li class="nav-item ms-lg-2">
                             <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
                                 {% csrf_token %}
@@ -105,6 +110,7 @@
                     <ul class="footer-links">
                         {% if user.is_authenticated %}
                             <li><a href="{% url 'resumes:dashboard' %}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
+                            <li><a href="{% url 'portfolio:list' %}"><i class="bi bi-share"></i> Portfolios</a></li>
                             <li><a href="{% url 'accounts:profile' %}"><i class="bi bi-person"></i> Profile</a></li>
                             <li><a href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                         {% else %}

@@ -7,6 +7,7 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    website = models.URLField(blank=True, help_text='Personal website URL')
 
     def __str__(self):
         return f"Profile of {self.user.username}"

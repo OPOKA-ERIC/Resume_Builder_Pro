@@ -14,6 +14,9 @@
             <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="btn btn-success btn-icon">
                 <i class="bi bi-download"></i> Download PDF
             </a>
+            <a href="{% url 'portfolio:create' resume.id %}" class="btn btn-info btn-icon text-white">
+                <i class="bi bi-share"></i> Create Portfolio
+            </a>
             <a href="{% url 'resumes:template_select' resume.id %}" class="btn btn-outline-primary btn-icon">
                 <i class="bi bi-palette"></i> Change Template
             </a>

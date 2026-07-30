@@ -10,10 +10,11 @@
 
 | Member | Role | Primary Responsibilities |
 |--------|------|------------------------|
-| **Opeto Isaac** | Authentication & PDF Generation Lead | User registration, login, logout, profile management, password change, PDF generation with xhtml2pdf, security configuration |
+| **Opoka Eric** | Backend & Database Lead / Portfolio Generator | Django project setup and configuration; Design and implement all models and database migrations; Admin panel configuration; **Portfolio Generator** (shareable portfolio pages with QR codes) |
+| **Opeto Isaac** | Authentication & PDF Generation / Job Match Analyzer | User registration, login, logout, profile management, PDF generation; **Job Match Analyzer** (skill gap analysis, proficiency scoring, AI-powered recommendations) |
+| **Ojok Isaac** | Frontend & UI/UX Lead / Job Adverts Integration | Bootstrap templates, wizard JavaScript, 27 resume templates; **Job Adverts Integration** (LinkedIn and external platform import) |
 | **Auma Dilish** | Testing, Documentation & Deployment Lead | Unit testing, integration testing, bug tracking, user manual, project documentation, GitHub management, deployment configuration |
-| **[Member 3]** | Resume Management & Wizard Lead | Resume CRUD operations, multi-step wizard, form handling, model design for resume sections |
-| **[Member 4]** | Template Design & Frontend Lead | HTML/CSS templates, Bootstrap integration, responsive design, template gallery, static files |
+| **Namuganza Isabella** | Admin Configuration & Django Admin Lead | Django admin panel configuration, admin interface for users/resumes/templates/job analyses, admin dashboard reporting, data management |
 
 ---
 
@@ -31,10 +32,10 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                   Django Application                         │
 │                                                              │
-│  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌──────────┐ │
-│  │ accounts  │  │ resumes  │  │templates_app│  │pdf_export│ │
-│  │  (Auth)   │  │  (CRUD)  │  │ (Gallery)  │  │  (PDF)   │ │
-│  └─────┬─────┘  └────┬─────┘  └─────┬──────┘  └────┬─────┘ │
+│  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌──────────┐  ┌─────────────┐  ┌──────────┐  ┌──────────┐ │
+│  │ accounts  │  │ resumes  │  │templates_app│  │pdf_export│  │job_analysis │  │ portfolio│  │job_board │ │
+│  │  (Auth)   │  │  (CRUD)  │  │ (Gallery)  │  │  (PDF)   │  │ (Matching)  │  │ (Shares) │  │(Adverts)│ │
+│  └─────┬─────┘  └────┬─────┘  └─────┬──────┘  └────┬─────┘  └──────┬──────┘  └────┬─────┘  └────┬─────┘ │
 │        │              │              │               │        │
 │        └──────────────┴──────────────┴───────────────┘        │
 │                           │                                   │
@@ -102,12 +103,65 @@
 **Education, Experience, Skill, Project, Certification, Language, Reference**
 Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fields as described in the User Manual.
 
+**JobAnalysis** — stores job description analysis results with match score
+| Field | Type | Constraints |
+|-------|------|-------------|
+| id | BigAutoField | PK |
+| user | ForeignKey → User | CASCADE |
+| resume | ForeignKey → Resume | CASCADE |
+| job_title | CharField | Optional |
+| company | CharField | Optional |
+| job_description | TextField | Required |
+| match_score | FloatField | 0-100 scale |
+| created_at | DateTimeField | Auto-set |
+
+**SkillScore** — individual skill scoring within a JobAnalysis
+| Field | Type | Constraints |
+|-------|------|-------------|
+| id | BigAutoField | PK |
+| job_analysis | ForeignKey → JobAnalysis | CASCADE |
+| skill_name | CharField | Required |
+| required_level | CharField | Required level from job |
+| user_level | CharField | Current user proficiency |
+| score | FloatField | Match score 0-100 |
+| recommendation | TextField | AI suggestion |
+
+**Portfolio** — shareable public portfolio page
+| Field | Type | Constraints |
+|-------|------|-------------|
+| id | BigAutoField | PK |
+| user | ForeignKey → User | CASCADE |
+| resume | ForeignKey → Resume | CASCADE |
+| slug | SlugField | Unique, used in URL |
+| qr_code | ImageField | Uploaded QR image |
+| is_published | BooleanField | Default: False |
+| views | IntegerField | View counter |
+| created_at | DateTimeField | Auto-set |
+
+**JobAdvert** — imported job listing
+| Field | Type | Constraints |
+|-------|------|-------------|
+| id | BigAutoField | PK |
+| source | CharField | e.g. 'LinkedIn' |
+| source_id | CharField | External platform ID |
+| title | CharField | Job title |
+| company | CharField | Company name |
+| description | TextField | Full job description |
+| url | URLField | Original listing URL |
+| posted_date | DateField | When posted |
+| imported_by | ForeignKey → User | Who imported it |
+| created_at | DateTimeField | Auto-set |
+
 ### Key Relationships
 
 - User → (1:N) → Resume
 - Resume → (1:N) → Education, Experience, Skill, Project, Certification, Language, Reference
 - ResumeTemplate → (1:N) → Resume
 - User → (1:1) → UserProfile
+- User → (1:N) → JobAnalysis
+- JobAnalysis → (1:N) → SkillScore
+- User → (1:N) → Portfolio
+- User → (1:N) → JobAdvert
 
 ---
 
@@ -135,6 +189,16 @@ Each has a `ForeignKey → Resume` with `CASCADE` deletion and model-specific fi
 | `/pdf/<id>/preview/` | `pdf_preview` | `pdf_export:pdf_preview` | Yes | GET |
 | `/templates/` | `template_gallery` | `templates_app:gallery` | No | GET |
 | `/templates/<id>/preview/` | `template_preview` | `templates_app:preview` | Yes | GET |
+| `/analysis/` | `job_analysis_dashboard` | `job_analysis:dashboard` | Yes | GET |
+| `/analysis/<resume_id>/match/` | `run_job_match` | `job_analysis:run_match` | Yes | GET/POST |
+| `/analysis/<id>/results/` | `view_analysis_results` | `job_analysis:results` | Yes | GET |
+| `/portfolio/` | `portfolio_list` | `portfolio:list` | Yes | GET |
+| `/portfolio/<slug>/` | `public_portfolio_view` | `portfolio:public` | No | GET |
+| `/portfolio/<id>/generate/` | `generate_portfolio` | `portfolio:generate` | Yes | GET/POST |
+| `/jobs/` | `advert_list` | `job_board:list` | Yes | GET |
+| `/jobs/import/` | `import_adverts` | `job_board:import` | Yes | GET/POST |
+| `/jobs/<id>/` | `advert_detail` | `job_board:detail` | Yes | GET |
+| `/ai/suggest/` | `ai_suggestions` | `ai_engine:suggest` | Yes | GET/POST |
 
 ---
 
@@ -297,6 +361,10 @@ whitenoise
 psycopg2-binary
 xhtml2pdf
 Pillow
+openai           # AI integration for job analysis and recommendations
+qrcode           # QR code generation for portfolio sharing
+beautifulsoup4   # Web scraping for job advert import
+requests         # HTTP requests for external API calls
 ```
 
 ---
@@ -325,7 +393,7 @@ Resume Builder Pro is a full-stack Django web application that enables users to 
 
 ### Key Achievements
 
-1. **Modular Architecture:** Four well-separated Django apps (accounts, resumes, templates_app, pdf_export) each handling distinct concerns, following the Django best practice of "small, reusable apps."
+1. **Modular Architecture:** Seven well-separated Django apps (accounts, resumes, templates_app, pdf_export, job_analysis, portfolio, job_board) plus an AI engine service layer, following the Django best practice of "small, reusable apps."
 
 2. **Comprehensive Test Suite:** 125 automated tests covering unit testing of models, forms, and views across all modules, plus integration tests for end-to-end user workflows. All tests pass consistently.
 
@@ -351,4 +419,5 @@ Resume Builder Pro is a full-stack Django web application that enables users to 
 5. ATS (Applicant Tracking System) compatibility checker
 6. JavaScript testing with Selenium/Playwright
 7. Load and stress testing
-8. Multiple resume sections editing post-creation
+8. Mobile app (React Native / Flutter)
+9. REST API for third-party integrations

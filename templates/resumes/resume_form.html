@@ -12,7 +12,7 @@
                 <div>
                     {% if action == 'Edit' %}
                         <h3 class="mb-0"><i class="bi bi-pencil-square me-2" style="color: var(--primary);"></i>Edit Resume</h3>
-                        <small class="text-muted">Update your resume title</small>
+                        <small class="text-muted">Update your resume details</small>
                     {% else %}
                         <h3 class="mb-0"><i class="bi bi-plus-circle me-2" style="color: var(--primary);"></i>Create New Resume</h3>
                         <small class="text-muted">Choose how you'd like to start</small>
@@ -20,47 +20,72 @@
                 </div>
             </div>
 
-            <div class="row g-4">
-                <!-- Option 1: Use a Template -->
-                <div class="col-md-6">
-                    <a href="{% url 'templates_app:gallery' %}" class="text-decoration-none">
-                        <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(79,70,229,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
-                            <div class="card-body text-center p-4">
-                                <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-50) 0%, #ede9fe 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                                    <i class="bi bi-palette" style="font-size: 1.8rem; color: var(--primary);"></i>
-                                </div>
-                                <h5 class="fw-bold mb-2">Use a Template</h5>
-                                <p class="text-muted mb-3" style="font-size: 0.9rem;">Choose from 27+ professionally designed templates. Pre-filled with sample data you can edit.</p>
-                                <span class="btn btn-primary btn-icon">
-                                    <i class="bi bi-eye"></i> Browse Templates
-                                </span>
+            {% if action == 'Edit' and form %}
+                <div class="card border-0 shadow-sm" style="border-radius: var(--radius-lg);">
+                    <div class="card-body p-4">
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label fw-medium">Resume Title</label>
+                                {{ form.title }}
                             </div>
-                        </div>
-                    </a>
+                            <div class="mb-3">
+                                <label for="{{ form.summary.id_for_label }}" class="form-label fw-medium">
+                                    Professional Summary <small class="text-muted">(appears as "About" on your portfolio website)</small>
+                                </label>
+                                {{ form.summary }}
+                            </div>
+                            <div class="d-flex gap-2 pt-2">
+                                <button type="submit" class="btn btn-primary btn-icon">
+                                    <i class="bi bi-check-lg"></i> Save
+                                </button>
+                                <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary btn-icon">
+                                    <i class="bi bi-x-lg"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <!-- Option 2: Start from Scratch -->
-                <div class="col-md-6">
-                    <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--secondary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(14,165,233,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
-                        <div class="card-body text-center p-4">
-                            <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
-                                <i class="bi bi-pencil-square" style="font-size: 1.8rem; color: var(--secondary);"></i>
+            {% else %}
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <a href="{% url 'templates_app:gallery' %}" class="text-decoration-none">
+                            <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(79,70,229,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
+                                <div class="card-body text-center p-4">
+                                    <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-50) 0%, #ede9fe 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                        <i class="bi bi-palette" style="font-size: 1.8rem; color: var(--primary);"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Use a Template</h5>
+                                    <p class="text-muted mb-3" style="font-size: 0.9rem;">Choose from 27+ professionally designed templates. Pre-filled with sample data you can edit.</p>
+                                    <span class="btn btn-primary btn-icon">
+                                        <i class="bi bi-eye"></i> Browse Templates
+                                    </span>
+                                </div>
                             </div>
-                            <h5 class="fw-bold mb-2">Start from Scratch</h5>
-                            <p class="text-muted mb-3" style="font-size: 0.9rem;">Build your resume step by step with our guided wizard. Full control over every detail.</p>
-                            <button type="button" class="btn btn-outline-primary btn-icon" onclick="document.getElementById('scratchForm').submit();">
-                                <i class="bi bi-arrow-right"></i> Start Building
-                            </button>
+                        </a>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); transition: all 0.3s ease; cursor: pointer; border: 2px solid transparent;" onmouseover="this.style.borderColor='var(--secondary)'; this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 30px rgba(14,165,233,0.15)';" onmouseout="this.style.borderColor='transparent'; this.style.transform=''; this.style.boxShadow='';">
+                            <div class="card-body text-center p-4">
+                                <div style="width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                    <i class="bi bi-pencil-square" style="font-size: 1.8rem; color: var(--secondary);"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">Start from Scratch</h5>
+                                <p class="text-muted mb-3" style="font-size: 0.9rem;">Build your resume step by step with our guided wizard. Full control over every detail.</p>
+                                <button type="button" class="btn btn-outline-primary btn-icon" onclick="document.getElementById('scratchForm').submit();">
+                                    <i class="bi bi-arrow-right"></i> Start Building
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Hidden form for scratch creation -->
-            <form id="scratchForm" method="post" action="{% url 'resumes:resume_create' %}" class="d-none">
-                {% csrf_token %}
-                <input type="hidden" name="title" value="My Professional Resume">
-            </form>
+                <form id="scratchForm" method="post" action="{% url 'resumes:resume_create' %}" class="d-none">
+                    {% csrf_token %}
+                    <input type="hidden" name="title" value="My Professional Resume">
+                </form>
+            {% endif %}
         </div>
     </div>
 </div>

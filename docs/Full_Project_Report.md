@@ -12,6 +12,7 @@
 | Opeto Isaac | Authentication & PDF Generation Lead |
 | Ojok Isaac | Frontend & UI/UX Lead |
 | Auma Dilish | Testing, Documentation & Deployment Lead |
+| Namuganza Isabella | Admin Configuration & Django Admin Lead |
 
 **Supervisor / Facilitator:** ______________________
 **Date:** July 2026
@@ -51,10 +52,14 @@ Manually created resumes are inconsistent in structure, are time-consuming to up
 4. To allow the user to preview the assembled resume before downloading it.
 5. To generate and let the user download a print-ready PDF copy of the resume.
 6. To persist each user's resume data so it can be revisited and edited at any time.
+7. To analyse a user's resume against a job description and provide skill gap analysis with proficiency scoring (Job Match Analyzer).
+8. To generate a shareable, public portfolio/CV page accessible via a unique link and QR code (Portfolio Generator).
+9. To integrate job adverts from external platforms (LinkedIn, etc.) into the system for browsing and analysis.
+10. To leverage AI for intelligent skill recommendations, job description parsing, and content improvement suggestions.
 
 ### 1.4 Scope of the Project
 
-The system covers account registration and login, a multi-step resume-data wizard (personal details, education, experience, skills, projects, certifications), template selection, live preview, and PDF export. It does not cover payment processing, third-party job-board integration, or real-time collaborative editing; these are noted as possible future extensions.
+The system covers account registration and login, a multi-step resume-data wizard (personal details, education, experience, skills, projects, certifications), template selection, live preview, and PDF export. Additionally, the system includes a Job Match Analyzer that scores user skills against job descriptions and recommends improvements, a Portfolio Generator that creates shareable public portfolio pages with QR codes, and integration with external job boards (LinkedIn, etc.) for importing and analysing job adverts. AI capabilities power the job matching, skill recommendations, and smart content suggestions throughout the platform. The system does not cover payment processing or real-time collaborative editing; these are noted as possible future extensions.
 
 ### 1.5 Beneficiaries
 
@@ -79,6 +84,12 @@ The system covers account registration and login, a multi-step resume-data wizar
 | FR-07 | The system shall save each user's resume data so it persists between sessions. |
 | FR-08 | The system shall allow the user to edit and re-generate a previously saved resume. |
 | FR-09 | The system shall provide an administrative panel for managing users and templates. |
+| FR-10 | The system shall allow a user to input a job description URL or text and receive a skill gap analysis with proficiency scoring. |
+| FR-11 | The system shall recommend missing or underdeveloped skills based on the analysed job description. |
+| FR-12 | The system shall generate a shareable public portfolio/CV page with a unique URL. |
+| FR-13 | The system shall generate a QR code for the shareable portfolio page. |
+| FR-14 | The system shall allow importing and browsing job adverts from external platforms (LinkedIn, etc.). |
+| FR-15 | The system shall use AI to parse job descriptions and provide intelligent skill recommendations and resume improvement suggestions. |
 
 ### 2.2 Non-Functional Requirements
 
@@ -103,6 +114,10 @@ The system covers account registration and login, a multi-step resume-data wizar
 | UC-06 | Download Resume as PDF | Registered User | The system converts the rendered resume into a PDF file and serves it to the user. |
 | UC-07 | Edit Saved Resume | Registered User | A returning user updates any section of a previously saved resume. |
 | UC-08 | Manage Users & Templates | Administrator | An administrator manages user accounts and adds or edits resume templates through the Django admin panel. |
+| UC-09 | Analyse Job Match | Registered User | The user submits a job description URL or text; the system analyses their resume skills against the job requirements and returns a match score with recommendations. |
+| UC-10 | Generate Portfolio Link | Registered User | The user generates a shareable public portfolio/CV page with a unique URL and QR code for distribution. |
+| UC-11 | Browse Job Adverts | Registered User | The user browses imported job adverts from external platforms and analyses them against their resume. |
+| UC-12 | AI Resume Improvement | Registered User | The user receives AI-powered suggestions for improving resume content, keywords, and structure based on target job descriptions. |
 
 ---
 
@@ -229,19 +244,33 @@ User          Browser           Django View        Database        PDF Engine
 ### 3.6 Component Diagram
 
 ```
-+------------------+   +------------------+   +------------------+   +------------------+
-|  accounts app    |   |   resumes app     |   |  templates app   |   |   core / config   |
-|  - models        |   |  - models         |   |  - static assets |   |  - urls.py        |
-|  - forms         |   |  - forms (wizard) |   |  - preview logic |   |  - settings.py    |
-|  - views (auth)  |   |  - views          |   |                  |   |                  |
-+------------------+   +------------------+   +------------------+   +------------------+
-          \                    |                      |                     /
-           \___________________|______________________|____________________/
-                                       |
-                              +------------------+
-                              |   pdf app        |
-                              |  - PDF generator |
-                              +------------------+
++------------------+   +------------------+   +------------------+   +------------------+   +------------------+
+|  accounts app    |   |   resumes app     |   |  templates app   |   |  job_analysis    |   |   portfolio      |
+|  - models        |   |  - models         |   |  - static assets |   |  - job matcher   |   |  - public pages  |
+|  - forms         |   |  - forms (wizard) |   |  - preview logic |   |  - skill scorer  |   |  - QR generator  |
+|  - views (auth)  |   |  - views          |   |                  |   |  - AI integration |   |  - sharing       |
++------------------+   +------------------+   +------------------+   +------------------+   +------------------+
+          \                    |                      |                     /                     /
+           \___________________|______________________|____________________/_____________________/
+                                        |
+                               +------------------+
+                               |   pdf app        |
+                               |  - PDF generator |
+                               +------------------+
+
+                               +---------------------+
+                               |  job_board (NEW)    |
+                               |  - advert importer  |
+                               |  - LinkedIn parser  |
+                               |  - advert browser   |
+                               +---------------------+
+
+                               +---------------------+
+                               |  ai_engine (NEW)    |
+                               |  - NLP parser       |
+                               |  - skill recommender |
+                               |  - content suggester |
+                               +---------------------+
 ```
 
 ### 3.7 Deployment Diagram
@@ -308,8 +337,12 @@ User          Browser           Django View        Database        PDF Engine
 | **Language** | id (PK), resume_id (FK -> Resume), name, proficiency_level |
 | **Reference** | id (PK), resume_id (FK -> Resume), name, relationship, contact |
 | **ResumeTemplate** | id (PK), name, description, preview_image, html_file, is_active, created_at |
+| **JobAnalysis** | id (PK), user_id (FK -> User), resume_id (FK -> Resume), job_title, company, job_description, match_score, created_at |
+| **SkillScore** | id (PK), job_analysis_id (FK -> JobAnalysis), skill_name, required_level, user_level, score, recommendation |
+| **Portfolio** | id (PK), user_id (FK -> User), resume_id (FK -> Resume), slug (unique), qr_code, is_published, views, created_at |
+| **JobAdvert** | id (PK), source (LinkedIn, etc.), source_id, title, company, description, url, posted_date, imported_by (FK -> User), created_at |
 
-**Total: 11 tables across 4 Django apps**
+**Total: 15 tables across 6 Django apps**
 
 ### 4.3 Entity Descriptions
 
@@ -324,6 +357,10 @@ User          Browser           Django View        Database        PDF Engine
 - **Language** — Spoken/written languages with proficiency (basic, conversational, fluent, native).
 - **Reference** — Professional references with name, relationship, and contact.
 - **ResumeTemplate** — Pre-built CV template definitions with HTML file paths.
+- **JobAnalysis** — Stores the result of analysing a resume against a job description, including overall match score and timestamp.
+- **SkillScore** — Individual skill-level analysis entries within a JobAnalysis, showing required vs. actual proficiency and a recommendation.
+- **Portfolio** — Represents a published shareable portfolio page with a unique slug, QR code, view tracking, and publish toggle.
+- **JobAdvert** — Imported job listings from external platforms (LinkedIn, etc.) with source metadata, description, and URL.
 
 ---
 
@@ -496,7 +533,11 @@ Resume_Builder_Pro/
 | **resumes** | Resume CRUD, wizard views, all section models | 8 (Resume, Education, Experience, Skill, Project, Certification, Language, Reference) | 14 | 14 | 61 (41 unit + 20 integration) |
 | **templates_app** | Template gallery, selection, and preview rendering | 1 (ResumeTemplate) | 3 | 3 | 21 |
 | **pdf_export** | Converting the rendered resume HTML into a downloadable PDF | 0 | 4 | 2 | 11 |
-| **Total** | | **10 models** | **26 views** | **28 URL patterns** | **125 tests** |
+| **job_analysis** | Job description parsing, skill matching, scoring, and resume gap analysis | 2 (JobAnalysis, SkillScore) | 5 | 6 | TBD |
+| **portfolio** | Shareable portfolio page generation, QR codes, public viewing | 1 (Portfolio) | 4 | 5 | TBD |
+| **job_board** | Job advert import (LinkedIn, etc.), browsing, and search | 1 (JobAdvert) | 4 | 5 | TBD |
+| **ai_engine** | AI/NLP integration for smart recommendations, content suggestions, and job parsing | 0 | 2 | 3 | TBD |
+| **Total** | | **15 models** | **41 views** | **47 URL patterns** | **125+ tests** |
 
 ---
 
@@ -678,17 +719,19 @@ Key bugs fixed:
 | Core Backend (Days 4-6) | Django project setup, models, migrations, admin panel, authentication. | 3 days |
 | Wizard & Frontend (Days 7-9) | Build the multi-step resume form, Bootstrap templates, and JavaScript step logic. | 3 days |
 | Templates, Preview & PDF (Days 10-11) | Implement 27 resume templates, live preview, and PDF export. | 2 days |
-| Testing & Fixes (Days 12-13) | Unit, integration, and manual testing; bug fixes; supervision check-in. | 2 days |
-| Deployment & Presentation Prep (Day 14) | Deploy to hosting platform, finalise GitHub repo and README, rehearse presentation. | 1 day |
+| New Features — Job Analysis, Portfolio, Job Board, AI (Days 12-14) | Implement Job Match Analyzer with skill scoring, Portfolio Generator with QR codes, Job Advert importer/browser, and AI engine integration for recommendations. | 3 days |
+| Testing & Fixes (Days 15-16) | Unit, integration, and manual testing for all new features; bug fixes; supervision check-in. | 2 days |
+| Deployment & Presentation Prep (Day 17) | Deploy to hosting platform, finalise GitHub repo and README, rehearse presentation. | 1 day |
 
-### Work Allocation
+### Work Allocation (Updated with New Features)
 
 | Member | Primary Responsibilities |
 |--------|-------------------------|
-| **Opoka Eric** — Backend & Database Lead | Django project setup and configuration; Design and implement all models and database migrations; Admin panel configuration; Co-author Chapters 3 and 4. |
-| **Opeto Isaac** — Authentication & PDF Generation Lead | User registration, login/logout, and profile management; PDF generation logic and the pdf_export app; Security review; Co-author Chapter 2 and Chapter 10. |
-| **Ojok Isaac** — Frontend & UI/UX Lead | Bootstrap 5 templates for all wizard steps and the dashboard; Multi-step wizard JavaScript logic; Design and implementation of 27 resume templates; Co-author Chapter 5. |
+| **Opoka Eric** — Backend & Database Lead / Portfolio Generator | Django project setup and configuration; Design and implement all models and database migrations; Admin panel configuration; **Portfolio Generator** — shareable public portfolio/CV pages with unique links and QR code generation; Co-author Chapters 3 and 4. |
+| **Opeto Isaac** — Authentication & PDF Generation / Job Match Analyzer | User registration, login/logout, and profile management; PDF generation logic and the pdf_export app; **Job Match Analyzer** — resume skill gap analysis, job description matching, proficiency scoring, and improvement recommendations (merged with resume improvement dashboard); AI integration for job matching; Security review; Co-author Chapter 2 and Chapter 10. |
+| **Ojok Isaac** — Frontend & UI/UX Lead / Job Adverts Integration | Bootstrap 5 templates for all wizard steps and the dashboard; Multi-step wizard JavaScript logic; Design and implementation of 27 resume templates; **Job Adverts Integration** — importing and browsing job listings from LinkedIn and other external platforms; AI-assisted job advert parsing; Co-author Chapter 5. |
 | **Auma Dilish** — Testing, Documentation & Deployment Lead | Unit, integration, and manual testing; Bug tracking and coordination of fixes; User manual, references, appendices, and final report compilation; GitHub repository management and deployment. |
+| **Namuganza Isabella** — Admin Configuration & Django Admin Lead | Django admin panel configuration and customisation; Admin interface for managing users, resumes, templates, and job analyses; Admin dashboard reporting and data management; Co-author admin-related documentation. |
 
 ---
 
@@ -858,16 +901,14 @@ services:
 
 ### Appendix C: Future Enhancements
 
-1. AI-powered resume content suggestions
-2. Multi-language resume generation
-3. LinkedIn profile import
-4. Resume versioning and comparison
-5. Collaboration features for team resumes
-6. Payment processing for premium templates
-7. Email resume sharing
-8. Resume analytics (views, downloads)
-9. Mobile app (React Native / Flutter)
-10. REST API for third-party integrations
+1. Multi-language resume generation
+2. Resume versioning and comparison
+3. Collaboration features for team resumes
+4. Payment processing for premium templates
+5. Email resume sharing
+6. Resume analytics (views, downloads)
+7. Mobile app (React Native / Flutter)
+8. REST API for third-party integrations
 
 ---
 

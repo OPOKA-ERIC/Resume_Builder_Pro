@@ -9,9 +9,10 @@ CURRENT_YEAR = 2026
 class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
-        fields = ['title']
+        fields = ['title', 'summary']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Resume Title'}),
+            'summary': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Write a professional summary for your portfolio website...'}),
         }
 
     def clean_title(self):

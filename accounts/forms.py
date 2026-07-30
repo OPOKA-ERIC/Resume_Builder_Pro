@@ -95,7 +95,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['phone', 'address', 'photo']
+        fields = ['phone', 'address', 'photo', 'website']
         widgets = {
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -109,6 +109,10 @@ class ProfileForm(forms.ModelForm):
             'photo': forms.ClearableFileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*',
+            }),
+            'website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://yourwebsite.com',
             }),
         }
 

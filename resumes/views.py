@@ -213,6 +213,24 @@ def resume_preview(request, resume_id):
     })
 
 
+def public_cv_view(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id)
+    pdf_html = None
+    if resume.template and resume.template.html_file:
+        try:
+            from django.template.loader import render_to_string
+            pdf_html = render_to_string(resume.template.html_file, {
+                'resume': resume,
+                'user': resume.user,
+            })
+        except Exception:
+            pdf_html = None
+    return render(request, 'resumes/public_cv.html', {
+        'resume': resume,
+        'pdf_html': pdf_html,
+    })
+
+
 @login_required
 @xframe_options_sameorigin
 def resume_preview_frame(request, resume_id):

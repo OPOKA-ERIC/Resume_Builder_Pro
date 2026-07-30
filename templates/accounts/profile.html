@@ -51,13 +51,21 @@
                         <i class="bi bi-telephone"></i> Contact Details
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <small class="text-muted d-block">Phone</small>
                             <span>{{ profile.phone|default:"—" }}</span>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <small class="text-muted d-block">Address</small>
                             <span>{{ profile.address|default:"—" }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">Website</small>
+                            {% if profile.website %}
+                                <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                            {% else %}
+                                <span>—</span>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -142,6 +150,19 @@
                             {% if form.photo.errors %}
                                 <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.photo.errors.0 }}</div>
                             {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <div class="profile-section-title">
+                            <i class="bi bi-globe"></i> Online Presence
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_website" class="form-label">Personal Website</label>
+                            <div class="input-group-icon">
+                                <i class="bi bi-link-45deg input-icon"></i>
+                                {{ form.website }}
+                            </div>
                         </div>
                     </div>
 

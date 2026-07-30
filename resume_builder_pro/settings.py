@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'resumes',
     'templates_app',
     'pdf_export',
+    'portfolio',
 ]
 
 MIDDLEWARE = [
