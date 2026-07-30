@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Resume Builder Pro - Full Project Report</title>
+<style>
+  @media print {
+    @page { size: A4; margin: 2cm 2.5cm; }
+    h1 { page-break-before: always; }
+    h1:first-of-type { page-break-before: avoid; }
+    table { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+  }
+  body {
+    font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #1e293b;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  h1 { font-size: 20pt; color: #4f46e5; border-bottom: 2px solid #4f46e5; padding-bottom: 6px; margin-top: 30px; }
+  h2 { font-size: 15pt; color: #1e293b; margin-top: 24px; }
+  h3 { font-size: 12pt; color: #334155; margin-top: 18px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+  th, td { border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }
+  th { background-color: #eef2ff; font-weight: 600; }
+  tr:nth-child(even) { background-color: #f8fafc; }
+  pre { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; padding: 10px; font-family: Consolas, monospace; font-size: 9pt; white-space: pre-wrap; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; }
+  pre code { background: none; padding: 0; }
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 30px 0; }
+  ul { margin: 6px 0; padding-left: 24px; }
+  li { margin: 3px 0; }
+  p { margin: 8px 0; }
+</style>
+</head>
+<body>
+<h1>Resume Builder Pro — Full Project Report</h1>
+<p><strong>Faculty of Computing and Informatics</strong>
+<strong>BSE2301 — Software Engineering Mini Project 2</strong></p>
+<p><strong>Group W — Project 11: Resume Builder Application</strong>
+<strong>Group C</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opoka Eric</td>
+<td>Backend &amp; Database Lead</td>
+</tr>
+<tr>
+<td>Opeto Isaac</td>
+<td>Authentication &amp; PDF Generation Lead</td>
+</tr>
+<tr>
+<td>Ojok Isaac</td>
+<td>Frontend &amp; UI/UX Lead</td>
+</tr>
+<tr>
+<td>Auma Dilish</td>
+<td>Testing, Documentation &amp; Deployment Lead</td>
+</tr>
+<tr>
+<td>Namuganza Isabella</td>
+<td>Admin Configuration &amp; Django Admin Lead</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Supervisor / Facilitator:</strong> <strong><em>_</em></strong><strong><em>_</em></strong><strong><em>_</em></strong>_
+<strong>Date:</strong> July 2026</p>
+<hr />
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#chapter-1-introduction">Introduction</a></li>
+<li><a href="#chapter-2-requirements-analysis">Requirements Analysis</a></li>
+<li><a href="#chapter-3-system-design">System Design</a></li>
+<li><a href="#chapter-4-database-design">Database Design</a></li>
+<li><a href="#chapter-5-user-interface-design">User Interface Design</a></li>
+<li><a href="#chapter-6-implementation-plan">Implementation Plan</a></li>
+<li><a href="#chapter-7-testing-strategy">Testing Strategy</a></li>
+<li><a href="#chapter-8-risk-analysis">Risk Analysis</a></li>
+<li><a href="#chapter-9-project-schedule">Project Schedule</a></li>
+<li><a href="#chapter-10-deployment-strategy">Deployment Strategy</a></li>
+</ol>
+<hr />
+<h2>Chapter 1: Introduction</h2>
+<h3>1.1 Background</h3>
+<p>Job seekers frequently struggle to produce a clean, well-formatted resume, either because they lack design experience or because manually adjusting layouts in word processors is slow and error-prone. Resume Builder Pro solves this by separating content from presentation: the user only supplies information, and the system takes care of formatting it into a chosen professional template.</p>
+<h3>1.2 Problem Statement</h3>
+<p>Manually created resumes are inconsistent in structure, are time-consuming to update, and offer no easy way to try different visual styles without redoing the layout by hand. There is no simple, self-service tool that lets a user store their career information once and generate multiple styled outputs from it.</p>
+<h3>1.3 Objectives</h3>
+<ol>
+<li>To allow users to register and securely manage a personal account.</li>
+<li>To allow users to enter personal, education, and work-experience details through a guided, step-by-step form.</li>
+<li>To provide a set of ready-made, professional resume templates for the user to choose from.</li>
+<li>To allow the user to preview the assembled resume before downloading it.</li>
+<li>To generate and let the user download a print-ready PDF copy of the resume.</li>
+<li>To persist each user's resume data so it can be revisited and edited at any time.</li>
+<li>To analyse a user's resume against a job description and provide skill gap analysis with proficiency scoring (Job Match Analyzer).</li>
+<li>To generate a shareable, public portfolio/CV page accessible via a unique link and QR code (Portfolio Generator).</li>
+<li>To integrate job adverts from external platforms (LinkedIn, etc.) into the system for browsing and analysis.</li>
+<li>To leverage AI for intelligent skill recommendations, job description parsing, and content improvement suggestions.</li>
+</ol>
+<h3>1.4 Scope of the Project</h3>
+<p>The system covers account registration and login, a multi-step resume-data wizard (personal details, education, experience, skills, projects, certifications), template selection, live preview, and PDF export. Additionally, the system includes a Job Match Analyzer that scores user skills against job descriptions and recommends improvements, a Portfolio Generator that creates shareable public portfolio pages with QR codes, and integration with external job boards (LinkedIn, etc.) for importing and analysing job adverts. AI capabilities power the job matching, skill recommendations, and smart content suggestions throughout the platform. The system does not cover payment processing or real-time collaborative editing; these are noted as possible future extensions.</p>
+<h3>1.5 Beneficiaries</h3>
+<ul>
+<li>Students and recent graduates applying for their first jobs.</li>
+<li>Job seekers who want a fast, consistent way to produce and update a resume.</li>
+<li>Career-services staff who may recommend the tool to clients.</li>
+</ul>
+<hr />
+<h2>Chapter 2: Requirements Analysis</h2>
+<h3>2.1 Functional Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01</td>
+<td>The system shall allow a new user to register with an email, username, and password.</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>The system shall allow a registered user to log in and log out securely.</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>The system shall provide a multi-step form for personal details, education history, work experience, skills, projects, certifications, and languages.</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>The system shall let the user choose from at least three distinct resume templates.</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>The system shall render a live preview of the resume using the selected template before download.</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>The system shall generate a downloadable PDF version of the completed resume.</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>The system shall save each user's resume data so it persists between sessions.</td>
+</tr>
+<tr>
+<td>FR-08</td>
+<td>The system shall allow the user to edit and re-generate a previously saved resume.</td>
+</tr>
+<tr>
+<td>FR-09</td>
+<td>The system shall provide an administrative panel for managing users and templates.</td>
+</tr>
+<tr>
+<td>FR-10</td>
+<td>The system shall allow a user to input a job description URL or text and receive a skill gap analysis with proficiency scoring.</td>
+</tr>
+<tr>
+<td>FR-11</td>
+<td>The system shall recommend missing or underdeveloped skills based on the analysed job description.</td>
+</tr>
+<tr>
+<td>FR-12</td>
+<td>The system shall generate a shareable public portfolio/CV page with a unique URL.</td>
+</tr>
+<tr>
+<td>FR-13</td>
+<td>The system shall generate a QR code for the shareable portfolio page.</td>
+</tr>
+<tr>
+<td>FR-14</td>
+<td>The system shall allow importing and browsing job adverts from external platforms (LinkedIn, etc.).</td>
+</tr>
+<tr>
+<td>FR-15</td>
+<td>The system shall use AI to parse job descriptions and provide intelligent skill recommendations and resume improvement suggestions.</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 Non-Functional Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Quality Attribute</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usability</td>
+<td>The wizard shall guide the user one section at a time with clear labels and validation messages.</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>A resume preview shall render in under 2 seconds and a PDF shall generate in under 5 seconds under normal load.</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Passwords shall be hashed (Django's PBKDF2 default), and all form input shall be validated and sanitised server-side.</td>
+</tr>
+<tr>
+<td>Portability</td>
+<td>The application shall run on any platform supporting Python 3 and shall be deployable with SQLite in development and PostgreSQL in production.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>The codebase shall follow Django's app-based structure so each concern (accounts, resumes, templates, PDF export) is isolated and independently testable.</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>The deployed application shall target 99% uptime during the demonstration and grading period.</td>
+</tr>
+</tbody>
+</table>
+<h3>2.3 Use Case Descriptions</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Use Case</th>
+<th>Actor</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UC-01</td>
+<td>Register Account</td>
+<td>Visitor</td>
+<td>A visitor supplies an email, username, and password to create a new account.</td>
+</tr>
+<tr>
+<td>UC-02</td>
+<td>Log In / Log Out</td>
+<td>Registered User</td>
+<td>A user authenticates to access their dashboard, or ends their session.</td>
+</tr>
+<tr>
+<td>UC-03</td>
+<td>Enter Resume Details</td>
+<td>Registered User</td>
+<td>The user progresses through the wizard entering personal, education, experience, skills, project, and certification data.</td>
+</tr>
+<tr>
+<td>UC-04</td>
+<td>Select Template</td>
+<td>Registered User</td>
+<td>The user picks one of the available resume templates for rendering.</td>
+</tr>
+<tr>
+<td>UC-05</td>
+<td>Preview Resume</td>
+<td>Registered User</td>
+<td>The user views a rendered, on-screen version of the resume before committing to a download.</td>
+</tr>
+<tr>
+<td>UC-06</td>
+<td>Download Resume as PDF</td>
+<td>Registered User</td>
+<td>The system converts the rendered resume into a PDF file and serves it to the user.</td>
+</tr>
+<tr>
+<td>UC-07</td>
+<td>Edit Saved Resume</td>
+<td>Registered User</td>
+<td>A returning user updates any section of a previously saved resume.</td>
+</tr>
+<tr>
+<td>UC-08</td>
+<td>Manage Users &amp; Templates</td>
+<td>Administrator</td>
+<td>An administrator manages user accounts and adds or edits resume templates through the Django admin panel.</td>
+</tr>
+<tr>
+<td>UC-09</td>
+<td>Analyse Job Match</td>
+<td>Registered User</td>
+<td>The user submits a job description URL or text; the system analyses their resume skills against the job requirements and returns a match score with recommendations.</td>
+</tr>
+<tr>
+<td>UC-10</td>
+<td>Generate Portfolio Link</td>
+<td>Registered User</td>
+<td>The user generates a shareable public portfolio/CV page with a unique URL and QR code for distribution.</td>
+</tr>
+<tr>
+<td>UC-11</td>
+<td>Browse Job Adverts</td>
+<td>Registered User</td>
+<td>The user browses imported job adverts from external platforms and analyses them against their resume.</td>
+</tr>
+<tr>
+<td>UC-12</td>
+<td>AI Resume Improvement</td>
+<td>Registered User</td>
+<td>The user receives AI-powered suggestions for improving resume content, keywords, and structure based on target job descriptions.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Chapter 3: System Design</h2>
+<h3>3.1 Use Case Diagram</h3>
+<div class="codehilite"><pre><span></span><code><span class="o">+-------------------------------------------------+</span>
+<span class="o">|</span><span class="w">                </span><span class="n">Resume</span><span class="w"> </span><span class="n">Builder</span><span class="w"> </span><span class="n">Pro</span><span class="w">                </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                                                   </span><span class="o">|</span>
+<span class="o">|</span><span class="w">  </span><span class="p">(</span><span class="n">Visitor</span><span class="p">)</span><span class="o">----&gt;</span><span class="w">  </span><span class="p">[</span><span class="n">Register</span><span class="w"> </span><span class="n">Account</span><span class="p">]</span><span class="w">               </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                                                   </span><span class="o">|</span>
+<span class="o">|</span><span class="w">  </span><span class="p">(</span><span class="n">Registered</span><span class="p">)</span><span class="o">---&gt;</span><span class="w">  </span><span class="p">[</span><span class="n">Log</span><span class="w"> </span><span class="n">In</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Log</span><span class="w"> </span><span class="n">Out</span><span class="p">]</span><span class="w">            </span><span class="o">|</span>
+<span class="o">|</span><span class="w">    </span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="w">        </span><span class="p">[</span><span class="n">Enter</span><span class="w"> </span><span class="n">Resume</span><span class="w"> </span><span class="n">Details</span><span class="p">]</span><span class="w">           </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                  </span><span class="p">[</span><span class="n">Select</span><span class="w"> </span><span class="n">Template</span><span class="p">]</span><span class="w">                </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                  </span><span class="p">[</span><span class="n">Preview</span><span class="w"> </span><span class="n">Resume</span><span class="p">]</span><span class="w">                 </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                  </span><span class="p">[</span><span class="n">Download</span><span class="w"> </span><span class="n">Resume</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">PDF</span><span class="p">]</span><span class="w">         </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                  </span><span class="p">[</span><span class="n">Edit</span><span class="w"> </span><span class="n">Saved</span><span class="w"> </span><span class="n">Resume</span><span class="p">]</span><span class="w">              </span><span class="o">|</span>
+<span class="o">|</span><span class="w">                                                   </span><span class="o">|</span>
+<span class="o">|</span><span class="w">  </span><span class="p">(</span><span class="n">Administrator</span><span class="p">)</span><span class="o">&gt;</span><span class="w">  </span><span class="p">[</span><span class="n">Manage</span><span class="w"> </span><span class="n">Users</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Templates</span><span class="p">]</span><span class="w">    </span><span class="o">|</span>
+<span class="o">+-------------------------------------------------+</span>
+</code></pre></div>
+
+<h3>3.2 Activity Diagram — Create &amp; Download a Resume</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">Start</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Log</span><span class="w"> </span><span class="n">In</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Register</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Fill</span><span class="w"> </span><span class="n">Personal</span><span class="w"> </span><span class="n">Details</span><span class="p">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">Fill</span><span class="w"> </span><span class="n">Education</span><span class="p">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">Fill</span><span class="w"> </span><span class="n">Experience</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span><span class="w">                                                 </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span><span class="w">                                                 </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Fill</span><span class="w"> </span><span class="n">Skills</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Projects</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">Certifications</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;---------+</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Select</span><span class="w"> </span><span class="n">Template</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Preview</span><span class="w"> </span><span class="n">Resume</span><span class="p">]</span><span class="w"> </span><span class="o">--</span><span class="p">(</span><span class="n">edit</span><span class="w"> </span><span class="n">needed</span><span class="o">?</span><span class="p">)</span><span class="o">--&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">Return</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">relevant</span><span class="w"> </span><span class="n">step</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span><span class="w"> </span><span class="p">(</span><span class="n">looks</span><span class="w"> </span><span class="n">good</span><span class="p">)</span>
+<span class="p">[</span><span class="n">Generate</span><span class="w"> </span><span class="n">PDF</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="p">[</span><span class="n">Download</span><span class="w"> </span><span class="n">File</span><span class="p">]</span>
+<span class="w">  </span><span class="o">|</span>
+<span class="w">  </span><span class="n">v</span>
+<span class="n">End</span>
+</code></pre></div>
+
+<h3>3.3 Sequence Diagram — Fill Resume &amp; Download PDF</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">User</span><span class="w">          </span><span class="n">Browser</span><span class="w">           </span><span class="n">Django</span><span class="w"> </span><span class="n">View</span><span class="w">        </span><span class="n">Database</span><span class="w">        </span><span class="n">PDF</span><span class="w"> </span><span class="n">Engine</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|--</span><span class="n">fill</span><span class="w"> </span><span class="n">form</span><span class="o">----&gt;|</span><span class="w">                    </span><span class="o">|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|--</span><span class="n">POST</span><span class="w"> </span><span class="n">resume</span><span class="w"> </span><span class="n">data</span><span class="o">-&gt;|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|--</span><span class="n">save</span><span class="w"> </span><span class="n">records</span><span class="o">--&gt;|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|&lt;--</span><span class="n">confirm</span><span class="o">--------|</span><span class="w">              </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|&lt;--</span><span class="n">render</span><span class="w"> </span><span class="n">preview</span><span class="o">---|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|--</span><span class="n">click</span><span class="w"> </span><span class="n">Download</span><span class="o">|</span><span class="w">                    </span><span class="o">|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|--</span><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">download</span><span class="o">----&gt;|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|--</span><span class="n">fetch</span><span class="w"> </span><span class="n">data</span><span class="o">----&gt;|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|&lt;--</span><span class="n">data</span><span class="o">-----------|</span><span class="w">              </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|--</span><span class="n">render</span><span class="w"> </span><span class="n">HTML</span><span class="o">---&gt;|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|----------------------</span><span class="n">render</span><span class="w"> </span><span class="n">PDF</span><span class="o">&gt;|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|</span><span class="w">                    </span><span class="o">|&lt;---------------------</span><span class="n">PDF</span><span class="w"> </span><span class="n">bytes</span><span class="o">--|</span>
+<span class="w"> </span><span class="o">|</span><span class="w">                </span><span class="o">|&lt;--</span><span class="n">PDF</span><span class="w"> </span><span class="n">file</span><span class="o">---------|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+<span class="w"> </span><span class="o">|&lt;--</span><span class="n">save</span><span class="o">/</span><span class="n">open</span><span class="o">----|</span><span class="w">                    </span><span class="o">|</span><span class="w">                 </span><span class="o">|</span><span class="w">               </span><span class="o">|</span>
+</code></pre></div>
+
+<h3>3.4 Class Diagram</h3>
+<div class="codehilite"><pre><span></span><code><span class="o">+-----------------+</span><span class="w">      </span><span class="o">+------------------+</span><span class="w">      </span><span class="o">+------------------+</span>
+<span class="o">|</span><span class="w">      </span><span class="nx">User</span><span class="w">        </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">   </span><span class="nx">UserProfile</span><span class="w">    </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">     </span><span class="nx">Resume</span><span class="w">       </span><span class="o">|</span>
+<span class="o">+-----------------+</span><span class="w">      </span><span class="o">+------------------+</span><span class="w">      </span><span class="o">+------------------+</span>
+<span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">          </span><span class="o">|</span><span class="mi">1</span><span class="o">----</span><span class="mi">1</span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">          </span><span class="o">|</span><span class="mi">1</span><span class="o">----*|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">          </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="nx">username</span><span class="w">         </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">user_id</span><span class="w"> </span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w">     </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">user_id</span><span class="w"> </span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w">     </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="nx">email</span><span class="w">            </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">phone</span><span class="w">            </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">title</span><span class="w">            </span><span class="o">|</span>
+<span class="o">|</span><span class="w"> </span><span class="nx">password_hash</span><span class="w">    </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">address</span><span class="w">          </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">template_id</span><span class="w"> </span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w"> </span><span class="o">|</span>
+<span class="o">+-----------------+</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">photo</span><span class="w">            </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">created_at</span><span class="w">       </span><span class="o">|</span>
+<span class="w">                          </span><span class="o">+------------------+</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="nx">updated_at</span><span class="w">       </span><span class="o">|</span>
+<span class="w">                                                    </span><span class="o">+------------------+</span>
+<span class="w">                                                             </span><span class="o">|</span><span class="mi">1</span>
+<span class="w">                     </span><span class="o">+----------------------------------------+</span>
+<span class="w">                     </span><span class="o">|*</span><span class="w">                    </span><span class="o">|*</span><span class="w">                 </span><span class="o">|*</span><span class="w">            </span><span class="o">|*</span>
+<span class="w">             </span><span class="o">+---------------+</span><span class="w">   </span><span class="o">+----------------+</span><span class="w">  </span><span class="o">+---------------+</span><span class="w">  </span><span class="o">+---------------+</span><span class="w"> </span><span class="o">+-------------+</span>
+<span class="w">             </span><span class="o">|</span><span class="w">   </span><span class="nx">Education</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="nx">Experience</span><span class="w">   </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w">     </span><span class="nx">Skill</span><span class="w">     </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w">    </span><span class="nx">Project</span><span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">Certification</span><span class="o">|</span>
+<span class="w">             </span><span class="o">+---------------+</span><span class="w">   </span><span class="o">+----------------+</span><span class="w">  </span><span class="o">+---------------+</span><span class="w">  </span><span class="o">+---------------+</span><span class="w"> </span><span class="o">+-------------+</span>
+<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">       </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">        </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">       </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">       </span><span class="o">|</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">(</span><span class="nx">PK</span><span class="p">)</span><span class="w">     </span><span class="o">|</span>
+<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">resume_id</span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">resume_id</span><span class="w"> </span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">resume_id</span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">resume_id</span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">resume_id</span><span class="p">(</span><span class="nx">FK</span><span class="p">)</span><span class="o">|</span>
+<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">institution</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">company</span><span class="w">        </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">name</span><span class="w">          </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">name</span><span class="w">          </span><span class="o">|</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">title</span><span class="w">       </span><span class="o">|</span>
+<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">qualification</span><span class="w"> </span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">role</span><span class="w">           </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">level</span><span class="w">         </span><span class="o">|</span><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="nx">description</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">issuer</span><span class="w">      </span><span class="o">|</span>
+<span class="w">             </span><span class="o">|</span><span class="w"> </span><span class="nx">start</span><span class="o">/</span><span class="nx">end</span><span class="w"> </span><span class="nx">year</span><span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">start</span><span class="o">/</span><span class="nx">end</span><span class="w"> </span><span class="nx">year</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="o">+---------------+</span><span class="w">  </span><span class="o">+---------------+</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">year</span><span class="w">        </span><span class="o">|</span>
+<span class="w">             </span><span class="o">+---------------+</span><span class="w">   </span><span class="o">|</span><span class="w"> </span><span class="nx">description</span><span class="w">    </span><span class="o">|</span><span class="w">                                        </span><span class="o">+-------------+</span>
+<span class="w">                                  </span><span class="o">+----------------+</span>
+</code></pre></div>
+
+<h3>3.5 Data Flow Diagram (Level 0 &amp; Level 1)</h3>
+<p><strong>Level 0 (Context Diagram)</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[User] ---resume data---&gt; ((Resume Builder Pro)) ---PDF file---&gt; [User]</span>
+<span class="w">                                       </span><span class="na">|        ^</span>
+<span class="w">                                       </span><span class="na">v        |</span>
+<span class="w">                                  </span><span class="k">[ Database ]</span>
+</code></pre></div>
+
+<p><strong>Level 1</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">[User]--login/register--&gt;(Auth Process)--&gt;[User table]</span>
+<span class="k">[User]--wizard data-----&gt;(Manage Resume Data)--&gt;[Resume/Education/Experience/Skill tables]</span>
+<span class="k">[User]--template choice-&gt;(Render Preview)--&gt;[Template table]</span>
+<span class="k">[User]--download request-&gt;(Generate PDF)--&gt;reads--&gt;[Resume + related tables]--&gt;PDF--&gt;[User]</span>
+</code></pre></div>
+
+<h3>3.6 Component Diagram</h3>
+<div class="codehilite"><pre><span></span><code>+------------------+   +------------------+   +------------------+   +------------------+   +------------------+
+|  accounts app    |   |   resumes app     |   |  templates app   |   |  job_analysis    |   |   portfolio      |
+|  - models        |   |  - models         |   |  - static assets |   |  - job matcher   |   |  - public pages  |
+|  - forms         |   |  - forms (wizard) |   |  - preview logic |   |  - skill scorer  |   |  - QR generator  |
+|  - views (auth)  |   |  - views          |   |                  |   |  - AI integration |   |  - sharing       |
++------------------+   +------------------+   +------------------+   +------------------+   +------------------+
+          \                    |                      |                     /                     /
+           \___________________|______________________|____________________/_____________________/
+                                        |
+                               +------------------+
+                               |   pdf app        |
+                               |  - PDF generator |
+                               +------------------+
+
+                               +---------------------+
+                               |  job_board (NEW)    |
+                               |  - advert importer  |
+                               |  - LinkedIn parser  |
+                               |  - advert browser   |
+                               +---------------------+
+
+                               +---------------------+
+                               |  ai_engine (NEW)    |
+                               |  - NLP parser       |
+                               |  - skill recommender |
+                               |  - content suggester |
+                               +---------------------+
+</code></pre></div>
+
+<h3>3.7 Deployment Diagram</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">+----------------------+</span><span class="c">        </span><span class="nb">+---------------------------+</span><span class="c">        </span><span class="nb">+----------------------+</span>
+<span class="c">|   Client Device      |  HTTPS |     Web/App Server         |        |   Database Server    |</span>
+<span class="c">|  (Browser)            |</span><span class="nv">&lt;</span><span class="nb">-----</span><span class="nv">&gt;</span><span class="c">|  (Django </span><span class="nb">+</span><span class="c"> Gunicorn/       |</span><span class="nv">&lt;</span><span class="nb">------</span><span class="nv">&gt;</span><span class="c">|  (SQLite / Postgres) |</span>
+<span class="c">|                       |        |   Nginx</span><span class="nt">,</span><span class="c"> hosted on Render/ |        |                      |</span>
+<span class="nb">+----------------------+</span><span class="c">        |   Railway/Heroku)          |        </span><span class="nb">+----------------------+</span>
+<span class="c">                                 |  </span><span class="nb">-</span><span class="c"> PDF engine (xhtml2pdf)  |</span>
+<span class="c">                                 </span><span class="nb">+---------------------------+</span>
+</code></pre></div>
+
+<hr />
+<h2>Chapter 4: Database Design</h2>
+<h3>4.1 Entity-Relationship Diagram</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">+---------------+</span><span class="c">        </span><span class="nb">+----------------+</span><span class="c">        </span><span class="nb">+----------------+</span>
+<span class="c">|     User      |        |  UserProfile   |        |    Resume      |</span>
+<span class="c">|</span><span class="nb">---------------</span><span class="c">|        |</span><span class="nb">----------------</span><span class="c">|        |</span><span class="nb">----------------</span><span class="c">|</span>
+<span class="c">| PK id         |</span><span class="nv">&lt;</span><span class="nb">--</span><span class="c">1:1</span><span class="nb">--</span><span class="c">| PK id          |</span><span class="nv">&lt;</span><span class="nb">--</span><span class="c">1:M</span><span class="nb">--</span><span class="c">| PK id           |</span>
+<span class="c">|    username   |        | FK user_id     |        | FK user_id      |</span>
+<span class="c">|    email      |        |    phone       |        |    title        |</span>
+<span class="c">|    password   |        |    address     |        | FK template_id  |</span>
+<span class="nb">+---------------+</span><span class="c">        |    photo       |        </span><span class="nb">+----------------+</span>
+<span class="c">                          </span><span class="nb">+----------------+</span><span class="c">              |</span>
+<span class="c">                                                     1:M | (to each child table)</span>
+<span class="c">        </span><span class="nb">+----------------+----------------+----------------+----------------+----------------+</span>
+<span class="c">        |                |                |                |                |                |</span>
+<span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+----------------+</span><span class="c"> </span><span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+----------------+</span><span class="c"> </span><span class="nb">+---------------+</span>
+<span class="c">|   Education   | |   Experience   | |     Skill     | |    Project    | | Certification  | |   Language    |</span>
+<span class="c">|</span><span class="nb">---------------</span><span class="c">| |</span><span class="nb">----------------</span><span class="c">| |</span><span class="nb">---------------</span><span class="c">| |</span><span class="nb">---------------</span><span class="c">| |</span><span class="nb">----------------</span><span class="c">| |</span><span class="nb">---------------</span><span class="c">|</span>
+<span class="c">| PK id         | | PK id          | | PK id         | | PK id         | | PK id          | | PK id         |</span>
+<span class="c">| FK resume_id  | | FK resume_id   | | FK resume_id  | | FK resume_id  | | FK resume_id   | | FK resume_id  |</span>
+<span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+----------------+</span><span class="c"> </span><span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+---------------+</span><span class="c"> </span><span class="nb">+----------------+</span><span class="c"> </span><span class="nb">+---------------+</span>
+
+<span class="nb">+----------------+</span>
+<span class="c">|    Template    |</span>
+<span class="c">|</span><span class="nb">----------------</span><span class="c">|</span>
+<span class="c">| PK id          |</span>
+<span class="c">|    name        |</span>
+<span class="c">|    html_file   |</span>
+<span class="c">|    is_active   |</span>
+<span class="nb">+----------------+</span>
+<span class="c">(Resume</span><span class="nt">.</span><span class="c">template_id references Template</span><span class="nt">.</span><span class="c">id</span><span class="nt">,</span><span class="c"> M:1)</span>
+</code></pre></div>
+
+<h3>4.2 Database Schema</h3>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>User</strong></td>
+<td>id (PK), username, email, password (hashed), date_joined</td>
+</tr>
+<tr>
+<td><strong>UserProfile</strong></td>
+<td>id (PK), user_id (FK -&gt; User), phone, address, photo</td>
+</tr>
+<tr>
+<td><strong>Resume</strong></td>
+<td>id (PK), user_id (FK -&gt; User), title, template_id (FK -&gt; Template), created_at, updated_at</td>
+</tr>
+<tr>
+<td><strong>Education</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), institution, qualification, start_year, end_year, description</td>
+</tr>
+<tr>
+<td><strong>Experience</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), company, role, start_year, end_year, description</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), name, proficiency_level</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), name, description, link</td>
+</tr>
+<tr>
+<td><strong>Certification</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), title, issuer, year_awarded</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), name, proficiency_level</td>
+</tr>
+<tr>
+<td><strong>Reference</strong></td>
+<td>id (PK), resume_id (FK -&gt; Resume), name, relationship, contact</td>
+</tr>
+<tr>
+<td><strong>ResumeTemplate</strong></td>
+<td>id (PK), name, description, preview_image, html_file, is_active, created_at</td>
+</tr>
+<tr>
+<td><strong>JobAnalysis</strong></td>
+<td>id (PK), user_id (FK -&gt; User), resume_id (FK -&gt; Resume), job_title, company, job_description, match_score, created_at</td>
+</tr>
+<tr>
+<td><strong>SkillScore</strong></td>
+<td>id (PK), job_analysis_id (FK -&gt; JobAnalysis), skill_name, required_level, user_level, score, recommendation</td>
+</tr>
+<tr>
+<td><strong>Portfolio</strong></td>
+<td>id (PK), user_id (FK -&gt; User), resume_id (FK -&gt; Resume), slug (unique), qr_code, is_published, views, created_at</td>
+</tr>
+<tr>
+<td><strong>JobAdvert</strong></td>
+<td>id (PK), source (LinkedIn, etc.), source_id, title, company, description, url, posted_date, imported_by (FK -&gt; User), created_at</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total: 15 tables across 6 Django apps</strong></p>
+<h3>4.3 Entity Descriptions</h3>
+<ul>
+<li><strong>User</strong> — Django's built-in authentication model; stores credentials and session data.</li>
+<li><strong>UserProfile</strong> — Extends User with phone, address, and profile photo (OneToOne relationship).</li>
+<li><strong>Resume</strong> — Core entity; each resume belongs to one user and optionally references a template.</li>
+<li><strong>Education</strong> — Academic history entries linked to a resume (institution, qualification, years).</li>
+<li><strong>Experience</strong> — Work history entries linked to a resume (company, role, years, description).</li>
+<li><strong>Skill</strong> — Named skills with proficiency levels (beginner, intermediate, advanced, expert).</li>
+<li><strong>Project</strong> — Portfolio items with name, description, and optional link.</li>
+<li><strong>Certification</strong> — Professional certifications with issuer and year.</li>
+<li><strong>Language</strong> — Spoken/written languages with proficiency (basic, conversational, fluent, native).</li>
+<li><strong>Reference</strong> — Professional references with name, relationship, and contact.</li>
+<li><strong>ResumeTemplate</strong> — Pre-built CV template definitions with HTML file paths.</li>
+<li><strong>JobAnalysis</strong> — Stores the result of analysing a resume against a job description, including overall match score and timestamp.</li>
+<li><strong>SkillScore</strong> — Individual skill-level analysis entries within a JobAnalysis, showing required vs. actual proficiency and a recommendation.</li>
+<li><strong>Portfolio</strong> — Represents a published shareable portfolio page with a unique slug, QR code, view tracking, and publish toggle.</li>
+<li><strong>JobAdvert</strong> — Imported job listings from external platforms (LinkedIn, etc.) with source metadata, description, and URL.</li>
+</ul>
+<hr />
+<h2>Chapter 5: User Interface Design</h2>
+<h3>5.1 Design Philosophy</h3>
+<p>The interface follows a clean, mobile-responsive Bootstrap 5 layout with an indigo color theme (#4f46e5). Typography uses Inter for body text and Plus Jakarta Sans for headings. All screens extend a shared <code>base.html</code> layout with a consistent navbar and footer.</p>
+<h3>5.2 Screen Descriptions</h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Landing Page</strong></td>
+<td>Hero banner introducing Resume Builder Pro, a short feature summary, and Register / Log In buttons.</td>
+</tr>
+<tr>
+<td><strong>Register / Login</strong></td>
+<td>Simple centred form with username/email and password fields, validation messages, and a link to switch between the two forms.</td>
+</tr>
+<tr>
+<td><strong>Dashboard</strong></td>
+<td>Lists the user's saved resumes as cards with 'Edit', 'Preview', and 'Delete' actions, plus a 'Create New Resume' button.</td>
+</tr>
+<tr>
+<td><strong>Resume Wizard</strong></td>
+<td>A horizontal progress bar (Education -&gt; Experience -&gt; Skills -&gt; Projects -&gt; Certifications -&gt; Languages -&gt; References) with Back/Next buttons on each step.</td>
+</tr>
+<tr>
+<td><strong>Template Selection</strong></td>
+<td>A gallery grid of 27 template thumbnails; clicking one highlights it as selected and updates the live preview.</td>
+</tr>
+<tr>
+<td><strong>Resume Preview</strong></td>
+<td>Full-page rendered resume using the chosen template, with 'Edit' and 'Download PDF' buttons fixed at the top.</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>User profile management with email, name, phone, address, and photo upload.</td>
+</tr>
+<tr>
+<td><strong>Password Change</strong></td>
+<td>Form for changing password with old/new/confirm fields.</td>
+</tr>
+<tr>
+<td><strong>Template Gallery</strong></td>
+<td>Public gallery of all 27 resume templates with preview capabilities.</td>
+</tr>
+</tbody>
+</table>
+<h3>5.3 Color System</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Hex</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>--primary</td>
+<td>#4f46e5</td>
+<td>Primary actions, buttons, links</td>
+</tr>
+<tr>
+<td>--primary-50</td>
+<td>#eef2ff</td>
+<td>Light backgrounds</td>
+</tr>
+<tr>
+<td>--secondary</td>
+<td>#0ea5e9</td>
+<td>Secondary actions</td>
+</tr>
+<tr>
+<td>--success</td>
+<td>#10b981</td>
+<td>Success states</td>
+</tr>
+<tr>
+<td>--danger</td>
+<td>#ef4444</td>
+<td>Error states, delete actions</td>
+</tr>
+<tr>
+<td>--warning</td>
+<td>#f59e0b</td>
+<td>Warning states</td>
+</tr>
+<tr>
+<td>--dark</td>
+<td>#1e293b</td>
+<td>Text, headings</td>
+</tr>
+<tr>
+<td>--gray-50</td>
+<td>#f8fafc</td>
+<td>Backgrounds</td>
+</tr>
+<tr>
+<td>--gray-100</td>
+<td>#f1f5f9</td>
+<td>Card backgrounds</td>
+</tr>
+<tr>
+<td>--gray-200</td>
+<td>#e2e8f0</td>
+<td>Borders</td>
+</tr>
+<tr>
+<td>--gray-500</td>
+<td>#64748b</td>
+<td>Muted text</td>
+</tr>
+<tr>
+<td>--gray-900</td>
+<td>#0f172a</td>
+<td>Body text</td>
+</tr>
+</tbody>
+</table>
+<h3>5.4 Responsive Breakpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Breakpoint</th>
+<th>Width</th>
+<th>Layout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mobile</td>
+<td>&lt; 576px</td>
+<td>Single column, stacked cards</td>
+</tr>
+<tr>
+<td>Tablet</td>
+<td>576px - 768px</td>
+<td>Two-column grid</td>
+</tr>
+<tr>
+<td>Desktop</td>
+<td>768px - 992px</td>
+<td>Three-column grid</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>&gt; 992px</td>
+<td>Full-width with max-width container</td>
+</tr>
+</tbody>
+</table>
+<h3>5.5 JavaScript Features</h3>
+<ol>
+<li><strong>Alert auto-dismiss</strong> — Bootstrap alerts auto-dismiss after 5 seconds</li>
+<li><strong>Back-to-top button</strong> — Appears on scroll, smooth scroll to top</li>
+<li><strong>Navbar scroll effect</strong> — Navbar background changes on scroll</li>
+<li><strong>Password toggle</strong> — Show/hide password visibility</li>
+<li><strong>Scroll animations</strong> — Fade-in animations on scroll</li>
+<li><strong>Wizard validation</strong> — Client-side form validation for wizard steps</li>
+<li><strong>Counter animation</strong> — Animated number counters on landing page</li>
+</ol>
+<hr />
+<h2>Chapter 6: Implementation Plan</h2>
+<h3>6.1 Technology Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language</td>
+<td>Python 3.12+</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Django 6.0.6</td>
+</tr>
+<tr>
+<td>Database (Dev)</td>
+<td>SQLite3</td>
+</tr>
+<tr>
+<td>Database (Prod)</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>HTML5, CSS3, Bootstrap 5.3</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td>Vanilla JS (form interactivity, wizard)</td>
+</tr>
+<tr>
+<td>PDF Generation</td>
+<td>xhtml2pdf 0.2.17</td>
+</tr>
+<tr>
+<td>Image Handling</td>
+<td>Pillow 12.3.0</td>
+</tr>
+<tr>
+<td>Production Server</td>
+<td>Gunicorn 26.0.0</td>
+</tr>
+<tr>
+<td>Static Files</td>
+<td>WhiteNoise 6.12.0</td>
+</tr>
+<tr>
+<td>Version Control</td>
+<td>Git &amp; GitHub</td>
+</tr>
+</tbody>
+</table>
+<h3>6.2 Project Folder Structure</h3>
+<div class="codehilite"><pre><span></span><code><span class="n">Resume_Builder_Pro</span><span class="o">/</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">manage</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">README</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">Dockerfile</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">Procfile</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">render</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">|--</span><span class="w"> </span><span class="o">.</span><span class="n">gitignore</span>
+<span class="o">|--</span><span class="w"> </span><span class="o">.</span><span class="n">dockerignore</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">db</span><span class="o">.</span><span class="n">sqlite3</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">Resume_Builder_SDD_4_Members</span><span class="o">.</span><span class="n">docx</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">resume_builder_pro</span><span class="o">/</span><span class="w">        </span><span class="c1"># Project configuration</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">settings</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">urls</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">wsgi</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">asgi</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">accounts</span><span class="o">/</span><span class="w">                  </span><span class="c1"># Registration, login, profile</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">models</span><span class="o">.</span><span class="n">py</span><span class="w">              </span><span class="c1"># UserProfile model</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">forms</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># RegistrationForm, ProfileForm, PasswordChangeForm</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">views</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 5 views (register, login, logout, profile, password_change)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">urls</span><span class="o">.</span><span class="n">py</span><span class="w">                </span><span class="c1"># 9 URL patterns</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">admin</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># UserProfileAdmin</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">tests</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 32 unit tests</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">migrations</span><span class="o">/</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">resumes</span><span class="o">/</span><span class="w">                   </span><span class="c1"># Resume CRUD &amp; wizard</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">models</span><span class="o">.</span><span class="n">py</span><span class="w">              </span><span class="c1"># 8 models (Resume, Education, Experience, Skill, Project, Certification, Language, Reference)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">forms</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 8 ModelForms</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">views</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 14 views</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">urls</span><span class="o">.</span><span class="n">py</span><span class="w">                </span><span class="c1"># 14 URL patterns</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">admin</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># ResumeAdmin with 7 TabularInlines</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">tests</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 41 unit tests</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">integration_tests</span><span class="o">.</span><span class="n">py</span><span class="w">   </span><span class="c1"># 20 integration tests</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">migrations</span><span class="o">/</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">templates_app</span><span class="o">/</span><span class="w">             </span><span class="c1"># Template gallery &amp; selection</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">models</span><span class="o">.</span><span class="n">py</span><span class="w">              </span><span class="c1"># ResumeTemplate model</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">views</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 3 views (gallery, preview, preview_frame)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">urls</span><span class="o">.</span><span class="n">py</span><span class="w">                </span><span class="c1"># 3 URL patterns</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">admin</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># ResumeTemplateAdmin</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">tests</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 21 unit tests</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">fixtures</span><span class="o">/</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">initial_templates</span><span class="o">.</span><span class="n">json</span><span class="w">  </span><span class="c1"># 27 CV templates</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">migrations</span><span class="o">/</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">pdf_export</span><span class="o">/</span><span class="w">                </span><span class="c1"># PDF generation</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">views</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 4 functions (generate_pdf_html, render_to_pdf, download_pdf, pdf_preview)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">urls</span><span class="o">.</span><span class="n">py</span><span class="w">                </span><span class="c1"># 2 URL patterns</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">tests</span><span class="o">.</span><span class="n">py</span><span class="w">               </span><span class="c1"># 11 unit tests</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">models</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">templates</span><span class="o">/</span><span class="w">                 </span><span class="c1"># 51 HTML templates</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">base</span><span class="o">.</span><span class="n">html</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">landing</span><span class="o">.</span><span class="n">html</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">accounts</span><span class="o">/</span><span class="w">              </span><span class="c1"># 10 templates (login, register, profile, password_change, password_reset, etc.)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">resumes</span><span class="o">/</span><span class="w">               </span><span class="c1"># 8 templates (dashboard, resume_form, wizard_step, preview, etc.)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">templates_app</span><span class="o">/</span><span class="w">         </span><span class="c1"># 2 templates (gallery, preview)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">pdf</span><span class="o">/</span><span class="w">                   </span><span class="c1"># 29 templates (resume_pdf + 27 CV templates + pdf_preview)</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">snippets</span><span class="o">/</span><span class="w">              </span><span class="c1"># 1 template (template_preview_card)</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="k">static</span><span class="o">/</span><span class="w">                    </span><span class="c1"># Static assets</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">css</span><span class="o">/</span><span class="n">style</span><span class="o">.</span><span class="n">css</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">js</span><span class="o">/</span><span class="n">main</span><span class="o">.</span><span class="n">js</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">js</span><span class="o">/</span><span class="n">wizard</span><span class="o">.</span><span class="n">js</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">docs</span><span class="o">/</span><span class="w">                      </span><span class="c1"># Documentation</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Full_Project_Report</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Chapter_5_User_Interface_Design</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Chapter_7_Testing</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Chapter_10_Deployment_Strategy</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Chapter_2_NonFunctional_Requirements</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">User_Manual</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Bug_Tracking_Report</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span><span class="w">   </span><span class="o">|--</span><span class="w"> </span><span class="n">Appendices</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|</span>
+<span class="o">|--</span><span class="w"> </span><span class="n">test</span><span class="o">/</span><span class="w">                      </span><span class="c1"># Manual testing screenshots (19 PNG files)</span>
+</code></pre></div>
+
+<h3>6.3 Django App Breakdown</h3>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Responsibility</th>
+<th>Models</th>
+<th>Views</th>
+<th>URL Patterns</th>
+<th>Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>accounts</strong></td>
+<td>User registration, login/logout, profile management</td>
+<td>1 (UserProfile)</td>
+<td>5</td>
+<td>9</td>
+<td>32</td>
+</tr>
+<tr>
+<td><strong>resumes</strong></td>
+<td>Resume CRUD, wizard views, all section models</td>
+<td>8 (Resume, Education, Experience, Skill, Project, Certification, Language, Reference)</td>
+<td>14</td>
+<td>14</td>
+<td>61 (41 unit + 20 integration)</td>
+</tr>
+<tr>
+<td><strong>templates_app</strong></td>
+<td>Template gallery, selection, and preview rendering</td>
+<td>1 (ResumeTemplate)</td>
+<td>3</td>
+<td>3</td>
+<td>21</td>
+</tr>
+<tr>
+<td><strong>pdf_export</strong></td>
+<td>Converting the rendered resume HTML into a downloadable PDF</td>
+<td>0</td>
+<td>4</td>
+<td>2</td>
+<td>11</td>
+</tr>
+<tr>
+<td><strong>job_analysis</strong></td>
+<td>Job description parsing, skill matching, scoring, and resume gap analysis</td>
+<td>2 (JobAnalysis, SkillScore)</td>
+<td>5</td>
+<td>6</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td><strong>portfolio</strong></td>
+<td>Shareable portfolio page generation, QR codes, public viewing</td>
+<td>1 (Portfolio)</td>
+<td>4</td>
+<td>5</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td><strong>job_board</strong></td>
+<td>Job advert import (LinkedIn, etc.), browsing, and search</td>
+<td>1 (JobAdvert)</td>
+<td>4</td>
+<td>5</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td><strong>ai_engine</strong></td>
+<td>AI/NLP integration for smart recommendations, content suggestions, and job parsing</td>
+<td>0</td>
+<td>2</td>
+<td>3</td>
+<td>TBD</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>15 models</strong></td>
+<td><strong>41 views</strong></td>
+<td><strong>47 URL patterns</strong></td>
+<td><strong>125+ tests</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Chapter 7: Testing Strategy</h2>
+<h3>7.1 Testing Overview</h3>
+<p>The testing strategy follows Django's built-in testing framework, which extends Python's <code>unittest</code> module. The test suite comprises <strong>125 tests</strong> distributed across four application modules, all of which pass successfully with a <strong>100% pass rate</strong>.</p>
+<p><strong>Test execution command:</strong></p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>accounts<span class="w"> </span>resumes<span class="w"> </span>resumes.integration_tests<span class="w"> </span>templates_app<span class="w"> </span>pdf_export
+</code></pre></div>
+
+<h3>7.2 Unit Testing (105 Tests)</h3>
+<h4>7.2.1 Accounts Module — 32 Tests</h4>
+<table>
+<thead>
+<tr>
+<th>Test Class</th>
+<th>Tests</th>
+<th>What is Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RegistrationFormTest</td>
+<td>6</td>
+<td>Valid registration, duplicate email, duplicate username, password mismatch, short username, invalid username characters</td>
+</tr>
+<tr>
+<td>ProfileFormTest</td>
+<td>3</td>
+<td>Valid profile, invalid phone, duplicate email for different user</td>
+</tr>
+<tr>
+<td>UserProfileModelTest</td>
+<td>2</td>
+<td>Profile creation, string representation</td>
+</tr>
+<tr>
+<td>RegisterViewTest</td>
+<td>5</td>
+<td>GET form, successful POST, duplicate rejected, password mismatch, redirect if authenticated</td>
+</tr>
+<tr>
+<td>LoginViewTest</td>
+<td>5</td>
+<td>GET form, successful login, failed login, wrong password, redirect if authenticated</td>
+</tr>
+<tr>
+<td>LogoutViewTest</td>
+<td>2</td>
+<td>Logout redirect, redirect to login</td>
+</tr>
+<tr>
+<td>ProfileViewTest</td>
+<td>5</td>
+<td>Requires login, GET loads, POST updates, data persists, unauthenticated redirect</td>
+</tr>
+<tr>
+<td>PasswordChangeViewTest</td>
+<td>4</td>
+<td>GET loads, successful change, wrong old password, unauthenticated redirect</td>
+</tr>
+</tbody>
+</table>
+<h4>7.2.2 Resumes Module — 41 Tests</h4>
+<table>
+<thead>
+<tr>
+<th>Test Class</th>
+<th>Tests</th>
+<th>What is Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ResumeModelTest</td>
+<td>3</td>
+<td>Creation/str, ordering by -updated_at, template nullable</td>
+</tr>
+<tr>
+<td>EducationModelTest</td>
+<td>2</td>
+<td>Creation/str, end_year nullable</td>
+</tr>
+<tr>
+<td>ExperienceModelTest</td>
+<td>1</td>
+<td>Creation/str</td>
+</tr>
+<tr>
+<td>SkillModelTest</td>
+<td>2</td>
+<td>Creation/str/level, default proficiency</td>
+</tr>
+<tr>
+<td>ProjectModelTest</td>
+<td>1</td>
+<td>Creation/str</td>
+</tr>
+<tr>
+<td>CertificationModelTest</td>
+<td>1</td>
+<td>Creation/str</td>
+</tr>
+<tr>
+<td>LanguageModelTest</td>
+<td>2</td>
+<td>Creation/str, default proficiency</td>
+</tr>
+<tr>
+<td>ReferenceModelTest</td>
+<td>1</td>
+<td>Creation/str</td>
+</tr>
+<tr>
+<td>DashboardViewTest</td>
+<td>4</td>
+<td>Requires login, loads, shows resumes, empty state</td>
+</tr>
+<tr>
+<td>ResumeCreateViewTest</td>
+<td>3</td>
+<td>Page loads, POST creates, redirects to wizard</td>
+</tr>
+<tr>
+<td>WizardStepViewTest</td>
+<td>14</td>
+<td>Each wizard step loads + adds entry (education, experience, skills, projects, certifications, languages, references) + prevents other user access</td>
+</tr>
+<tr>
+<td>ResumeEditViewTest</td>
+<td>2</td>
+<td>Edit page loads, POST updates title</td>
+</tr>
+<tr>
+<td>ResumeDeleteViewTest</td>
+<td>2</td>
+<td>Delete page loads, POST deletes</td>
+</tr>
+<tr>
+<td>ResumePreviewViewTest</td>
+<td>1</td>
+<td>Preview loads with education + skill data</td>
+</tr>
+<tr>
+<td>TemplateSelectViewTest</td>
+<td>1</td>
+<td>Template select page loads</td>
+</tr>
+</tbody>
+</table>
+<h4>7.2.3 PDF Export Module — 11 Tests</h4>
+<table>
+<thead>
+<tr>
+<th>Test Class</th>
+<th>Tests</th>
+<th>What is Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GeneratePdfHtmlTest</td>
+<td>2</td>
+<td>HTML generation contains resume data, empty resume works</td>
+</tr>
+<tr>
+<td>DownloadPdfViewTest</td>
+<td>6</td>
+<td>Authenticated download, unauthenticated redirect, other user 404, content type, non-empty content, PDF with all sections</td>
+</tr>
+<tr>
+<td>PdfPreviewViewTest</td>
+<td>3</td>
+<td>Authenticated preview, unauthenticated redirect, other user 404</td>
+</tr>
+</tbody>
+</table>
+<h4>7.2.4 Templates App Module — 21 Tests</h4>
+<table>
+<thead>
+<tr>
+<th>Test Class</th>
+<th>Tests</th>
+<th>What is Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ResumeTemplateModelTest</td>
+<td>8</td>
+<td>Creation, str, default is_active, default description blank, preview_image nullable, created_at auto, ordering by name, unique instances</td>
+</tr>
+<tr>
+<td>TemplateGalleryViewTest</td>
+<td>7</td>
+<td>Gallery loads, renders correct template, excludes inactive, empty state, shows multiple active, only shows active, no login required</td>
+</tr>
+<tr>
+<td>TemplatePreviewViewTest</td>
+<td>6</td>
+<td>Loads when authenticated, redirects when not, redirects to login, other user can access, nonexistent returns 404, inactive template loads</td>
+</tr>
+</tbody>
+</table>
+<h3>7.3 Integration Testing (20 Tests)</h3>
+<table>
+<thead>
+<tr>
+<th>Test Class</th>
+<th>Tests</th>
+<th>What is Tested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FullRegistrationToResumeFlowTest</td>
+<td>1</td>
+<td>Complete journey: register -&gt; login -&gt; create resume -&gt; all 7 wizard steps -&gt; preview -&gt; PDF download</td>
+</tr>
+<tr>
+<td>ProfileUpdateFlowTest</td>
+<td>1</td>
+<td>Profile update persists (email, name, phone, address)</td>
+</tr>
+<tr>
+<td>PasswordChangeFlowTest</td>
+<td>1</td>
+<td>Password change works, old password fails, new password succeeds</td>
+</tr>
+<tr>
+<td>ResumeAuthorizationFlowTest</td>
+<td>7</td>
+<td>User B cannot see User A's dashboard, preview, edit, delete, PDF, wizard; User A can delete own</td>
+</tr>
+<tr>
+<td>DashboardStateTransitionTest</td>
+<td>3</td>
+<td>Empty dashboard, populated after creation, empty after deletion</td>
+</tr>
+<tr>
+<td>PDFGenerationIntegrationTest</td>
+<td>3</td>
+<td>PDF with all sections, PDF preview renders, HTML contains all data</td>
+</tr>
+<tr>
+<td>TemplateSelectionFlowTest</td>
+<td>4</td>
+<td>Page after wizard, shows active templates, requires auth, requires ownership</td>
+</tr>
+</tbody>
+</table>
+<h3>7.4 Manual Testing</h3>
+<p>Manual testing was performed across Chrome, Firefox, and Edge browsers at both desktop and mobile widths. A total of <strong>19 screenshots</strong> were captured during manual testing sessions on July 23, 2026, covering:</p>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Cases</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI Test Cases (MT-001 to MT-010)</td>
+<td>10</td>
+</tr>
+<tr>
+<td>UX Test Cases (UX-001 to UX-006)</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Browser Compatibility</td>
+<td>Chrome, Firefox, Edge</td>
+</tr>
+<tr>
+<td>Responsive Design</td>
+<td>Desktop, Tablet, Mobile</td>
+</tr>
+</tbody>
+</table>
+<h4>7.4.1 Manual Testing Evidence (Screenshots)</h4>
+<p>All screenshots are stored in the <code>test/</code> directory of the repository.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Screenshot</th>
+<th>Description</th>
+<th>Timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>homepage.png</code></td>
+<td>Landing page — hero banner, feature summary, and Call-to-Action buttons</td>
+<td>July 23, 2026</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>Screenshot 2026-07-23 110055.png</code></td>
+<td>User registration page — form with username, email, and password fields</td>
+<td>11:00 AM</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Screenshot 2026-07-23 111023.png</code></td>
+<td>User login page — authentication form with validation messages</td>
+<td>11:10 AM</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>Screenshot 2026-07-23 111059.png</code></td>
+<td>Dashboard — empty state with "No resumes yet" message and create button</td>
+<td>11:10 AM</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>Screenshot 2026-07-23 111241.png</code></td>
+<td>Create resume page — option to use a template or start from scratch</td>
+<td>11:12 AM</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>Screenshot 2026-07-23 111322.png</code></td>
+<td>Resume wizard — Education step with form fields and progress indicator</td>
+<td>11:13 AM</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>Screenshot 2026-07-23 111347.png</code></td>
+<td>Resume wizard — Experience step with company, role, and date fields</td>
+<td>11:13 AM</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>Screenshot 2026-07-23 111430.png</code></td>
+<td>Resume wizard — Skills step with proficiency level selector</td>
+<td>11:14 AM</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>Screenshot 2026-07-23 111608.png</code></td>
+<td>Resume wizard — Projects step with name, description, and link fields</td>
+<td>11:16 AM</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>Screenshot 2026-07-23 113033.png</code></td>
+<td>Template selection page — gallery grid of 27 CV templates</td>
+<td>11:30 AM</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>Screenshot 2026-07-23 113330.png</code></td>
+<td>Template preview — iframe preview of selected template with sample data</td>
+<td>11:33 AM</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>Screenshot 2026-07-23 113420.png</code></td>
+<td>Resume preview — full rendered resume using selected template</td>
+<td>11:34 AM</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>Screenshot 2026-07-23 113555.png</code></td>
+<td>PDF preview — rendered PDF output of the completed resume</td>
+<td>11:35 AM</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>Screenshot 2026-07-23 113622.png</code></td>
+<td>PDF download — generated PDF file opened in browser</td>
+<td>11:36 AM</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>Screenshot 2026-07-23 113705.png</code></td>
+<td>User profile page — profile management with photo upload</td>
+<td>11:37 AM</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>Screenshot 2026-07-23 113741.png</code></td>
+<td>Password change page — old/new/confirm password form</td>
+<td>11:37 AM</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>Screenshot 2026-07-23 113807.png</code></td>
+<td>Django admin panel — template management with 27 templates loaded</td>
+<td>11:38 AM</td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>Screenshot 2026-07-23 113833.png</code></td>
+<td>Template gallery page — public gallery with preview cards</td>
+<td>11:38 AM</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>Screenshot 2026-07-23 114921.png</code></td>
+<td>Dashboard with resumes — populated dashboard showing saved resumes</td>
+<td>11:49 AM</td>
+</tr>
+</tbody>
+</table>
+<h3>7.5 Test Results Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Tests</th>
+<th>Passed</th>
+<th>Failed</th>
+<th>Pass Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accounts (Unit)</td>
+<td>32</td>
+<td>32</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>resumes (Unit)</td>
+<td>41</td>
+<td>41</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>resumes (Integration)</td>
+<td>20</td>
+<td>20</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>pdf_export (Unit)</td>
+<td>11</td>
+<td>11</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>templates_app (Unit)</td>
+<td>21</td>
+<td>21</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>125</strong></td>
+<td><strong>125</strong></td>
+<td><strong>0</strong></td>
+<td><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>7.6 Coverage Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Estimated Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Models</td>
+<td>~95%</td>
+</tr>
+<tr>
+<td>Forms</td>
+<td>~90%</td>
+</tr>
+<tr>
+<td>Views</td>
+<td>~85%</td>
+</tr>
+<tr>
+<td>Templates</td>
+<td>~70%</td>
+</tr>
+<tr>
+<td>URLs</td>
+<td>~95%</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>~95%</td>
+</tr>
+<tr>
+<td>PDF Export</td>
+<td>~80%</td>
+</tr>
+</tbody>
+</table>
+<h3>7.7 Bug Tracking Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Count</th>
+<th>All Fixed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical</td>
+<td>3</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Major</td>
+<td>5</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Minor</td>
+<td>7</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>15</strong></td>
+<td><strong>Yes</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Key bugs fixed:
+1. Missing xhtml2pdf dependency (Critical)
+2. Missing CV template files (Critical)
+3. WhiteNoise not configured for static files (Critical)
+4. DEBUG hardcoded to True (Major)
+5. ALLOWED_HOSTS set to wildcard (Major)
+6. template_preview using .get() instead of get_object_or_404() (Major)
+7. Zero test coverage for templates_app (Major)
+8. No integration tests (Major)
+9. Template selection not persisting (Major)
+10. Various minor UI and code quality issues (7 minor)</p>
+<hr />
+<h2>Chapter 8: Risk Analysis</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Impact</th>
+<th>Likelihood</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF rendering differs from on-screen preview (fonts, spacing)</td>
+<td>High</td>
+<td>Medium</td>
+<td>Standardised on xhtml2pdf early and tested every template against it before UI was finalised.</td>
+</tr>
+<tr>
+<td>Scope creep from adding extra templates or features late in the schedule</td>
+<td>Medium</td>
+<td>High</td>
+<td>Locked the feature list after Chapter 2 sign-off; extra ideas went into a 'Future Work' list.</td>
+</tr>
+<tr>
+<td>Team member unavailability during the two-week window</td>
+<td>High</td>
+<td>Low</td>
+<td>Daily short check-ins and clearly owned modules so any one member's task can be picked up by another.</td>
+</tr>
+<tr>
+<td>Data loss or corruption during wizard multi-step entry</td>
+<td>High</td>
+<td>Medium</td>
+<td>Saved progress to the database at the end of each wizard step rather than only at final submission.</td>
+</tr>
+<tr>
+<td>Deployment issues (missing dependencies, static files not served)</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Maintained a pinned requirements.txt and tested a full deployment at least 3 days before the presentation date.</td>
+</tr>
+<tr>
+<td>Security vulnerabilities (XSS, CSRF, SQL injection)</td>
+<td>High</td>
+<td>Low</td>
+<td>Django's built-in protections (CSRF tokens, parameterised queries, template auto-escaping, password hashing).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Chapter 9: Project Schedule</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Key Tasks</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Requirements &amp; Design (Days 1-3)</td>
+<td>Finalise requirements, ER diagram, use cases, wireframes, and design document.</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>Core Backend (Days 4-6)</td>
+<td>Django project setup, models, migrations, admin panel, authentication.</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>Wizard &amp; Frontend (Days 7-9)</td>
+<td>Build the multi-step resume form, Bootstrap templates, and JavaScript step logic.</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>Templates, Preview &amp; PDF (Days 10-11)</td>
+<td>Implement 27 resume templates, live preview, and PDF export.</td>
+<td>2 days</td>
+</tr>
+<tr>
+<td>New Features — Job Analysis, Portfolio, Job Board, AI (Days 12-14)</td>
+<td>Implement Job Match Analyzer with skill scoring, Portfolio Generator with QR codes, Job Advert importer/browser, and AI engine integration for recommendations.</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>Testing &amp; Fixes (Days 15-16)</td>
+<td>Unit, integration, and manual testing for all new features; bug fixes; supervision check-in.</td>
+<td>2 days</td>
+</tr>
+<tr>
+<td>Deployment &amp; Presentation Prep (Day 17)</td>
+<td>Deploy to hosting platform, finalise GitHub repo and README, rehearse presentation.</td>
+<td>1 day</td>
+</tr>
+</tbody>
+</table>
+<h3>Work Allocation (Updated with New Features)</h3>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Primary Responsibilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Opoka Eric</strong> — Backend &amp; Database Lead / Portfolio Generator</td>
+<td>Django project setup and configuration; Design and implement all models and database migrations; Admin panel configuration; <strong>Portfolio Generator</strong> — shareable public portfolio/CV pages with unique links and QR code generation; Co-author Chapters 3 and 4.</td>
+</tr>
+<tr>
+<td><strong>Opeto Isaac</strong> — Authentication &amp; PDF Generation / Job Match Analyzer</td>
+<td>User registration, login/logout, and profile management; PDF generation logic and the pdf_export app; <strong>Job Match Analyzer</strong> — resume skill gap analysis, job description matching, proficiency scoring, and improvement recommendations (merged with resume improvement dashboard); AI integration for job matching; Security review; Co-author Chapter 2 and Chapter 10.</td>
+</tr>
+<tr>
+<td><strong>Ojok Isaac</strong> — Frontend &amp; UI/UX Lead / Job Adverts Integration</td>
+<td>Bootstrap 5 templates for all wizard steps and the dashboard; Multi-step wizard JavaScript logic; Design and implementation of 27 resume templates; <strong>Job Adverts Integration</strong> — importing and browsing job listings from LinkedIn and other external platforms; AI-assisted job advert parsing; Co-author Chapter 5.</td>
+</tr>
+<tr>
+<td><strong>Auma Dilish</strong> — Testing, Documentation &amp; Deployment Lead</td>
+<td>Unit, integration, and manual testing; Bug tracking and coordination of fixes; User manual, references, appendices, and final report compilation; GitHub repository management and deployment.</td>
+</tr>
+<tr>
+<td><strong>Namuganza Isabella</strong> — Admin Configuration &amp; Django Admin Lead</td>
+<td>Django admin panel configuration and customisation; Admin interface for managing users, resumes, templates, and job analyses; Admin dashboard reporting and data management; Co-author admin-related documentation.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Chapter 10: Deployment Strategy</h2>
+<h3>10.1 Overview</h3>
+<p>Resume Builder Pro is designed for containerised deployment to cloud platforms. The strategy ensures reproducibility, security, and scalability across development, staging, and production environments.</p>
+<h3>10.2 Deployment Architecture</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">[Client Browser] &lt;--HTTPS--&gt; [Reverse Proxy (Nginx)]</span>
+<span class="w">                                      </span><span class="na">|</span>
+<span class="w">                              </span><span class="k">[Application Server (Gunicorn)]</span>
+<span class="w">                                      </span><span class="na">|</span>
+<span class="w">                              </span><span class="k">[Django Application]</span>
+<span class="w">                                      </span><span class="na">|</span>
+<span class="w">                        </span><span class="k">[Database (PostgreSQL)] + [Static Files (WhiteNoise)]</span>
+</code></pre></div>
+
+<h3>10.3 Environment Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Database</th>
+<th>Debug</th>
+<th>Hosts</th>
+<th>SSL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Development</strong></td>
+<td>SQLite3</td>
+<td>True</td>
+<td>localhost, 127.0.0.1</td>
+<td>No</td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>PostgreSQL</td>
+<td>False</td>
+<td>Domain name</td>
+<td>Yes (HTTPS)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Required Environment Variables (Production):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DJANGO_SECRET_KEY</code></td>
+<td>Cryptographic secret for sessions/CSRF</td>
+<td><code>django-insecure-...</code></td>
+</tr>
+<tr>
+<td><code>DJANGO_DEBUG</code></td>
+<td>Set to <code>False</code> in production</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>DJANGO_ALLOWED_HOSTS</code></td>
+<td>Comma-separated allowed hostnames</td>
+<td><code>resumebuilder.onrender.com</code></td>
+</tr>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td>PostgreSQL connection string</td>
+<td><code>postgres://user:pass@host:5432/db</code></td>
+</tr>
+<tr>
+<td><code>WEB_CONCURRENCY</code></td>
+<td>Gunicorn worker count</td>
+<td><code>3</code></td>
+</tr>
+</tbody>
+</table>
+<h3>10.4 Containerisation</h3>
+<p><strong>Dockerfile:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PYTHONDONTWRITEBYTECODE</span><span class="o">=</span><span class="m">1</span>
+<span class="k">ENV</span><span class="w"> </span><span class="nv">PYTHONUNBUFFERED</span><span class="o">=</span><span class="m">1</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+<span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic<span class="w"> </span>--noinput
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">8000</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;gunicorn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;resume_builder_pro.wsgi:application&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;--bind&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;0.0.0.0:8000&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p><strong>docker-compose.yml:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python manage.py runserver 0.0.0.0:8000</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/app</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJANGO_DEBUG=True</span>
+</code></pre></div>
+
+<h3>10.5 Cloud Platform Deployment (Render)</h3>
+<p><strong>Steps:</strong>
+1. Push to GitHub repository
+2. Create Render Web Service connected to the GitHub repo
+3. Configure build command: <code>pip install -r requirements.txt &amp;&amp; python manage.py collectstatic --noinput &amp;&amp; python manage.py migrate</code>
+4. Configure start command: <code>gunicorn resume_builder_pro.wsgi:application</code>
+5. Add environment variables (SECRET_KEY, DATABASE_URL, etc.)
+6. Add PostgreSQL database via Render Dashboard
+7. Verify deployment at the generated URL</p>
+<h3>10.6 Security Checklist</h3>
+<ul>
+<li>[x] <code>DEBUG</code> reads from <code>DJANGO_DEBUG</code> environment variable (defaults to <code>False</code>)</li>
+<li>[x] <code>DJANGO_SECRET_KEY</code> set via environment variable</li>
+<li>[x] <code>ALLOWED_HOSTS</code> reads from <code>DJANGO_ALLOWED_HOSTS</code> environment variable</li>
+<li>[x] <code>SECURE_SSL_REDIRECT = True</code> (when not DEBUG)</li>
+<li>[x] <code>SESSION_COOKIE_SECURE = True</code> (when not DEBUG)</li>
+<li>[x] <code>CSRF_COOKIE_SECURE = True</code> (when not DEBUG)</li>
+<li>[x] <code>SECURE_HSTS_SECONDS = 31536000</code></li>
+<li>[x] <code>SECURE_HSTS_INCLUDE_SUBDOMAINS = True</code></li>
+<li>[x] <code>SECURE_HSTS_PRELOAD = True</code></li>
+<li>[x] <code>X_FRAME_OPTIONS = 'DENY'</code></li>
+<li>[x] <code>SECURE_CONTENT_TYPE_NOSNIFF = True</code></li>
+<li>[x] WhiteNoise middleware configured for static file serving</li>
+<li>[x] <code>.gitignore</code> excludes <code>db.sqlite3</code>, <code>media/</code>, <code>__pycache__/</code>, <code>.env</code></li>
+</ul>
+<hr />
+<h2>Project Statistics</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total Django Apps</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Total Models</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Total Views</td>
+<td>26</td>
+</tr>
+<tr>
+<td>Total URL Patterns</td>
+<td>28</td>
+</tr>
+<tr>
+<td>Total HTML Templates</td>
+<td>51</td>
+</tr>
+<tr>
+<td>Total Static Files</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Total Tests</td>
+<td>125</td>
+</tr>
+<tr>
+<td>Test Pass Rate</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Total Bugs Found</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Bugs Fixed</td>
+<td>15 (100%)</td>
+</tr>
+<tr>
+<td>CV Templates</td>
+<td>27</td>
+</tr>
+<tr>
+<td>Total Git Commits</td>
+<td>62</td>
+</tr>
+<tr>
+<td>Test Screenshots</td>
+<td>19</td>
+</tr>
+<tr>
+<td>Documentation Files</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>6 (Django, Gunicorn, WhiteNoise, psycopg2-binary, xhtml2pdf, Pillow)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Appendices</h2>
+<h3>Appendix A: URL Route Reference</h3>
+<table>
+<thead>
+<tr>
+<th>URL Pattern</th>
+<th>View</th>
+<th>Auth Required</th>
+<th>HTTP Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td>Landing page</td>
+<td>No</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/admin/</code></td>
+<td>Django admin</td>
+<td>Yes (staff)</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/register/</code></td>
+<td>register_view</td>
+<td>No</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/login/</code></td>
+<td>login_view</td>
+<td>No</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/logout/</code></td>
+<td>logout_view</td>
+<td>Yes</td>
+<td>POST</td>
+</tr>
+<tr>
+<td><code>/accounts/profile/</code></td>
+<td>profile_view</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/password-change/</code></td>
+<td>password_change_view</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/password-reset/</code></td>
+<td>PasswordResetView</td>
+<td>No</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/password-reset/done/</code></td>
+<td>PasswordResetDoneView</td>
+<td>No</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/accounts/password-reset-confirm/</code></td>
+<td>PasswordResetConfirmView</td>
+<td>No</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/accounts/password-reset-complete/</code></td>
+<td>PasswordResetCompleteView</td>
+<td>No</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/resumes/</code></td>
+<td>dashboard</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/resumes/create/</code></td>
+<td>resume_create</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/create-from-template/&lt;id&gt;/</code></td>
+<td>create_from_template</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/edit/</code></td>
+<td>resume_edit</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/delete/</code></td>
+<td>resume_delete</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/wizard/&lt;step&gt;/</code></td>
+<td>wizard_step</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/wizard/&lt;step&gt;/&lt;entry&gt;/edit/</code></td>
+<td>wizard_entry_edit</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/wizard/&lt;step&gt;/&lt;entry&gt;/delete/</code></td>
+<td>wizard_entry_delete</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/templates/</code></td>
+<td>template_select</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/preview/</code></td>
+<td>resume_preview</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/preview/frame/</code></td>
+<td>resume_preview_frame</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/&lt;section&gt;/&lt;item&gt;/edit/</code></td>
+<td>section_edit</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/resumes/&lt;id&gt;/&lt;section&gt;/&lt;item&gt;/delete/</code></td>
+<td>section_delete</td>
+<td>Yes</td>
+<td>GET, POST</td>
+</tr>
+<tr>
+<td><code>/templates/</code></td>
+<td>template_gallery</td>
+<td>No</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/templates/&lt;id&gt;/preview/</code></td>
+<td>template_preview</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/templates/&lt;id&gt;/frame/</code></td>
+<td>template_preview_frame</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/pdf/&lt;id&gt;/download/</code></td>
+<td>download_pdf</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+<tr>
+<td><code>/pdf/&lt;id&gt;/preview/</code></td>
+<td>pdf_preview</td>
+<td>Yes</td>
+<td>GET</td>
+</tr>
+</tbody>
+</table>
+<h3>Appendix B: Dependencies</h3>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Django</td>
+<td>6.0.6</td>
+<td>Web framework</td>
+</tr>
+<tr>
+<td>gunicorn</td>
+<td>latest</td>
+<td>Production WSGI server</td>
+</tr>
+<tr>
+<td>whitenoise</td>
+<td>latest</td>
+<td>Static file serving</td>
+</tr>
+<tr>
+<td>psycopg2-binary</td>
+<td>latest</td>
+<td>PostgreSQL adapter</td>
+</tr>
+<tr>
+<td>xhtml2pdf</td>
+<td>latest</td>
+<td>HTML-to-PDF conversion</td>
+</tr>
+<tr>
+<td>Pillow</td>
+<td>latest</td>
+<td>Image processing</td>
+</tr>
+</tbody>
+</table>
+<h3>Appendix C: Future Enhancements</h3>
+<ol>
+<li>Multi-language resume generation</li>
+<li>Resume versioning and comparison</li>
+<li>Collaboration features for team resumes</li>
+<li>Payment processing for premium templates</li>
+<li>Email resume sharing</li>
+<li>Resume analytics (views, downloads)</li>
+<li>Mobile app (React Native / Flutter)</li>
+<li>REST API for third-party integrations</li>
+</ol>
+<hr />
+<p><strong>Report compiled by:</strong> Auma Dilish — Testing, Documentation &amp; Deployment Lead
+<strong>Date:</strong> July 23, 2026</p>
+</body>
+</html>
