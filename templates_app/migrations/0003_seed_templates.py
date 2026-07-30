@@ -38,7 +38,7 @@ def reverse_templates(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('templates_app', '0002_add_template_theming_fields'),
+        ('templates_app', '0001_initial'),
     ]
 
     operations = [
