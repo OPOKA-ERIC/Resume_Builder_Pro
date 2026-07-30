@@ -3,249 +3,255 @@
 {% block main_class %}{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section">
-    <div class="container position-relative" style="z-index: 2;">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="hero-title animate-fade-in-up">
-                    Build Your Dream Resume
-                    <br>In <span class="typewriter-cursor"></span>
-                </h1>
-                <p class="hero-subtitle animate-fade-in-up delay-1">
-                    Create professional, polished resumes that stand out. Step-by-step guidance, beautiful templates, and instant PDF export &mdash; all free.
-                </p>
-                <div class="hero-cta d-flex gap-3 mt-4 animate-fade-in-up delay-2">
-                    <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg">
-                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
-                    </a>
-                    <a href="{% url 'templates_app:gallery' %}" class="btn btn-outline-light btn-lg">
-                        <i class="bi bi-palette me-2"></i>Browse Templates
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block text-center animate-fade-in delay-3">
-                <div class="hero-mockup">
-                    <div class="hero-floating-badge badge-top">
-                        <i class="bi bi-patch-check-fill badge-check"></i> ATS Optimized
-                    </div>
-                    <div class="hero-floating-badge badge-bottom">
-                        <i class="bi bi-star-fill badge-star"></i> Professional
-                    </div>
-                    <div class="mockup-card">
-                        <div class="mockup-name">Your Name</div>
-                        <div class="mockup-role">Software Engineer</div>
-                        <div class="mockup-line mockup-line-full"></div>
-                        <div class="mockup-line mockup-line-long"></div>
-                        <div class="mockup-line mockup-line-medium"></div>
-                        <div class="mockup-skills">
-                            <div class="mockup-skill-dot"></div>
-                            <div class="mockup-skill-dot"></div>
-                            <div class="mockup-skill-dot"></div>
-                            <div class="mockup-skill-dot"></div>
-                        </div>
-                        <div class="mockup-line mockup-line-full" style="margin-top: 0.5rem;"></div>
-                        <div class="mockup-line mockup-line-long"></div>
-                        <div class="mockup-line mockup-line-short"></div>
-                    </div>
-                    <div class="hero-mockup-shadow"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- Stats Section -->
-<section class="container mb-5 animate-fade-in-up">
-    <div class="stats-section">
-        <div class="row g-4">
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number" data-count="1000">0</div>
-                    <div class="stat-label">Resumes Created</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number" data-count="3">0</div>
-                    <div class="stat-label">Pro Templates</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number" data-count="7">0</div>
-                    <div class="stat-label">Easy Steps</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number" data-count="100">0</div>
-                    <div class="stat-label">% Free</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="container mb-5">
-    <div class="text-center mb-5 animate-fade-in-up">
-        <h2 class="fw-bold" style="font-size: 2rem;">Why Resume Builder Pro?</h2>
-        <div class="divider"></div>
-        <p class="text-muted mt-3" style="max-width: 520px; margin: 0 auto;">
-            Everything you need to create a standout resume, all in one place.
+<!-- ===================== LANDING HERO ===================== -->
+<section class="landing-hero" id="landingHero">
+  <div class="landing-hero-bg"></div>
+  <div class="landing-hero-dots"></div>
+  <div class="landing-hero-container">
+    <div class="landing-hero-grid">
+      <div class="landing-hero-text">
+        <h1 class="landing-headline">
+          <span class="lw-reveal"><span>Build</span></span>
+          <span class="lw-reveal"><span>Your</span></span>
+          <span class="lw-reveal lw-amber"><span>Dream</span></span>
+          <span class="lw-reveal"><span>Resume</span></span>
+        </h1>
+        <p class="landing-subhead">
+          Create professional, polished resumes that stand out. Step-by-step guidance, beautiful templates, and instant PDF export — all free.
         </p>
+        <div class="landing-hero-actions">
+          <a href="{% url 'accounts:register' %}" class="landing-btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:8px"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            Get Started Free
+          </a>
+          <a href="{% url 'templates_app:gallery' %}" class="landing-btn-ghost">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:8px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Browse Templates
+          </a>
+        </div>
+        <div class="landing-trust">
+          <span class="landing-trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Free to use — no credit card required
+          </span>
+        </div>
+      </div>
+      <div class="landing-hero-visual">
+        <div class="landing-mockup">
+          <div class="landing-mockup-card">
+            <div class="lm-header">
+              <div class="lm-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <div class="lm-body">
+              <div class="lm-name">Alex Morgan</div>
+              <div class="lm-title">Software Engineer</div>
+              <div class="lm-line lm-line-full"></div>
+              <div class="lm-line lm-line-long"></div>
+              <div class="lm-line lm-line-med"></div>
+              <div class="lm-skills">
+                <span class="lm-skill"></span>
+                <span class="lm-skill"></span>
+                <span class="lm-skill"></span>
+                <span class="lm-skill"></span>
+              </div>
+              <div class="lm-line lm-line-full" style="margin-top:10px"></div>
+              <div class="lm-line lm-line-long"></div>
+              <div class="lm-line lm-line-short"></div>
+            </div>
+          </div>
+          <div class="landing-mockup-float float-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ATS Optimized
+          </div>
+          <div class="landing-mockup-float float-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Pro Design
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-1">
-            <div class="feature-card h-100">
-                <div class="feature-icon feature-icon-primary">
-                    <i class="bi bi-pencil-square"></i>
-                </div>
-                <h5>Step-by-Step Wizard</h5>
-                <p>Enter your information section by section with guided prompts and validation.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-2">
-            <div class="feature-card h-100">
-                <div class="feature-icon feature-icon-secondary">
-                    <i class="bi bi-palette"></i>
-                </div>
-                <h5>Professional Templates</h5>
-                <p>Choose from multiple professionally designed templates to match your style.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-3">
-            <div class="feature-card h-100">
-                <div class="feature-icon feature-icon-accent">
-                    <i class="bi bi-file-earmark-pdf"></i>
-                </div>
-                <h5>PDF Download</h5>
-                <p>Generate a print-ready PDF of your resume with one click.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 animate-fade-in-up delay-4">
-            <div class="feature-card h-100">
-                <div class="feature-icon feature-icon-success">
-                    <i class="bi bi-graph-up-arrow"></i>
-                </div>
-                <h5>Job Match Analyzer</h5>
-                <p>Paste any job description and get a skill gap analysis with match score and improvement tips.</p>
-            </div>
-        </div>
+    <!-- Stats Bar -->
+    <div class="landing-stats-bar">
+      <div class="landing-stat">
+        <div class="landing-stat-num" data-count="1000">0</div>
+        <div class="landing-stat-label">Resumes Created</div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat">
+        <div class="landing-stat-num" data-count="3">0</div>
+        <div class="landing-stat-label">Pro Templates</div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat">
+        <div class="landing-stat-num" data-count="7">0</div>
+        <div class="landing-stat-label">Easy Steps</div>
+      </div>
+      <div class="landing-stat-divider"></div>
+      <div class="landing-stat">
+        <div class="landing-stat-num" data-count="100">0</div>
+        <div class="landing-stat-label">% Free</div>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="container mb-5">
-    <div class="text-center mb-5 animate-fade-in-up">
-        <h2 class="fw-bold" style="font-size: 2rem;">How It Works</h2>
-        <div class="divider"></div>
+<!-- ===================== FEATURES ===================== -->
+<section class="landing-section landing-section-white" id="landingFeatures">
+  <div class="landing-hero-container">
+    <div class="landing-section-header">
+      <h2 class="landing-section-title">Why Resume Builder Pro?</h2>
+      <p class="landing-section-sub">Everything you need to create a standout resume, all in one place.</p>
     </div>
-
-    <div class="row g-4 align-items-center">
-        <div class="col-md-3 text-center animate-fade-in-up delay-1">
-            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-50); display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 1.25rem;">1</div>
-            <h5 class="fw-bold">Create Your Profile</h5>
-            <p class="text-muted">Sign up and fill in your personal details, education, and work experience.</p>
+    <div class="landing-features-grid">
+      <div class="landing-card">
+        <div class="landing-card-accent"></div>
+        <div class="landing-card-icon landing-card-icon-primary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         </div>
-        <div class="col-md-3 text-center animate-fade-in-up delay-2">
-            <div style="width: 80px; height: 80px; border-radius: 50%; background: #e0f2fe; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--secondary); margin-bottom: 1.25rem;">2</div>
-            <h5 class="fw-bold">Choose a Template</h5>
-            <p class="text-muted">Pick from our collection of professionally designed resume templates.</p>
+        <h3 class="landing-card-title">Step-by-Step Wizard</h3>
+        <p class="landing-card-desc">Enter your information section by section with guided prompts and validation.</p>
+      </div>
+      <div class="landing-card">
+        <div class="landing-card-accent"></div>
+        <div class="landing-card-icon landing-card-icon-secondary">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </div>
-        <div class="col-md-3 text-center animate-fade-in-up delay-3">
-            <div style="width: 80px; height: 80px; border-radius: 50%; background: #fef3c7; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 1.25rem;">3</div>
-            <h5 class="fw-bold">Download PDF</h5>
-            <p class="text-muted">Preview your resume and download it as a polished PDF in seconds.</p>
+        <h3 class="landing-card-title">Professional Templates</h3>
+        <p class="landing-card-desc">Choose from multiple professionally designed templates to match your style.</p>
+      </div>
+      <div class="landing-card">
+        <div class="landing-card-accent"></div>
+        <div class="landing-card-icon landing-card-icon-accent">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         </div>
-        <div class="col-md-3 text-center animate-fade-in-up delay-4">
-            <div style="width: 80px; height: 80px; border-radius: 50%; background: #d1fae5; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: var(--success); margin-bottom: 1.25rem;">4</div>
-            <h5 class="fw-bold">Analyze & Improve</h5>
-            <p class="text-muted">Use the Job Match Analyzer to score your resume against real job descriptions.</p>
+        <h3 class="landing-card-title">PDF Download</h3>
+        <p class="landing-card-desc">Generate a print-ready PDF of your resume with one click.</p>
+      </div>
+      <div class="landing-card">
+        <div class="landing-card-accent"></div>
+        <div class="landing-card-icon landing-card-icon-success">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
+        <h3 class="landing-card-title">Job Match Analyzer</h3>
+        <p class="landing-card-desc">Paste any job description and get a skill gap analysis with match score and improvement tips.</p>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="container mb-5">
-    <div class="text-center mb-5 animate-fade-in-up">
-        <h2 class="fw-bold" style="font-size: 2rem;">Loved by Students</h2>
-        <div class="divider"></div>
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="landing-section landing-section-gray" id="landingHow">
+  <div class="landing-hero-container">
+    <div class="landing-section-header">
+      <h2 class="landing-section-title">How It Works</h2>
+      <p class="landing-section-sub">Get started in four simple steps.</p>
     </div>
-
-    <div class="row g-4">
-        <div class="col-md-4 animate-fade-in-up delay-1">
-            <div class="testimonial-card h-100">
-                <div class="testimonial-stars">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                </div>
-                <p class="testimonial-text">"Built my first professional resume in under 10 minutes. The step-by-step wizard made it so easy!"</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">SK</div>
-                    <div>
-                        <div class="testimonial-name">Sarah K.</div>
-                        <div class="testimonial-role">Computer Science Student</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 animate-fade-in-up delay-2">
-            <div class="testimonial-card h-100">
-                <div class="testimonial-stars">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                </div>
-                <p class="testimonial-text">"The templates are gorgeous and the PDF export is flawless. Got callbacks from 3 companies!"</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">JM</div>
-                    <div>
-                        <div class="testimonial-name">James M.</div>
-                        <div class="testimonial-role">Fresh Graduate</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 animate-fade-in-up delay-3">
-            <div class="testimonial-card h-100">
-                <div class="testimonial-stars">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                </div>
-                <p class="testimonial-text">"Finally, a resume builder that's actually free and looks this good. Highly recommended for students."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">AO</div>
-                    <div>
-                        <div class="testimonial-name">Amos O.</div>
-                        <div class="testimonial-role">Engineering Student</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="landing-steps-grid">
+      <div class="landing-step-card">
+        <div class="landing-step-num">1</div>
+        <h3 class="landing-card-title">Create Your Profile</h3>
+        <p class="landing-card-desc">Sign up and fill in your personal details, education, and work experience.</p>
+      </div>
+      <div class="landing-step-card">
+        <div class="landing-step-num landing-step-num-secondary">2</div>
+        <h3 class="landing-card-title">Choose a Template</h3>
+        <p class="landing-card-desc">Pick from our collection of professionally designed resume templates.</p>
+      </div>
+      <div class="landing-step-card">
+        <div class="landing-step-num landing-step-num-accent">3</div>
+        <h3 class="landing-card-title">Download PDF</h3>
+        <p class="landing-card-desc">Preview your resume and download it as a polished PDF in seconds.</p>
+      </div>
+      <div class="landing-step-card">
+        <div class="landing-step-num landing-step-num-success">4</div>
+        <h3 class="landing-card-title">Analyze & Improve</h3>
+        <p class="landing-card-desc">Use the Job Match Analyzer to score your resume against real job descriptions.</p>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- CTA Section -->
-<section class="container mb-5 animate-fade-in-up">
-    <div class="card-gradient text-center" style="border-radius: var(--radius-xl); padding: 3.5rem 2rem;">
-        <h2 class="fw-bold mb-3" style="font-size: 2rem;">Ready to Build Your Resume?</h2>
-        <p class="mb-4" style="color: rgba(255,255,255,0.8); max-width: 450px; margin: 0 auto;">
-            Join thousands of students who created their professional resumes with us. It's free.
-        </p>
-        <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg fw-bold">
-            <i class="bi bi-rocket-takeoff me-2"></i>Get Started Now
+<!-- ===================== TESTIMONIALS ===================== -->
+<section class="landing-section landing-section-white" id="landingTestimonials">
+  <div class="landing-hero-container">
+    <div class="landing-section-header">
+      <h2 class="landing-section-title">Loved by Students</h2>
+      <p class="landing-section-sub">Hear from people who built their resumes with us.</p>
+    </div>
+    <div class="landing-testimonials-grid">
+      <div class="landing-testimonial-card">
+        <div class="lt-stars">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="lt-text">&ldquo;Built my first professional resume in under 10 minutes. The step-by-step wizard made it so easy!&rdquo;</p>
+        <div class="lt-author">
+          <div class="lt-avatar">SK</div>
+          <div>
+            <div class="lt-name">Sarah K.</div>
+            <div class="lt-role">Computer Science Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="landing-testimonial-card">
+        <div class="lt-stars">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="lt-text">&ldquo;The templates are gorgeous and the PDF export is flawless. Got callbacks from 3 companies!&rdquo;</p>
+        <div class="lt-author">
+          <div class="lt-avatar lt-avatar-secondary">JM</div>
+          <div>
+            <div class="lt-name">James M.</div>
+            <div class="lt-role">Fresh Graduate</div>
+          </div>
+        </div>
+      </div>
+      <div class="landing-testimonial-card">
+        <div class="lt-stars">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="lt-text">&ldquo;Finally, a resume builder that&rsquo;s actually free and looks this good. Highly recommended for students.&rdquo;</p>
+        <div class="lt-author">
+          <div class="lt-avatar lt-avatar-accent">AO</div>
+          <div>
+            <div class="lt-name">Amos O.</div>
+            <div class="lt-role">Engineering Student</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="landing-cta-section" id="landingCTA">
+  <div class="landing-hero-container">
+    <div class="landing-cta-card">
+      <div class="landing-cta-content">
+        <h2 class="landing-cta-title">Ready to Build Your Resume?</h2>
+        <p class="landing-cta-sub">Join thousands of students who created their professional resumes with us. It&rsquo;s free.</p>
+        <a href="{% url 'accounts:register' %}" class="landing-btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:8px"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Get Started Now
         </a>
+      </div>
     </div>
+  </div>
 </section>
+
 {% endblock %}
