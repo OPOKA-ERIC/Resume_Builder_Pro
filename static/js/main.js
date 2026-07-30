@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Landing page navbar glass effect
     var landingNav = document.querySelector('.landing-page .navbar-main');
     if (landingNav) {
-        function handleScroll() { landingNav.classList.toggle('navbar-glass', window.scrollY > 50); }
+        function handleScroll() { landingNav.classList.toggle('scrolled', window.scrollY > 50); }
         window.addEventListener('scroll', handleScroll, { passive: true });
         handleScroll();
     }
