@@ -14,6 +14,7 @@ urlpatterns = [
     path('pdf/', include('pdf_export.urls')),
     path('portfolio/', include('portfolio.urls')),
     path('p/<slug:slug>/', portfolio_views.public_portfolio_view, name='portfolio_public'),
+    path('job-match/', include('job_match.urls')),
 ]
 
 if settings.DEBUG:

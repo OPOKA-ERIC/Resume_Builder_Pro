@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Match Results - Resume Builder Pro{% endblock %}
+{% block extra_css %}
+<style>
+.score-ring { width: 180px; height: 180px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; position: relative; }
+.score-ring-inner { width: 150px; height: 150px; border-radius: 50%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2; }
+.score-ring svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.score-ring circle { fill: none; stroke-width: 8; cx: 90; cy: 90; r: 82; }
+.score-ring .bg-circle { stroke: var(--gray-100); }
+.score-ring .progress-circle { stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+.score-number { font-family: var(--font-display); font-size: 2.8rem; font-weight: 800; line-height: 1; }
+.score-label { font-size: 0.85rem; color: var(--gray-500); font-weight: 500; }
+.skill-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: var(--radius-sm); transition: var(--transition-fast); }
+.skill-item:hover { background: var(--gray-50); }
+.skill-item .skill-name { font-weight: 600; flex: 1; }
+.skill-item .skill-badge { font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 50px; font-weight: 600; }
+.skill-category { font-size: 0.72rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+.progress-bar-custom { height: 8px; border-radius: 4px; background: var(--gray-100); overflow: hidden; }
+.progress-bar-custom .fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.recommendation-card { border-left: 4px solid var(--primary); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; margin-bottom: 0.75rem; background: var(--gray-50); }
+.recommendation-card.missing { border-left-color: var(--danger); }
+.recommendation-card.partial { border-left-color: var(--accent); }
+.action-link { text-decoration: none; font-weight: 600; transition: var(--transition-fast); }
+.action-link:hover { text-decoration: underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4 animate-fade-in-up">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'job_match:analyze' %}" class="text-decoration-none">Job Match Analyzer</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Results</li>
+        </ol>
+    </nav>
+</div>
+
+{% if all_analyses %}
+<div class="card mb-4 animate-fade-in-up">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-list-ol me-2 text-primary"></i>All Matched Jobs ({{ all_analyses|length }})</h5>
+        <div class="row g-2">
+            {% for a in all_analyses %}
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-2 p-2 rounded {% if a.id == analysis.id %}bg-primary bg-opacity-10 border border-primary{% else %}bg-gray-50{% endif %}" style="border: 1px solid var(--gray-200);">
+                    <div class="fw-bold fs-4 {% if a.id == analysis.id %}text-primary{% else %}text-muted{% endif %}">{{ a.overall_score|floatformat:0 }}%</div>
+                    <div class="small">
+                        <strong>{{ a.job.title|truncatechars:30 }}</strong><br>
+                        <span class="text-muted">{{ a.job.company|default:"—" }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <!-- Score Card -->
+    <div class="col-lg-4 animate-fade-in-up">
+        <div class="card h-100">
+            <div class="card-body p-4 text-center">
+                <h5 class="fw-bold mb-3"><i class="bi bi-trophy me-2 text-warning"></i>Match Score</h5>
+
+                {% with score=analysis.overall_score %}
+                <div class="score-ring mb-3">
+                    <div class="score-ring-inner">
+                        <div class="score-number">{{ score|floatformat:0 }}</div>
+                        <div class="score-label">% Match</div>
+                    </div>
+                    <svg viewBox="0 0 180 180">
+                        <circle class="bg-circle" cx="90" cy="90" r="82"/>
+                        <circle class="progress-circle"
+                            cx="90" cy="90" r="82"
+                            stroke="{% if score >= 80 %}var(--success){% elif score >= 60 %}var(--accent){% elif score >= 40 %}var(--secondary){% else %}var(--danger){% endif %}"
+                            stroke-dasharray="515"
+                            stroke-dashoffset="{{ 515|floatformat:0 }}"
+                            id="scoreCircle"/>
+                    </svg>
+                </div>
+                {% endwith %}
+
+                {% with score=analysis.overall_score %}
+                <div class="mb-3">
+                    {% if score >= 80 %}
+                        <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-check-circle me-1"></i>Strong Match</span>
+                    {% elif score >= 60 %}
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2"><i class="bi bi-exclamation-circle me-1"></i>Good Match</span>
+                    {% elif score >= 40 %}
+                        <span class="badge bg-info fs-6 px-3 py-2"><i class="bi bi-info-circle me-1"></i>Moderate Match</span>
+                    {% else %}
+                        <span class="badge bg-danger fs-6 px-3 py-2"><i class="bi bi-x-circle me-1"></i>Low Match</span>
+                    {% endif %}
+                </div>
+                {% endwith %}
+
+                <hr>
+                <div class="d-flex justify-content-around text-center">
+                    <div>
+                        <div class="fw-bold fs-5 text-success">{{ analysis.matched_skills|length }}</div>
+                        <small class="text-muted">Matched</small>
+                    </div>
+                    <div>
+                        <div class="fw-bold fs-5 text-warning">{{ analysis.partial_skills|length }}</div>
+                        <small class="text-muted">Partial</small>
+                    </div>
+                    <div>
+                        <div class="fw-bold fs-5 text-danger">{{ analysis.missing_skills|length }}</div>
+                        <small class="text-muted">Missing</small>
+                    </div>
+                    <div>
+                        <div class="fw-bold fs-5">{{ total }}</div>
+                        <small class="text-muted">Total</small>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="text-start small">
+                    {% if resume %}<div class="mb-1"><strong>Resume:</strong> {{ resume.title }}</div>{% endif %}
+                    {% if analysis.job.title %}<div class="mb-1"><strong>Job:</strong> {{ analysis.job.title }}{% if analysis.job.company %} at {{ analysis.job.company }}{% endif %}</div>{% endif %}
+                    <div class="text-muted">Analyzed {{ analysis.created_at|date:"M d, Y H:i" }}</div>
+                </div>
+
+                <div class="mt-3 d-grid gap-2">
+                    <a href="{% url 'job_match:analyze' %}" class="btn btn-primary btn-icon">
+                        <i class="bi bi-arrow-repeat"></i> Analyze Another
+                    </a>
+                    <a href="{% url 'job_match:history' %}" class="btn btn-outline-secondary btn-icon">
+                        <i class="bi bi-clock-history"></i> View History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details -->
+    <div class="col-lg-8">
+        <!-- Matched Skills -->
+        {% if analysis.matched_skills %}
+        <div class="card mb-3 animate-fade-in-up delay-1">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3 text-success"><i class="bi bi-check-circle-fill me-2"></i>Matched Skills ({{ analysis.matched_skills|length }})</h5>
+                {% for skill in analysis.matched_skills %}
+                <div class="skill-item">
+                    <i class="bi bi-check-circle-fill text-success flex-shrink-0"></i>
+                    <div class="skill-name">{{ skill.name }}</div>
+                    <span class="skill-category">{{ skill.category }}</span>
+                    <span class="skill-badge bg-success text-white">{{ skill.your_level }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Partial Skills -->
+        {% if analysis.partial_skills %}
+        <div class="card mb-3 animate-fade-in-up delay-2">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3 text-warning"><i class="bi bi-arrow-up-circle-fill me-2"></i>Skills to Upgrade ({{ analysis.partial_skills|length }})</h5>
+                {% for skill in analysis.partial_skills %}
+                <div class="skill-item">
+                    <i class="bi bi-arrow-up-circle-fill text-warning flex-shrink-0"></i>
+                    <div class="skill-name">{{ skill.name }}</div>
+                    <span class="skill-category">{{ skill.category }}</span>
+                    <span class="skill-badge bg-warning text-dark">{{ skill.your_level }}</span>
+                    <i class="bi bi-arrow-right text-muted"></i>
+                    <span class="skill-badge bg-success text-white">{{ skill.suggested_upgrade|title }}</span>
+                </div>
+                <div class="progress-bar-custom ms-4 mb-2" style="max-width: 300px;">
+                    <div class="fill" style="width: {{ skill.your_score }}%; background: var(--accent);"></div>
+                </div>
+                {% endfor %}
+                {% if resume %}
+                <div class="mt-3">
+                    <a href="{% url 'resumes:wizard_step' resume_id=resume.id step='skills' %}" class="action-link text-primary">
+                        <i class="bi bi-pencil me-1"></i> Update skills in resume wizard
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Missing Skills -->
+        {% if analysis.missing_skills %}
+        <div class="card mb-3 animate-fade-in-up delay-3">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-x-circle-fill me-2"></i>Missing Skills ({{ analysis.missing_skills|length }})</h5>
+                {% for skill in analysis.missing_skills %}
+                <div class="skill-item">
+                    <i class="bi bi-x-circle-fill text-danger flex-shrink-0"></i>
+                    <div class="skill-name">{{ skill.name }}</div>
+                    <span class="skill-category">{{ skill.category }}</span>
+                    <span class="skill-badge bg-danger text-white">Missing</span>
+                </div>
+                {% endfor %}
+                {% if resume %}
+                <div class="mt-3">
+                    <a href="{% url 'resumes:wizard_step' resume_id=resume.id step='skills' %}" class="action-link text-primary">
+                        <i class="bi bi-plus-circle me-1"></i> Add missing skills to your resume
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recommendations -->
+        {% if analysis.recommendations %}
+        <div class="card animate-fade-in-up delay-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-lightbulb me-2 text-warning"></i>Recommendations</h5>
+                <div style="white-space: pre-line; font-size: 0.92rem; line-height: 1.7; color: var(--gray-600);">
+                    {{ analysis.recommendations }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var circle = document.getElementById('scoreCircle');
+    if (circle) {
+        var score = {{ analysis.overall_score|floatformat:0 }};
+        var circumference = 515;
+        var offset = circumference - (score / 100) * circumference;
+        setTimeout(function() {
+            circle.style.strokeDashoffset = offset;
+        }, 300);
+    }
+});
+</script>
+{% endblock %}

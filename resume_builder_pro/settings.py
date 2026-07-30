@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
@@ -24,6 +26,7 @@ INSTALLED_APPS = [
     'templates_app',
     'pdf_export',
     'portfolio',
+    'job_match',
 ]
 
 MIDDLEWARE = [
@@ -95,6 +98,9 @@ LOGIN_REDIRECT_URL = '/resumes/'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Gemini configuration (for AI-powered job fetch)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

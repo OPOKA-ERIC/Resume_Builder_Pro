@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Analysis History - Resume Builder Pro{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 animate-fade-in-up">
+    <div>
+        <h2 class="fw-bold mb-1"><i class="bi bi-clock-history me-2 text-primary"></i>Analysis History</h2>
+        <p class="text-muted mb-0">Your previous job match analyses</p>
+    </div>
+    <a href="{% url 'job_match:analyze' %}" class="btn btn-primary btn-icon">
+        <i class="bi bi-plus-lg"></i> New Analysis
+    </a>
+</div>
+
+{% if analyses %}
+<div class="row g-3">
+    {% for analysis in analyses %}
+    <div class="col-md-6 col-lg-4 animate-fade-in-up delay-{{ forloop.counter }}">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    {% with score=analysis.overall_score %}
+                    <div style="width: 60px; height: 60px; border-radius: 50%;
+                        background: {% if score >= 80 %}var(--success){% elif score >= 60 %}var(--accent){% elif score >= 40 %}var(--secondary){% else %}var(--danger){% endif %};
+                        display: flex; align-items: center; justify-content: center;
+                        color: white; font-weight: 800; font-size: 1.2rem;">
+                        {{ score|floatformat:0 }}%
+                    </div>
+                    {% endwith %}
+                    <small class="text-muted">{{ analysis.created_at|date:"M d, Y" }}</small>
+                </div>
+
+                <h6 class="fw-bold mb-1">{{ analysis.job.title|default:"Job Description" }}</h6>
+                {% if analysis.job.company %}<p class="text-muted small mb-2">{{ analysis.job.company }}</p>{% endif %}
+
+                <div class="d-flex gap-2 small mb-2">
+                    <span class="text-success"><i class="bi bi-check-circle"></i> {{ analysis.matched_skills|length }} matched</span>
+                    <span class="text-warning"><i class="bi bi-arrow-up"></i> {{ analysis.partial_skills|length }} partial</span>
+                    <span class="text-danger"><i class="bi bi-x-circle"></i> {{ analysis.missing_skills|length }} missing</span>
+                </div>
+
+                <p class="small text-muted mb-2">
+                    <i class="bi bi-file-earmark-text me-1"></i>{{ analysis.resume.title|default:"Uploaded resume" }}
+                </p>
+
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'job_match:results' analysis_id=analysis.id %}" class="btn btn-sm btn-outline-primary btn-icon">
+                        <i class="bi bi-eye"></i> View
+                    </a>
+                    <form method="post" action="{% url 'job_match:delete_analysis' analysis_id=analysis.id %}" class="d-inline"
+                          onsubmit="return confirm('Delete this analysis?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger btn-icon">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card animate-fade-in-up">
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <h4 class="fw-bold mb-2">No analyses yet</h4>
+        <p class="text-muted mb-4">You haven't analyzed any job descriptions yet.</p>
+        <a href="{% url 'job_match:analyze' %}" class="btn btn-primary btn-lg btn-icon">
+            <i class="bi bi-graph-up-arrow"></i> Analyze Your First Job
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
