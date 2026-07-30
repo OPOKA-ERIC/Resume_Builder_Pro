@@ -1,6 +1,11 @@
 import re
 from difflib import SequenceMatcher
 
+SOFT_SKILL_CATEGORIES = {
+    'Soft Skills', 'Marketing & Sales', 'Accounting & Finance',
+    'Human Resources', 'Healthcare & Medical',
+}
+
 SKILL_TAXONOMY = {
     'Programming Languages': [
         'Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'C#', 'Ruby', 'Go', 'Rust',
@@ -143,6 +148,11 @@ def tokenize(text):
     return set(normalize_text(text).split())
 
 
+def _word_boundary_pattern(skill_lower: str) -> str:
+    escaped = re.escape(skill_lower)
+    return rf'(?<![a-z]){escaped}(?![a-z])'
+
+
 def extract_skills_from_jd(jd_text):
     found_skills = {}
     text_lower = jd_text.lower()
@@ -152,7 +162,8 @@ def extract_skills_from_jd(jd_text):
             skill_lower = skill.lower()
             score = 0
 
-            if skill_lower in text_lower:
+            pattern = _word_boundary_pattern(skill_lower)
+            if re.search(pattern, text_lower):
                 score = len(skill_lower) / max(len(skill_lower), 1)
             else:
                 skill_tokens = set(skill_lower.split())
@@ -169,6 +180,20 @@ def extract_skills_from_jd(jd_text):
     return found_skills
 
 
+def extract_core_jd_skills(jd_text: str, max_skills: int = 20) -> dict:
+    all_skills = extract_skills_from_jd(jd_text)
+    filtered = {
+        name: info for name, info in all_skills.items()
+        if info['category'] not in SOFT_SKILL_CATEGORIES
+    }
+    sorted_skills = sorted(
+        filtered.items(),
+        key=lambda x: x[1].get('confidence', 0),
+        reverse=True,
+    )
+    return dict(sorted_skills[:max_skills])
+
+
 def get_resume_skill_map(resume):
     skills_data = {}
     for s in resume.skills.all():
@@ -180,47 +205,61 @@ def get_resume_skill_map(resume):
     return skills_data
 
 
+# Signals that indicate proficiency context in surrounding text
+_LEVEL_SIGNALS = {
+    'expert':       ['expert', 'lead', 'architect', 'principal', 'senior', 'years of experience', '5+ years', '7+ years', '10+ years'],
+    'advanced':     ['advanced', 'proficient', 'strong', 'extensive', '3+ years', '4+ years'],
+    'intermediate': ['intermediate', 'working knowledge', 'familiar', '1+ year', '2+ years'],
+    'beginner':     ['beginner', 'basic', 'exposure', 'learning', 'entry'],
+}
+
+
+def _infer_level_from_context(skill_lower: str, text: str) -> tuple[str, int]:
+    """Look at the 200-char window around the skill mention to infer proficiency."""
+    text_lower = text.lower()
+    idx = text_lower.find(skill_lower)
+    if idx == -1:
+        return 'intermediate', 50
+    window = text_lower[max(0, idx - 100): idx + 100]
+    for level in ('expert', 'advanced', 'intermediate', 'beginner'):
+        if any(sig in window for sig in _LEVEL_SIGNALS[level]):
+            return level, PROFICIENCY_MAP[level]
+    return 'intermediate', 50
+
+
 def extract_skills_from_resume_text(text):
     found = {}
     text_lower = text.lower()
     for category, skills in SKILL_TAXONOMY.items():
         for skill in skills:
             skill_lower = skill.lower()
-            if skill_lower in text_lower:
-                found[skill] = {
-                    'name': skill,
-                    'category': category,
-                    'level': 'intermediate',
-                    'level_score': 50,
-                }
+            matched = False
+            pattern = _word_boundary_pattern(skill_lower)
+            if re.search(pattern, text_lower):
+                matched = True
             else:
                 skill_tokens = set(skill_lower.split())
                 if len(skill_tokens) > 1 and skill_tokens.issubset(tokenize(text)):
-                    found[skill] = {
-                        'name': skill,
-                        'category': category,
-                        'level': 'intermediate',
-                        'level_score': 50,
-                    }
+                    matched = True
+            if matched:
+                level, level_score = _infer_level_from_context(skill_lower, text)
+                found[skill] = {
+                    'name': skill,
+                    'category': category,
+                    'level': level,
+                    'level_score': level_score,
+                }
     return found
 
 
-def analyze_match_from_text(resume_text, job_text):
-    resume_skills = extract_skills_from_resume_text(resume_text)
-    jd_skills = extract_skills_from_jd(job_text)
-
-    matched = []
-    missing = []
-    partial = []
-
-    matched_count = 0
+def _build_analysis(jd_skills: dict, resume_skills: dict, level_label_fn) -> dict:
+    """Shared core matching logic for both resume types."""
+    matched, missing, partial = [], [], []
     total_score = 0
-    total_possible = len(jd_skills) * 100 if jd_skills else 1
 
     for jd_skill_name, jd_skill_info in jd_skills.items():
         jd_lower = jd_skill_name.lower()
-        best_match = None
-        best_ratio = 0.0
+        best_match, best_ratio = None, 0.0
 
         for rs_lower, rs_info in resume_skills.items():
             ratio = fuzzy_match_skill(rs_lower, jd_lower)
@@ -228,92 +267,17 @@ def analyze_match_from_text(resume_text, job_text):
                 best_ratio = ratio
                 best_match = rs_info
 
-        threshold = 0.6
-        if best_match and best_ratio >= threshold:
-            your_level = best_match['level_score']
-            total_score += your_level
-            matched_count += 1
-
-            if your_level < 100:
-                partial.append({
-                    'name': jd_skill_name,
-                    'category': jd_skill_info['category'],
-                    'your_level': 'Detected',
-                    'your_score': your_level,
-                    'target_score': 100,
-                    'suggested_upgrade': 'advanced',
-                })
-            else:
-                matched.append({
-                    'name': jd_skill_name,
-                    'category': jd_skill_info['category'],
-                    'your_level': 'Detected',
-                    'your_score': your_level,
-                })
-        else:
-            missing.append({
-                'name': jd_skill_name,
-                'category': jd_skill_info['category'],
-                'your_level': 'Missing',
-                'your_score': 0,
-            })
-
-    overall_score = round((total_score / total_possible) * 100, 1) if total_possible else 0
-    recommendations = generate_recommendations(matched, missing, partial, overall_score)
-
-    return {
-        'overall_score': overall_score,
-        'matched_skills': matched,
-        'missing_skills': missing,
-        'partial_skills': partial,
-        'total_jd_skills': len(jd_skills),
-        'matched_count': matched_count,
-        'missing_count': len(missing),
-        'partial_count': len(partial),
-        'recommendations': recommendations,
-    }
-
-
-def fuzzy_match_skill(resume_skill_name, jd_skill_name):
-    return SequenceMatcher(None, resume_skill_name.lower(), jd_skill_name.lower()).ratio()
-
-
-def analyze_match(resume, job_text):
-    jd_skills = extract_skills_from_jd(job_text)
-    resume_skills = get_resume_skill_map(resume)
-
-    matched = []
-    missing = []
-    partial = []
-
-    matched_count = 0
-    total_score = 0
-    total_possible = len(jd_skills) * 100 if jd_skills else 1
-
-    for jd_skill_name, jd_skill_info in jd_skills.items():
-        jd_lower = jd_skill_name.lower()
-        best_match = None
-        best_ratio = 0.0
-
-        for rs_lower, rs_info in resume_skills.items():
-            ratio = fuzzy_match_skill(rs_lower, jd_lower)
-            if ratio > best_ratio:
-                best_ratio = ratio
-                best_match = rs_info
-
-        threshold = 0.6
-        if best_match and best_ratio >= threshold:
-            your_level = best_match['level_score']
-            score = your_level
+        if best_match and best_ratio >= 0.6:
+            score = best_match['level_score']          # 25 / 50 / 75 / 100
             total_score += score
-            matched_count += 1
+            label = level_label_fn(best_match)
 
-            if your_level < 100:
+            if score < 75:
                 partial.append({
                     'name': jd_skill_name,
                     'category': jd_skill_info['category'],
-                    'your_level': LEVEL_LABELS.get(best_match['level'], 'Unknown'),
-                    'your_score': your_level,
+                    'your_level': label,
+                    'your_score': score,
                     'target_score': 100,
                     'suggested_upgrade': _suggest_upgrade(best_match['level']),
                 })
@@ -321,11 +285,10 @@ def analyze_match(resume, job_text):
                 matched.append({
                     'name': jd_skill_name,
                     'category': jd_skill_info['category'],
-                    'your_level': LEVEL_LABELS.get(best_match['level'], 'Unknown'),
-                    'your_score': your_level,
+                    'your_level': label,
+                    'your_score': score,
                 })
         else:
-            total_score += 0
             missing.append({
                 'name': jd_skill_name,
                 'category': jd_skill_info['category'],
@@ -333,8 +296,9 @@ def analyze_match(resume, job_text):
                 'your_score': 0,
             })
 
-    overall_score = round((total_score / total_possible) * 100, 1) if total_possible else 0
-
+    # Score = average proficiency across all JD skills (missing = 0)
+    total_possible = len(jd_skills) * 100 if jd_skills else 1
+    overall_score = round(total_score / total_possible * 100, 1)
     recommendations = generate_recommendations(matched, missing, partial, overall_score)
 
     return {
@@ -343,11 +307,33 @@ def analyze_match(resume, job_text):
         'missing_skills': missing,
         'partial_skills': partial,
         'total_jd_skills': len(jd_skills),
-        'matched_count': matched_count,
+        'matched_count': len(matched),
         'missing_count': len(missing),
         'partial_count': len(partial),
         'recommendations': recommendations,
     }
+
+
+def analyze_match_from_text(resume_text, job_text):
+    resume_skills = extract_skills_from_resume_text(resume_text)
+    jd_skills = extract_core_jd_skills(job_text)
+    return _build_analysis(
+        jd_skills, resume_skills,
+        level_label_fn=lambda s: LEVEL_LABELS.get(s['level'], 'Detected'),
+    )
+
+
+def fuzzy_match_skill(resume_skill_name, jd_skill_name):
+    return SequenceMatcher(None, resume_skill_name.lower(), jd_skill_name.lower()).ratio()
+
+
+def analyze_match(resume, job_text):
+    jd_skills = extract_core_jd_skills(job_text)
+    resume_skills = get_resume_skill_map(resume)
+    return _build_analysis(
+        jd_skills, resume_skills,
+        level_label_fn=lambda s: LEVEL_LABELS.get(s['level'], 'Unknown'),
+    )
 
 
 def _suggest_upgrade(current_level):
