@@ -75,15 +75,17 @@ def public_portfolio_view(request, slug):
 
     resume = portfolio.resume
 
-    # Normalize project links so relative URLs don't break
-    for project in resume.projects.all():
-        project.safe_link = _normalize_url(project.link)
-
     user_profile = getattr(resume.user, 'profile', None)
     public_url = f'{request.scheme}://{request.get_host()}{portfolio.get_public_url()}'
 
     user = resume.user
     display_name = user.get_full_name().strip() or user.username.replace('_', ' ').replace('-', ' ').strip().title()
+
+    # Pass projects as a list with safe links (template re-queries .all() otherwise)
+    projects = []
+    for p in resume.projects.all():
+        p.safe_link = _normalize_url(p.link)
+        projects.append(p)
 
     return render(request, 'portfolio/public.html', {
         'portfolio': portfolio,
@@ -91,4 +93,5 @@ def public_portfolio_view(request, slug):
         'profile': user_profile,
         'public_url': public_url,
         'display_name': display_name,
+        'projects': projects,
     })

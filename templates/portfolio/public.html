@@ -425,13 +425,13 @@
 {% endif %}
 
 <!-- ═══ Projects ═══ -->
-{% if resume.projects.all %}
+{% if projects %}
 <section id="projects">
     <div class="container">
         <div class="section-label">Projects</div>
         <h2 class="section-title">What I've Built</h2>
         <div class="projects-grid">
-            {% for project in resume.projects.all %}
+            {% for project in projects %}
                 <div class="project-card">
                     <h3>{{ project.name }}</h3>
                     {% if project.description %}<p>{{ project.description|truncatewords:30 }}</p>{% endif %}
