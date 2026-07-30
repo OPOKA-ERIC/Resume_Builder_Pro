@@ -124,8 +124,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 
             _set(task, f'Found {len(jobs)} jobs — analysing…', 50)
 
-            analyses = []
-            for job in jobs:
+            def _analyse_job(job):
                 job_desc = JobDescription.objects.create(
                     user=user,
                     title=job.get('title', ''),
@@ -134,7 +133,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
                     source_url='',
                 )
                 result = _run_analysis(resume_text, job.get('description', ''), resume=resume)
-                analysis = SkillGapAnalysis.objects.create(
+                return SkillGapAnalysis.objects.create(
                     job=job_desc,
                     resume=resume,
                     overall_score=result['overall_score'],
@@ -143,7 +142,22 @@ def _run_task(task_id: str, user_id: int, payload: dict):
                     partial_skills=result.get('partial_skills', []),
                     recommendations=result.get('recommendations', ''),
                 )
-                analyses.append(analysis)
+
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+            analyses = []
+            with ThreadPoolExecutor(max_workers=len(jobs)) as ex:
+                futures = [ex.submit(_analyse_job, job) for job in jobs]
+                for f in as_completed(futures, timeout=15):
+                    try:
+                        analyses.append(f.result())
+                    except Exception as e:
+                        logger.warning('Job analysis failed: %s', e)
+
+            if not analyses:
+                task.status = AnalysisTask.STATUS_ERROR
+                task.error  = 'All job analyses failed. Please try again.'
+                task.save(update_fields=['status', 'error', 'updated_at'])
+                return
 
             top = max(analyses, key=lambda a: a.overall_score)
             task.status      = AnalysisTask.STATUS_DONE
@@ -163,12 +177,10 @@ def _run_task(task_id: str, user_id: int, payload: dict):
                 task.save(update_fields=['status', 'error', 'updated_at'])
                 return
 
-            _set(task, 'Extracting job details with AI…', 45)
-            parsed = extract_job_details(fetched['description'])
-
-            job_title = job_title or parsed.get('title', '')
-            company   = company   or parsed.get('company', '')
-            job_text  = parsed.get('description') or fetched['description']
+            # Use fetched title/company directly — skip the extra Gemini parse call
+            job_title = job_title or fetched.get('title', '')
+            company   = company   or fetched.get('company', '')
+            job_text  = fetched['description']
 
         # ── 3. Analyse ──────────────────────────────────────────────────────
         _set(task, 'Scoring your resume against the job…', 70)

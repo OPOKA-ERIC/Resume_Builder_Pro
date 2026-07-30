@@ -79,7 +79,7 @@ def _call(prompt: str) -> dict:
 
     try:
         config = GenerateContentConfig(
-            http_options=HttpOptions(timeout=10000),
+            http_options=HttpOptions(timeout=6000),
         )
         response = client.models.generate_content(
             model=MODEL_NAME,

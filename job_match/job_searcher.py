@@ -9,7 +9,7 @@ from .job_fetcher import fetch_job_from_url
 logger = logging.getLogger(__name__)
 
 
-def search_jobs_for_resume(resume_text: str, max_results: int = 5, max_workers: int = 6) -> list:
+def search_jobs_for_resume(resume_text: str, max_results: int = 2, max_workers: int = 6) -> list:
     queries = _generate_queries(resume_text)
     if not queries:
         return []
@@ -72,7 +72,7 @@ def _generate_queries(resume_text: str) -> list:
                 'Example: ["Python Backend Developer", "Django Software Engineer", "API Developer Python"]\n\n'
                 f"RESUME:\n{resume_text[:2000]}"
             )
-            config = GenerateContentConfig(http_options=HttpOptions(timeout=10000))
+            config = GenerateContentConfig(http_options=HttpOptions(timeout=6000))
             response = client.models.generate_content(
                 model='gemini-2.0-flash', contents=prompt, config=config,
             )
