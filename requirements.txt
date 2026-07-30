@@ -5,3 +5,6 @@ psycopg2-binary
 xhtml2pdf
 Pillow
 dj-database-url
+requests
+python-whois
+deep-translator==1.11.4

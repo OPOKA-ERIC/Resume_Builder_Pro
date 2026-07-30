@@ -1,0 +1,213 @@
+{% extends "resumes/themes/base_resume.html" %}
+
+{% block content %}
+<div class="archetype-e" style="padding: 24px 30px;">
+  <!-- Header -->
+  <header class="header" style="margin-bottom: 16px;">
+    <h1 style="font-size: 24pt; margin-bottom: 4px;">{{ user.get_full_name|default:user.username }}</h1>
+    {% if resume.title %}
+    <div style="font-size: 12pt; color: var(--text-secondary); margin-bottom: 8px;">{{ resume.title }}</div>
+    {% endif %}
+    <div class="contact-list">
+      {% if user.email %}
+      <div class="contact-item">{{ user.email }}</div>
+      {% endif %}
+      {% if user.profile.phone %}
+      <div class="contact-item">{{ user.profile.phone }}</div>
+      {% endif %}
+      {% if user.profile.address %}
+      <div class="contact-item">{{ user.profile.address }}</div>
+      {% endif %}
+      {% for link in resume.social_links.all %}
+      <div class="contact-item">
+        <a href="{{ link.url }}">{{ link.label }}</a>
+      </div>
+      {% endfor %}
+    </div>
+  </header>
+
+  {% block summary %}
+  {% if resume.summary %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Professional Summary</div>
+    <div class="entry-description">{{ resume.summary }}</div>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block experience %}
+  {% if resume.experiences.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Experience</div>
+    {% for exp in resume.experiences.all %}
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">{{ exp.role }}</div>
+          <div class="entry-subtitle">{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</div>
+        </div>
+        <div class="entry-date">{{ exp.start_year }} - {{ exp.end_year|default:"Present" }}</div>
+      </div>
+      {% if exp.description %}
+      <div class="entry-description">{{ exp.description|linebreaksbr }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block education %}
+  {% if resume.educations.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Education</div>
+    {% for edu in resume.educations.all %}
+    <div class="entry">
+      <div class="entry-header">
+        <div>
+          <div class="entry-title">{{ edu.qualification }}</div>
+          <div class="entry-subtitle">{{ edu.institution }}</div>
+        </div>
+        <div class="entry-date">{{ edu.start_year }} - {{ edu.end_year|default:"Present" }}</div>
+      </div>
+      {% if edu.description %}
+      <div class="entry-description">{{ edu.description }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block skills %}
+  {% if resume.skills.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Skills</div>
+    <ul class="skill-list">
+      {% for skill in resume.skills.all %}
+      <li class="skill-item">{{ skill.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block projects %}
+  {% if resume.projects.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Projects</div>
+    {% for project in resume.projects.all %}
+    <div class="entry">
+      <div class="entry-title">{{ project.name }}</div>
+      {% if project.description %}
+      <div class="entry-description">{{ project.description }}</div>
+      {% endif %}
+      {% if project.link %}
+      <a href="{{ project.link }}" class="project-link">{{ project.link }}</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block certifications %}
+  {% if resume.certifications.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Certifications</div>
+    {% for cert in resume.certifications.all %}
+    <div class="certification-item">
+      <div>
+        <span class="cert-title">{{ cert.title }}</span>
+        {% if cert.issuer %} <span class="cert-issuer">- {{ cert.issuer }}</span>{% endif %}
+      </div>
+      {% if cert.year_awarded %}
+      <span class="cert-year">{{ cert.year_awarded }}</span>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block languages %}
+  {% if resume.languages.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Languages</div>
+    <div class="language-list">
+      {% for lang in resume.languages.all %}
+      <div class="language-item">
+        {{ lang.name }} <span class="level">- {{ lang.proficiency_level }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+  {% block references %}
+  {% if resume.references.all %}
+  <div class="card section" style="
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  ">
+    <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">References</div>
+    <div class="reference-grid">
+      {% for ref in resume.references.all %}
+      <div class="reference-item">
+        <div class="reference-name">{{ ref.name }}</div>
+        <div class="reference-relationship">{{ ref.relationship }}</div>
+        <div class="reference-contact">{{ ref.contact }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endblock %}
+</div>
+{% endblock %}

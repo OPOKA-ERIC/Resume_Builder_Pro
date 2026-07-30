@@ -1,0 +1,632 @@
+[
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 28,
+    "fields": {
+      "name": "Classic Europass",
+      "description": "A clean, traditional sidebar layout with light-blue panel. ATS-friendly and perfect for formal industries.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/classic-europass.html",
+      "tags": ["simple", "ats", "professional", "with_photo"],
+      "swatches": ["#1a5276", "#2e86c1", "#1e3a5f"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 29,
+    "fields": {
+      "name": "Modern Clean",
+      "description": "A sleek, modern template with indigo gradient header and two-column body. Great for tech and creative roles.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/modern-clean.html",
+      "tags": ["modern", "with_photo", "two_column"],
+      "swatches": ["#4f46e5", "#7c3aed", "#2563eb"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 30,
+    "fields": {
+      "name": "Professional Sidebar",
+      "description": "Slim dark header with photo, single flowing column. Professional and polished for established careers.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/professional-sidebar.html",
+      "tags": ["modern", "with_photo", "professional"],
+      "swatches": ["#1e293b", "#334155", "#475569"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 31,
+    "fields": {
+      "name": "Two-Column Balanced",
+      "description": "Equal-width columns with diamond bullets and clean dividers. Balanced and professional.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "D",
+      "skin_file": "skins/two-column-balanced.html",
+      "tags": ["modern", "two_column"],
+      "swatches": ["#1e40af", "#2563eb", "#3b82f6"],
+      "supports_photo": false,
+      "supports_monochrome": false,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 32,
+    "fields": {
+      "name": "Executive",
+      "description": "Compact single-line header with dot markers. ATS-safe plain formatting for senior professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/executive.html",
+      "tags": ["professional", "ats", "simple"],
+      "swatches": ["#1f2937", "#374151", "#6b7280"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 33,
+    "fields": {
+      "name": "Celestial",
+      "description": "Soft neutral tones with refined serif typography. Two even columns for balanced presentation.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "D",
+      "skin_file": "skins/celestial.html",
+      "tags": ["simple", "two_column", "ats"],
+      "swatches": ["#374151", "#6b7280", "#9ca3af"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 34,
+    "fields": {
+      "name": "Galaxy",
+      "description": "Centered name with dotted leader lines pushing dates to the right edge. Classic and elegant.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/galaxy.html",
+      "tags": ["simple", "ats", "professional"],
+      "swatches": ["#111827", "#374151", "#6b7280"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 35,
+    "fields": {
+      "name": "Astral",
+      "description": "Tan photo header block with two-column body. Warm and professional for creative roles.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "E",
+      "skin_file": "skins/astral.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#d97706", "#f59e0b", "#b45309"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 36,
+    "fields": {
+      "name": "Eclipse",
+      "description": "Centered header with generous whitespace. Monochrome-only for a minimalist, sophisticated look.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/eclipse.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#6b7280", "#9ca3af", "#d1d5db"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 37,
+    "fields": {
+      "name": "Astralis",
+      "description": "Bold teal-bordered frame with dark sidebar. Striking and memorable for standout applications.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/astralis.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#e94560", "#dc2626", "#f43f5e"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 38,
+    "fields": {
+      "name": "Orbit",
+      "description": "Left-aligned plain header with tight line spacing. Clean and efficient for experienced professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/orbit.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#111827", "#374151", "#6b7280"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 39,
+    "fields": {
+      "name": "Comet",
+      "description": "Vibrant yellow header with black pill-shaped detail boxes. Eye-catching and dynamic.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/comet.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#fbbf24", "#f59e0b", "#d97706"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 40,
+    "fields": {
+      "name": "Solstice",
+      "description": "Bold name with thick double horizontal rule. Strong visual impact for confident candidates.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/solstice.html",
+      "tags": ["modern", "ats", "one_column"],
+      "swatches": ["#111827", "#1f2937", "#374151"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 41,
+    "fields": {
+      "name": "Pulsar",
+      "description": "Pale green sidebar with arrow accents. Fresh and modern for growth-oriented professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/pulsar.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#16a34a", "#22c55e", "#059669"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 42,
+    "fields": {
+      "name": "Quasar",
+      "description": "Muted grey tones with two-column skills grid. Understated and professional for technical roles.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/quasar.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#4b5563", "#6b7280", "#9ca3af"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 43,
+    "fields": {
+      "name": "Nebular",
+      "description": "Cream sidebar panel with warm tones. Contemporary and visually appealing for personal branding.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/nebular.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#8b5a2b", "#d4a574", "#a0522d"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 44,
+    "fields": {
+      "name": "Nova",
+      "description": "Bright pale-green header with arrow accents. Bold and transformative for career moments.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/nova.html",
+      "tags": ["modern", "one_column"],
+      "swatches": ["#22c55e", "#16a34a", "#15803d"],
+      "supports_photo": false,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 45,
+    "fields": {
+      "name": "Aurora",
+      "description": "Rose-toned panels with card-per-section layout. Unique and distinctive for creative professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "E",
+      "skin_file": "skins/aurora.html",
+      "tags": ["modern", "creative"],
+      "swatches": ["#ec4899", "#db2777", "#be185d"],
+      "supports_photo": false,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 46,
+    "fields": {
+      "name": "Hyperion",
+      "description": "Grey pill-shaped date badges above job entries. Clean and organized for experienced professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/executive.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#374151", "#6b7280", "#9ca3af"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 47,
+    "fields": {
+      "name": "Lunar",
+      "description": "Slim left info rail with monochrome dial. Minimalist and elegant for clarity-focused candidates.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/lunar.html",
+      "tags": ["simple", "ats", "with_photo"],
+      "swatches": ["#334155", "#475569", "#64748b"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 48,
+    "fields": {
+      "name": "Stellar",
+      "description": "Two-column with icon-prefixed contact details. Sleek and polished for standout achievements.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "F",
+      "skin_file": "skins/stellar.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#6b7280", "#9ca3af", "#d1d5db"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 49,
+    "fields": {
+      "name": "Zenith",
+      "description": "Soft pastel-green sidebar with bold section bars. Minimalistic with clarity and impact.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/zenith.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#22c55e", "#16a34a", "#15803d"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 50,
+    "fields": {
+      "name": "Aether",
+      "description": "Sharp single column with structured underlines. Professional and precise for expert candidates.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/aether.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#374151", "#6b7280", "#9ca3af"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 51,
+    "fields": {
+      "name": "Nebula",
+      "description": "Solid blue header with sidebar-style education and skills. Creative and expansive for diverse skills.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/nebula.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#1e40af", "#2563eb", "#3b82f6"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 52,
+    "fields": {
+      "name": "Eon",
+      "description": "Small photo beside name in dense single column. Clean and easy-to-read for qualifications focus.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "F",
+      "skin_file": "skins/eon.html",
+      "tags": ["simple", "ats", "with_photo"],
+      "swatches": ["#1f2937", "#374151", "#6b7280"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 53,
+    "fields": {
+      "name": "Cosmos",
+      "description": "Grey photo header banner with broad career overview. Comprehensive and professional.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "E",
+      "skin_file": "skins/cosmos.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#6b7280", "#9ca3af", "#d1d5db"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 54,
+    "fields": {
+      "name": "Starburst",
+      "description": "Dark charcoal header bar with photo and two-column body. Modern and professional.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/starburst.html",
+      "tags": ["modern", "with_photo", "two_column"],
+      "swatches": ["#1f2937", "#374151", "#6b7280"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 55,
+    "fields": {
+      "name": "Exoplanet",
+      "description": "Simple single column with two-column skills list. Organized and neat for clear presentation.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/exoplanet.html",
+      "tags": ["simple", "ats", "one_column"],
+      "swatches": ["#374151", "#6b7280", "#9ca3af"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 56,
+    "fields": {
+      "name": "Axis",
+      "description": "High-contrast blue sidebar with bold uppercase name. Strong visual hierarchy for leadership roles.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/axis.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#1d4ed8", "#2563eb", "#3b82f6"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 57,
+    "fields": {
+      "name": "Keystone",
+      "description": "Soft pale-blue sidebar with teal accent line. Professional and approachable for mid-career professionals.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "A",
+      "skin_file": "skins/keystone.html",
+      "tags": ["modern", "with_photo"],
+      "swatches": ["#0369a1", "#0ea5e9", "#38bdf8"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 58,
+    "fields": {
+      "name": "Helix",
+      "description": "Circular profile photo top-left with two-column layout. Generous whitespace and minimal rules.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "D",
+      "skin_file": "skins/helix.html",
+      "tags": ["modern", "with_photo", "two_column"],
+      "swatches": ["#059669", "#10b981", "#34d399"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 59,
+    "fields": {
+      "name": "Horizon",
+      "description": "Bold black outer border frame with traditional serif layout. Formal and distinctive.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "F",
+      "skin_file": "skins/horizon.html",
+      "tags": ["professional", "with_photo"],
+      "swatches": ["#1f2937", "#374151", "#6b7280"],
+      "supports_photo": true,
+      "supports_monochrome": true,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 60,
+    "fields": {
+      "name": "Quantum",
+      "description": "Thin solid navy top bar with right-aligned contact details. Split-column body for balanced presentation.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "D",
+      "skin_file": "skins/quantum.html",
+      "tags": ["modern", "with_photo", "two_column"],
+      "swatches": ["#1e3a5f", "#2563eb", "#3b82f6"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 61,
+    "fields": {
+      "name": "Meteor",
+      "description": "Vibrant and innovative template for creative, forward-thinking career paths.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "B",
+      "skin_file": "skins/comet.html",
+      "tags": ["modern", "creative", "with_photo"],
+      "swatches": ["#f97316", "#ea580c", "#c2410c"],
+      "supports_photo": true,
+      "supports_monochrome": false,
+      "ats_safe": false,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "templates_app.resumetemplate",
+    "pk": 62,
+    "fields": {
+      "name": "Shokumukeirekisho",
+      "description": "Detailed career history template designed to highlight experience and achievements.",
+      "html_file": "pdf/resume_pdf.html",
+      "is_active": true,
+      "archetype": "C",
+      "skin_file": "skins/galaxy.html",
+      "tags": ["professional", "ats", "one_column"],
+      "swatches": ["#1f2937", "#374151", "#4b5563"],
+      "supports_photo": false,
+      "supports_monochrome": true,
+      "ats_safe": true,
+      "created_at": "2026-07-26T00:00:00Z"
+    }
+  }
+]

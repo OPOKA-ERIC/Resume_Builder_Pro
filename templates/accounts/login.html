@@ -1,68 +1,107 @@
 {% extends "base.html" %}
-{% block title %}Login - Resume Builder Pro{% endblock %}
-{% block main_class %}{% endblock %}
+{% load static %}
+{% block title %}Sign In — Resume Builder Pro{% endblock %}
+{% block main_class %}landing-page{% endblock %}
 
 {% block content %}
-<div class="auth-split animate-fade-in-up">
-    <div class="auth-split-left">
-        <h2>Welcome Back</h2>
-        <p>Sign in to access your saved resumes, templates, and continue building your professional profile.</p>
-        <ul class="auth-split-features">
-            <li><i class="bi bi-check-circle-fill"></i> Access all your saved resumes</li>
-            <li><i class="bi bi-check-circle-fill"></i> Continue editing from where you left off</li>
-            <li><i class="bi bi-check-circle-fill"></i> Download resumes as PDF anytime</li>
-            <li><i class="bi bi-check-circle-fill"></i> Switch templates instantly</li>
-        </ul>
-    </div>
-    <div class="auth-split-right">
-        <div class="auth-split-form">
-            <h3>Sign In</h3>
-            <p class="auth-subtitle">Enter your credentials to continue</p>
-            <form method="post" novalidate>
-                {% csrf_token %}
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {% for error in form.non_field_errors %}
-                            <p class="mb-0">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div class="mb-3">
-                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                    <div class="input-group-icon">
-                        <i class="bi bi-person input-icon"></i>
-                        {{ form.username }}
-                    </div>
-                    {% if form.username.errors %}
-                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.username.errors.0 }}</div>
-                    {% endif %}
-                </div>
-                <div class="mb-3">
-                    <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                    <div class="input-group-icon">
-                        <i class="bi bi-lock input-icon"></i>
-                        {{ form.password }}
-                        <button type="button" class="password-toggle" onclick="togglePassword(this)" title="Show password">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                    {% if form.password.errors %}
-                        <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ form.password.errors.0 }}</div>
-                    {% endif %}
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mt-3 btn-icon">
-                    <i class="bi bi-box-arrow-in-right"></i> Sign In
-                </button>
-            </form>
-            <div class="text-center mt-4">
-                <p class="mb-0">
-                    <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot your password?</a>
-                </p>
-                <p class="mb-0 text-muted mt-2">
-                    Don't have an account? <a href="{% url 'accounts:register' %}" class="auth-link">Create one</a>
-                </p>
-            </div>
+
+<section class="auth-premium" id="authLogin">
+  <div class="auth-premium-bg"></div>
+  <div class="auth-premium-dots"></div>
+
+  <div class="auth-premium-container">
+    <div class="auth-card-wrap">
+      <!-- Features Panel -->
+      <div class="auth-features-panel">
+        <div class="afp-content">
+          <h2 class="afp-title">Welcome Back</h2>
+          <p class="afp-sub">Sign in to access your saved resumes, templates, and continue building your professional profile.</p>
+          <ul class="afp-list">
+            <li class="afp-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Access all your saved resumes
+            </li>
+            <li class="afp-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Continue editing from where you left off
+            </li>
+            <li class="afp-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Download resumes as PDF anytime
+            </li>
+            <li class="afp-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Switch templates instantly
+            </li>
+          </ul>
         </div>
+      </div>
+
+      <!-- Form Panel -->
+      <div class="auth-form-panel">
+        <div class="afp-inner">
+          <div class="afp-header">
+            <div class="afp-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3 class="afp-heading">Sign In</h3>
+            <p class="afp-desc">Enter your credentials to continue</p>
+          </div>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="afp-alert">
+              {% for error in form.non_field_errors %}
+              <p class="mb-0">{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="afp-field">
+              <label class="afp-label" for="{{ form.username.id_for_label }}">Username</label>
+              <div class="afp-input-wrap">
+                <svg class="afp-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                {{ form.username }}
+              </div>
+              {% if form.username.errors %}
+              <p class="afp-error">{{ form.username.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="afp-field">
+              <label class="afp-label" for="{{ form.password.id_for_label }}">Password</label>
+              <div class="afp-input-wrap">
+                <svg class="afp-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {{ form.password }}
+                <button type="button" class="afp-toggle-pw" onclick="togglePassword(this)" title="Show password">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              {% if form.password.errors %}
+              <p class="afp-error">{{ form.password.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="afp-submit-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:8px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In
+            </button>
+          </form>
+
+          <div class="afp-links">
+            <a href="{% url 'accounts:password_reset' %}" class="afp-link">Forgot your password?</a>
+            <span class="afp-link-divider"></span>
+            <span class="afp-link-text">
+              Don't have an account?
+              <a href="{% url 'accounts:register' %}" class="afp-link">Create one</a>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
+
 {% endblock %}

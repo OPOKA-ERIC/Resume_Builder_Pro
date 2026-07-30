@@ -1,0 +1,30 @@
+{% extends "resumes/themes/archetypes/archetype_a.html" %}
+
+{% block extra_css %}
+<style>
+  .archetype-a .sidebar {
+    background: #f0fdf4;
+    border-right: 2px solid #16a34a;
+  }
+  .archetype-a .sidebar-name h1 {
+    color: #16a34a;
+    font-weight: 700;
+  }
+  .archetype-a .section-title {
+    border-bottom: 2px solid #16a34a;
+    color: #16a34a;
+    position: relative;
+    padding-left: 12px;
+  }
+  .archetype-a .section-title::before {
+    content: '\2192';
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+  }
+  .archetype-a .skill-item {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+</style>
+{% endblock %}

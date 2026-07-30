@@ -8,6 +8,9 @@ class UserProfile(models.Model):
     address = models.TextField(blank=True)
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     website = models.URLField(blank=True, help_text='Personal website URL')
+    city = models.CharField(max_length=100, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"Profile of {self.user.username}"

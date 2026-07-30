@@ -7,17 +7,110 @@ from resumes.models import Resume
 
 logger = logging.getLogger(__name__)
 
+TEMPLATE_STYLES = {
+    'galaxy': {
+        'header_align': 'center', 'font_family': "Georgia, 'Times New Roman', serif",
+        'header_border_bottom': 'none',
+    },
+    'aether': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'astral': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'axis': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'celestial': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'classic-europass': {
+        'header_align': 'center', 'font_family': "Georgia, 'Times New Roman', serif",
+    },
+    'comet': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'eclipse': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'executive': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'modern-clean': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'nebula': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'nebular': {
+        'header_align': 'center', 'font_family': "Georgia, 'Times New Roman', serif",
+    },
+    'orbit': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'professional-sidebar': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'pulsar': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+    'quasar': {
+        'header_align': 'center', 'font_family': "Georgia, 'Times New Roman', serif",
+    },
+    'stellar': {
+        'header_align': 'center', 'font_family': "Georgia, 'Times New Roman', serif",
+    },
+    'zenith': {
+        'header_align': 'left', 'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    },
+}
+
+
+def _lighten_color(hex_color):
+    hex_color = hex_color.lstrip('#')
+    r, g, b = int(hex_color[:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    r = int(r + (255 - r) * 0.9)
+    g = int(g + (255 - g) * 0.9)
+    b = int(b + (255 - b) * 0.9)
+    return f'#{r:02x}{g:02x}{b:02x}'
+
 
 def generate_pdf_html(resume):
-    """Render resume data into HTML for PDF conversion using the selected template."""
+    """Render resume data into PDF-optimized HTML using the selected template's colors."""
     user = resume.user
-    template_path = 'pdf/resume_pdf.html'
-    if resume.template and resume.template.html_file:
-        template_path = resume.template.html_file
-    return render_to_string(template_path, {
+    context = {
         'resume': resume,
         'user': user,
-    })
+        'accent': '#1d4ed8',
+        'accent_soft': '#dbeafe',
+        'text_primary': '#111827',
+        'text_secondary': '#4b5563',
+        'header_align': 'left',
+        'header_border_bottom': '2px solid #1d4ed8',
+        'font_family': "'Inter', 'Segoe UI', Arial, sans-serif",
+    }
+
+    if resume.template:
+        tmpl = resume.template
+        if tmpl.swatches:
+            context['accent'] = tmpl.swatches[0]
+            context['accent_soft'] = _lighten_color(tmpl.swatches[0])
+            context['header_border_bottom'] = f'2px solid {tmpl.swatches[0]}'
+
+        skin_name = ''
+        if tmpl.skin_file:
+            skin_name = tmpl.skin_file.replace('skins/', '').replace('.html', '')
+        elif tmpl.html_file:
+            skin_name = tmpl.html_file.replace('templates/', '').replace('.html', '')
+
+        style = TEMPLATE_STYLES.get(skin_name, {})
+        context['header_align'] = style.get('header_align', 'left')
+        context['font_family'] = style.get('font_family', "'Inter', 'Segoe UI', Arial, sans-serif")
+        if 'header_border_bottom' in style:
+            context['header_border_bottom'] = style['header_border_bottom']
+
+    html = render_to_string('pdf/resume_pdf_themed.html', context)
+    return html
 
 
 def render_to_pdf(html_string, filename):

@@ -1,0 +1,42 @@
+{% extends "resumes/themes/archetypes/archetype_c.html" %}
+
+{% block extra_css %}
+<style>
+  .archetype-c .header {
+    text-align: center;
+    border-bottom: none;
+    padding-bottom: 8px;
+  }
+  .archetype-c .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: 1px;
+  }
+  .archetype-c .section-title {
+    border-bottom: none;
+    color: #111827;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 10pt;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .archetype-c .entry-header {
+    border-bottom: 1px dotted #d1d5db;
+    padding-bottom: 4px;
+  }
+  .archetype-c .entry-date {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+  }
+  .archetype-c .skill-item {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 0;
+  }
+</style>
+{% endblock %}
+
+{% block header_align %}center{% endblock %}
+{% block contact_align %}center{% endblock %}

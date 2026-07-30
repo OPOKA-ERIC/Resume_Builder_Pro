@@ -1,0 +1,199 @@
+{% extends "resumes/themes/base_resume.html" %}
+
+{% block content %}
+<div class="archetype-b">
+  <!-- Full-width Header Banner -->
+  <header class="header-banner" style="
+    background: var(--accent);
+    color: white;
+    padding: 24px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  ">
+    <div class="header-left">
+      <h1 style="color: white; font-size: 24pt; margin-bottom: 4px;">{{ user.get_full_name|default:user.username }}</h1>
+      {% if resume.title %}
+      <div style="font-size: 12pt; opacity: 0.9; font-weight: 400;">{{ resume.title }}</div>
+      {% endif %}
+    </div>
+    <div class="header-right" style="text-align: right;">
+      {% block header_photo %}
+      {% if photo_url %}
+      <img src="{{ photo_url }}" alt="{{ user.get_full_name }}"
+           style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white;">
+      {% endif %}
+      {% endblock %}
+    </div>
+  </header>
+
+  <!-- Contact Bar -->
+  <div class="contact-bar" style="
+    background: var(--surface-alt);
+    padding: 10px 30px;
+    border-bottom: 1px solid var(--border);
+  ">
+    <div class="contact-list" style="justify-content: center;">
+      {% if user.email %}
+      <div class="contact-item">{{ user.email }}</div>
+      {% endif %}
+      {% if user.profile.phone %}
+      <div class="contact-item">{{ user.profile.phone }}</div>
+      {% endif %}
+      {% if user.profile.address %}
+      <div class="contact-item">{{ user.profile.address }}</div>
+      {% endif %}
+      {% for link in resume.social_links.all %}
+      <div class="contact-item">
+        <a href="{{ link.url }}" style="color: var(--accent);">{{ link.label }}</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Two-column Body -->
+  <div class="body-columns" style="display: flex; padding: 20px 30px; gap: 24px;">
+    <!-- Left Column -->
+    <div class="col-left" style="flex: 3;">
+      {% block summary %}
+      {% if resume.summary %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Professional Summary</div>
+        <div class="entry-description">{{ resume.summary }}</div>
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block experience %}
+      {% if resume.experiences.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Experience</div>
+        {% for exp in resume.experiences.all %}
+        <div class="entry">
+          <div class="entry-header">
+            <div>
+              <div class="entry-title">{{ exp.role }}</div>
+              <div class="entry-subtitle">{{ exp.company }}{% if exp.location %}, {{ exp.location }}{% endif %}</div>
+            </div>
+            <div class="entry-date">{{ exp.start_year }} - {{ exp.end_year|default:"Present" }}</div>
+          </div>
+          {% if exp.description %}
+          <div class="entry-description">{{ exp.description|linebreaksbr }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block education %}
+      {% if resume.educations.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Education</div>
+        {% for edu in resume.educations.all %}
+        <div class="entry">
+          <div class="entry-header">
+            <div>
+              <div class="entry-title">{{ edu.qualification }}</div>
+              <div class="entry-subtitle">{{ edu.institution }}</div>
+            </div>
+            <div class="entry-date">{{ edu.start_year }} - {{ edu.end_year|default:"Present" }}</div>
+          </div>
+          {% if edu.description %}
+          <div class="entry-description">{{ edu.description }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block projects %}
+      {% if resume.projects.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Projects</div>
+        {% for project in resume.projects.all %}
+        <div class="entry">
+          <div class="entry-title">{{ project.name }}</div>
+          {% if project.description %}
+          <div class="entry-description">{{ project.description }}</div>
+          {% endif %}
+          {% if project.link %}
+          <a href="{{ project.link }}" class="project-link">{{ project.link }}</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endblock %}
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-right" style="flex: 2; border-left: 1px solid var(--border); padding-left: 24px;">
+      {% block sidebar_skills %}
+      {% if resume.skills.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Skills</div>
+        <ul class="skill-list">
+          {% for skill in resume.skills.all %}
+          <li class="skill-item">{{ skill.name }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block certifications %}
+      {% if resume.certifications.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Certifications</div>
+        {% for cert in resume.certifications.all %}
+        <div class="certification-item">
+          <div>
+            <span class="cert-title">{{ cert.title }}</span>
+            {% if cert.issuer %} <span class="cert-issuer">- {{ cert.issuer }}</span>{% endif %}
+          </div>
+          {% if cert.year_awarded %}
+          <span class="cert-year">{{ cert.year_awarded }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block languages %}
+      {% if resume.languages.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">Languages</div>
+        <div class="language-list" style="flex-direction: column; gap: 4px;">
+          {% for lang in resume.languages.all %}
+          <div class="language-item">
+            {{ lang.name }} <span class="level">- {{ lang.proficiency_level }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block references %}
+      {% if resume.references.all %}
+      <div class="section">
+        <div class="section-title" style="border-bottom-color: var(--accent); color: var(--accent);">References</div>
+        {% for ref in resume.references.all %}
+        <div class="reference-item" style="margin-bottom: 8px;">
+          <div class="reference-name">{{ ref.name }}</div>
+          <div class="reference-relationship">{{ ref.relationship }}</div>
+          <div class="reference-contact">{{ ref.contact }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endblock %}
+
+      {% block sidebar_extra %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -2,12 +2,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from portfolio import views as portfolio_views
+from templates_app.models import ResumeTemplate
+
+
+def landing_view(request):
+    featured_templates = ResumeTemplate.objects.filter(is_active=True).order_by('?')[:6]
+    return render(request, 'landing.html', {'featured_templates': featured_templates})
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='landing.html'), name='landing'),
+    path('', landing_view, name='landing'),
     path('accounts/', include('accounts.urls')),
     path('resumes/', include('resumes.urls')),
     path('templates/', include('templates_app.urls')),
@@ -15,6 +23,7 @@ urlpatterns = [
     path('portfolio/', include('portfolio.urls')),
     path('p/<slug:slug>/', portfolio_views.public_portfolio_view, name='portfolio_public'),
     path('job-match/', include('job_match.urls')),
+    path('jobs/', include('jobs.urls')),
 ]
 
 if settings.DEBUG:

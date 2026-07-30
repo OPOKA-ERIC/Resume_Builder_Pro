@@ -1,0 +1,53 @@
+{% extends "resumes/themes/archetypes/archetype_a.html" %}
+
+{% block extra_css %}
+<style>
+  .archetype-a .sidebar {
+    background: #e8f4f8;
+    border-right: none;
+  }
+  .archetype-a .sidebar-name h1 {
+    color: #1a5276;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  .archetype-a .section-title {
+    border-bottom: 2px solid #1a5276;
+    color: #1a5276;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  .archetype-a .skill-item {
+    background: #d4e6f1;
+    color: #1a5276;
+    border-radius: 4px;
+  }
+</style>
+{% endblock %}
+
+{% block sidebar_photo %}
+{% if photo_url %}
+<div class="photo-container" style="text-align: center; margin-bottom: 16px;">
+  <img src="{{ photo_url }}" alt="{{ user.get_full_name }}"
+       style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #1a5276;">
+</div>
+{% endif %}
+{% endblock %}
+
+{% block sidebar_contact %}
+<div class="section">
+  <div class="section-title">Contact</div>
+  <div class="contact-list" style="flex-direction: column; gap: 6px;">
+    {% if user.email %}
+    <div class="contact-item"><span>{{ user.email }}</span></div>
+    {% endif %}
+    {% if user.profile.phone %}
+    <div class="contact-item"><span>{{ user.profile.phone }}</span></div>
+    {% endif %}
+    {% if user.profile.address %}
+    <div class="contact-item"><span>{{ user.profile.address }}</span></div>
+    {% endif %}
+    {% for link in resume.social_links.all %}
+    <div class="contact-item"><a href="{{ link.url }}">{{ link.label }}</a></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

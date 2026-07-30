@@ -193,17 +193,35 @@ def template_select(request, resume_id):
 
 
 @login_required
+def _resolve_template_path(resume):
+    """Return (template_path, context_updates) for a resume, handling skin vs legacy."""
+    if not resume.template:
+        return None, {}
+    ctx = {}
+    if resume.template.skin_file:
+        template_path = resume.template.get_archetype_path()
+    elif resume.template.html_file:
+        template_path = resume.template.html_file
+    else:
+        return None, {}
+    if resume.template.swatches:
+        from pdf_export.views import _lighten_color
+        ctx['accent'] = resume.template.swatches[0]
+        ctx['accent_soft'] = _lighten_color(resume.template.swatches[0])
+    return template_path, ctx
+
+
 def resume_preview(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
 
     pdf_html = None
-    if resume.template and resume.template.html_file:
+    template_path, extra_ctx = _resolve_template_path(resume)
+    if template_path:
         try:
             from django.template.loader import render_to_string
-            pdf_html = render_to_string(resume.template.html_file, {
-                'resume': resume,
-                'user': request.user,
-            })
+            context = {'resume': resume, 'user': request.user}
+            context.update(extra_ctx)
+            pdf_html = render_to_string(template_path, context)
         except Exception:
             pdf_html = None
 
@@ -236,13 +254,13 @@ def public_cv_view(request, resume_id):
 def resume_preview_frame(request, resume_id):
     """Return the rendered resume HTML as a standalone page (for iframe src)."""
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
-    if resume.template and resume.template.html_file:
+    template_path, extra_ctx = _resolve_template_path(resume)
+    if template_path:
         try:
             from django.template.loader import render_to_string
-            html = render_to_string(resume.template.html_file, {
-                'resume': resume,
-                'user': request.user,
-            })
+            context = {'resume': resume, 'user': request.user}
+            context.update(extra_ctx)
+            html = render_to_string(template_path, context)
             return HttpResponse(html, content_type='text/html')
         except Exception:
             pass

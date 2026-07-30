@@ -1,0 +1,143 @@
+/* Resume Theme System - CSS Custom Properties */
+
+/* Default theme (Blue) */
+.resume-theme {
+  --accent: #1d4ed8;
+  --accent-soft: #dbeafe;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --surface: #ffffff;
+  --surface-alt: #f3f4f6;
+  --border: #e5e7eb;
+  --font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Monochrome mode */
+.resume-theme.monochrome {
+  --accent: #111827;
+  --accent-soft: #e5e7eb;
+  --text-secondary: #6b7280;
+}
+
+/* Swatch presets - these override --accent and --accent-soft */
+.resume-theme[data-swatch="indigo"] {
+  --accent: #4f46e5;
+  --accent-soft: #e0e7ff;
+}
+
+.resume-theme[data-swatch="blue"] {
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+}
+
+.resume-theme[data-swatch="sky"] {
+  --accent: #0ea5e9;
+  --accent-soft: #e0f2fe;
+}
+
+.resume-theme[data-swatch="teal"] {
+  --accent: #0d9488;
+  --accent-soft: #ccfbf1;
+}
+
+.resume-theme[data-swatch="emerald"] {
+  --accent: #059669;
+  --accent-soft: #d1fae5;
+}
+
+.resume-theme[data-swatch="green"] {
+  --accent: #16a34a;
+  --accent-soft: #dcfce7;
+}
+
+.resume-theme[data-swatch="amber"] {
+  --accent: #d97706;
+  --accent-soft: #fef3c7;
+}
+
+.resume-theme[data-swatch="orange"] {
+  --accent: #ea580c;
+  --accent-soft: #ffedd5;
+}
+
+.resume-theme[data-swatch="red"] {
+  --accent: #dc2626;
+  --accent-soft: #fee2e2;
+}
+
+.resume-theme[data-swatch="rose"] {
+  --accent: #e11d48;
+  --accent-soft: #ffe4e6;
+}
+
+.resume-theme[data-swatch="purple"] {
+  --accent: #9333ea;
+  --accent-soft: #f3e8ff;
+}
+
+.resume-theme[data-swatch="violet"] {
+  --accent: #7c3aed;
+  --accent-soft: #ede9fe;
+}
+
+.resume-theme[data-swatch="slate"] {
+  --accent: #475569;
+  --accent-soft: #f1f5f9;
+}
+
+.resume-theme[data-swatch="charcoal"] {
+  --accent: #374151;
+  --accent-soft: #f3f4f6;
+}
+
+.resume-theme[data-swatch="navy"] {
+  --accent: #1e3a5f;
+  --accent-soft: #dbeafe;
+}
+
+.resume-theme[data-swatch="gold"] {
+  --accent: #b45309;
+  --accent-soft: #fef3c7;
+}
+
+.resume-theme[data-swatch="coral"] {
+  --accent: #e8725c;
+  --accent-soft: #ffedd5;
+}
+
+.resume-theme[data-swatch="magenta"] {
+  --accent: #c026d3;
+  --accent-soft: #fae8ff;
+}
+
+.resume-theme[data-swatch="pink"] {
+  --accent: #db2777;
+  --accent-soft: #fce7f3;
+}
+
+.resume-theme[data-swatch="cyan"] {
+  --accent: #0891b2;
+  --accent-soft: #cffafe;
+}
+
+.resume-theme[data-swatch="lime"] {
+  --accent: #65a30d;
+  --accent-soft: #ecfccb;
+}
+
+/* Font families */
+.resume-theme[data-font="serif"] {
+  --font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.resume-theme[data-font="mono"] {
+  --font-family: 'Courier New', Courier, monospace;
+}
+
+.resume-theme[data-font="sans"] {
+  --font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.resume-theme[data-font="display"] {
+  --font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}

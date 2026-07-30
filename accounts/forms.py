@@ -95,7 +95,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['phone', 'address', 'photo', 'website']
+        fields = ['phone', 'address', 'photo', 'website', 'city']
         widgets = {
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -113,6 +113,11 @@ class ProfileForm(forms.ModelForm):
             'website': forms.URLInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'https://yourwebsite.com',
+            }),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., Kampala, Uganda',
+                'id': 'id_city',
             }),
         }
 

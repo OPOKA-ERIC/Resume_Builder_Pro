@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'pdf_export',
     'portfolio',
     'job_match',
+    'jobs',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,31 @@
+{% extends "resumes/themes/archetypes/archetype_c.html" %}
+
+{% block extra_css %}
+<style>
+  .archetype-c .header {
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .archetype-c .header h1 {
+    font-weight: 600;
+    color: #111827;
+  }
+  .archetype-c .section-title {
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 10pt;
+  }
+  .archetype-c .skill-item {
+    background: #f9fafb;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+    border-radius: 3px;
+    font-size: 9pt;
+  }
+  .archetype-c .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+</style>
+{% endblock %}

@@ -1,55 +1,140 @@
 {% extends "base.html" %}
-{% block title %}{{ template.name }} Template - Resume Builder Pro{% endblock %}
+{% block title %}{{ template.name }} Template — Resume Builder Pro{% endblock %}
+{% block main_class %}landing-page{% endblock %}
 
 {% block content %}
-<div class="animate-fade-in-up">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-            <a href="{% url 'templates_app:gallery' %}" class="text-muted text-decoration-none mb-1 d-inline-block">
-                <i class="bi bi-arrow-left"></i> Back to Templates
-            </a>
-            <h3 class="mb-0">{{ template.name }} <span class="badge bg-primary-subtle text-primary" style="font-size: 0.7rem;">Template</span></h3>
-            <p class="text-muted mb-0" style="font-size: 0.9rem;">{{ template.description }}</p>
-        </div>
-        <div class="d-flex gap-2">
-            <form method="post" action="{% url 'resumes:create_from_template' template.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary btn-icon">
-                    <i class="bi bi-rocket-takeoff"></i> Use This Template
-                </button>
-            </form>
-        </div>
-    </div>
 
-    {% if pdf_html %}
-        <div class="card overflow-hidden border-0 shadow-sm animate-fade-in-up delay-1" style="border-radius: var(--radius-lg);">
-            <div style="background: var(--gray-100); padding: 8px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 8px;">
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></div>
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div>
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></div>
-                <span style="font-size: 0.75rem; color: var(--gray-500); margin-left: 8px;">{{ template.name }} &mdash; Sample Preview</span>
-            </div>
-            <iframe src="{% url 'templates_app:preview_frame' template.id %}" style="width: 100%; height: 1100px; border: none;"></iframe>
+<!-- ===================== PREVIEW HERO ===================== -->
+<section class="pv-hero" id="previewHero">
+  <div class="pv-hero-bg"></div>
+  <div class="pv-hero-dots"></div>
+  <div class="pv-hero-container">
+    <a href="{% url 'templates_app:gallery' %}" class="pv-back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Templates
+    </a>
+    <div class="pv-header-row">
+      <div>
+        <h1 class="pv-headline">{{ template.name }}</h1>
+        <p class="pv-subhead">{{ template.description }}</p>
+        <div class="pv-badges">
+          {% if template.supports_photo %}
+          <span class="pv-badge pv-badge-photo">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Photo
+          </span>
+          {% endif %}
+          {% if template.supports_monochrome %}
+          <span class="pv-badge pv-badge-mono">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+            Monochrome
+          </span>
+          {% endif %}
+          {% if template.ats_safe %}
+          <span class="pv-badge pv-badge-ats">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ATS-Friendly
+          </span>
+          {% endif %}
+          {% if template.archetype %}
+          <span class="pv-badge pv-badge-layout">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Layout {{ template.archetype }}
+          </span>
+          {% endif %}
         </div>
-    {% else %}
-        <div class="card overflow-hidden" style="margin: 0 15px;">
-            <div class="d-flex align-items-center justify-content-center" style="height: 500px; background: var(--gray-50);">
-                <div class="text-center">
-                    <i class="bi bi-file-earmark-text" style="font-size: 4rem; color: var(--gray-300);"></i>
-                    <p class="text-muted mt-3">Preview is being generated...</p>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
-    <div class="text-center mt-4 mb-4">
+      </div>
+      <div class="pv-actions">
         <form method="post" action="{% url 'resumes:create_from_template' template.id %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-lg btn-icon">
-                <i class="bi bi-rocket-takeoff"></i> Create Resume with {{ template.name }} Template
-            </button>
+          {% csrf_token %}
+          <button type="submit" class="pv-btn-use">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Use This Template
+          </button>
         </form>
-        <p class="text-muted mt-2" style="font-size: 0.85rem;">This will create a new resume pre-filled with sample data that you can edit</p>
+      </div>
     </div>
-</div>
+  </div>
+</section>
+
+<!-- ===================== COLOR THEME ===================== -->
+{% if template.swatches %}
+<section class="pv-swatches" id="previewSwatches">
+  <div class="pv-hero-container">
+    <div class="pv-swatches-card">
+      <div class="pv-swatches-label">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>
+        Color Theme
+      </div>
+      <div class="pv-swatches-row">
+        {% for swatch in template.swatches %}
+        <a href="?swatch={{ swatch }}{% if monochrome %}&monochrome=true{% endif %}"
+           class="pv-swatch {% if swatch == current_swatch %}pv-swatch-active{% endif %}"
+           style="background: {{ swatch }};"
+           title="{{ swatch }}">
+          {% if swatch == current_swatch %}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          {% endif %}
+        </a>
+        {% endfor %}
+        {% if template.supports_monochrome %}
+        <a href="?{% if current_swatch %}swatch={{ current_swatch }}&{% endif %}monochrome={% if monochrome %}false{% else %}true{% endif %}"
+           class="pv-swatch-mono {% if monochrome %}pv-swatch-mono-active{% endif %}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/></svg>
+          Monochrome
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ===================== PREVIEW FRAME ===================== -->
+<section class="pv-frame-section" id="previewFrame">
+  <div class="pv-hero-container">
+    <div class="pv-frame-card">
+      <div class="pv-titlebar">
+        <div class="pv-dots">
+          <span class="pv-dot pv-dot-red"></span>
+          <span class="pv-dot pv-dot-yellow"></span>
+          <span class="pv-dot pv-dot-green"></span>
+        </div>
+        <span class="pv-titlebar-label">{{ template.name }} &mdash; Sample Preview</span>
+      </div>
+      {% if pdf_html %}
+      <iframe src="{% url 'templates_app:preview_frame' template.id %}{% if current_swatch %}?swatch={{ current_swatch }}{% endif %}{% if monochrome %}{% if current_swatch %}&{% else %}?{% endif %}monochrome=true{% endif %}"
+              class="pv-iframe"
+              title="{{ template.name }} preview"></iframe>
+      {% else %}
+      <div class="pv-empty">
+        <div class="pv-empty-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <p>Preview is being generated…</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA BOTTOM ===================== -->
+<section class="pv-cta" id="previewCta">
+  <div class="pv-hero-container">
+    <div class="pv-cta-inner">
+      <div>
+        <h2 class="pv-cta-title">Ready to build your resume?</h2>
+        <p class="pv-cta-text">Create a new resume pre-filled with sample data that you can fully customize.</p>
+      </div>
+      <form method="post" action="{% url 'resumes:create_from_template' template.id %}">
+        {% csrf_token %}
+        <button type="submit" class="pv-btn-use pv-btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Create Resume with {{ template.name }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

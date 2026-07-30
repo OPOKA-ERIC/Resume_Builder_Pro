@@ -1,0 +1,38 @@
+{% extends "resumes/themes/archetypes/archetype_b.html" %}
+
+{% block extra_css %}
+<style>
+  .archetype-b .header-banner {
+    background: #bbf7d0;
+    color: #14532d;
+    padding: 24px 30px;
+  }
+  .archetype-b .header-banner h1 {
+    color: #14532d;
+    font-weight: 800;
+  }
+  .archetype-b .header-banner div {
+    color: #166534;
+  }
+  .archetype-b .contact-bar {
+    background: #f0fdf4;
+  }
+  .archetype-b .section-title {
+    border-bottom: 2px solid #22c55e;
+    color: #14532d;
+    position: relative;
+    padding-left: 16px;
+  }
+  .archetype-b .section-title::before {
+    content: '\2192';
+    position: absolute;
+    left: 0;
+    color: #22c55e;
+  }
+  .archetype-b .skill-item {
+    background: #dcfce7;
+    color: #14532d;
+    border-radius: 4px;
+  }
+</style>
+{% endblock %}

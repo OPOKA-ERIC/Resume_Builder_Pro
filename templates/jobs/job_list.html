@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Browse Jobs — Resume Builder Pro{% endblock %}
+{% block main_class %}landing-page{% endblock %}
+
+{% block content %}
+
+<!-- ===================== JOBS HERO ===================== -->
+<section class="jobs-hero" id="jobsHero">
+  <div class="jobs-hero-bg"></div>
+  <div class="jobs-hero-dots"></div>
+  <div class="jobs-hero-container">
+    <div class="jobs-hero-top">
+      <div>
+        <h1 class="jobs-headline">
+          <span class="jw-reveal"><span>Find</span></span>
+          <span class="jw-reveal"><span>Your</span></span>
+          <span class="jw-reveal"><span>Next</span></span>
+          <span class="jw-reveal jw-amber"><span>Job</span></span>
+        </h1>
+        <p class="jobs-subhead">
+          Verified, legitimate job opportunities — from local to remote. Build a resume to unlock application details.
+        </p>
+        <div class="trust-banner-wrap">
+          <span class="trust-banner-jobs">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            All jobs verified for legitimacy
+          </span>
+        </div>
+      </div>
+      <a href="{% url 'jobs:post_job' %}" class="btn-tertiary-premium advertise-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Advertise a Job
+      </a>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="jobs-stats-bar">
+      <div class="jobs-stat">
+        <div class="jobs-stat-num">{{ total_jobs }}</div>
+        <div class="jobs-stat-label">Total Jobs</div>
+      </div>
+      <div class="jobs-stat-divider"></div>
+      <div class="jobs-stat">
+        <div class="jobs-stat-num">{{ page_obj.paginator.count }}</div>
+        <div class="jobs-stat-label">Showing</div>
+      </div>
+      <div class="jobs-stat-divider"></div>
+      <div class="jobs-stat">
+        <div class="jobs-stat-num">{{ categories|length }}</div>
+        <div class="jobs-stat-label">Categories</div>
+      </div>
+      <div class="jobs-stat-divider"></div>
+      <div class="jobs-stat">
+        <div class="jobs-stat-num">{{ user_location.city|default:"—" }}</div>
+        <div class="jobs-stat-label">Your Location</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SEARCH & FILTERS ===================== -->
+<section class="jobs-search-section" id="jobsSearch">
+  <div class="jobs-hero-container">
+    <form class="jobs-search-form" method="GET">
+      <div class="jobs-search-grid">
+        <div class="jobs-search-field">
+          <label class="jobs-search-label" for="searchQ">Search</label>
+          <input type="text" name="q" id="searchQ" class="jobs-input" placeholder="Search jobs, keywords..." value="{{ query }}">
+        </div>
+        <div class="jobs-search-field">
+          <label class="jobs-search-label" for="searchLocation">Location</label>
+          <input type="text" name="location" id="searchLocation" class="jobs-input" placeholder="City or location..." value="{{ location }}">
+        </div>
+        <div class="jobs-search-field">
+          <label class="jobs-search-label" for="searchCategory">Category</label>
+          <select name="category" id="searchCategory" class="jobs-select">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="jobs-search-field">
+          <label class="jobs-search-label" for="searchType">Type</label>
+          <select name="type" id="searchType" class="jobs-select">
+            <option value="">All Types</option>
+            <option value="full_time" {% if employment_type == 'full_time' %}selected{% endif %}>Full-Time</option>
+            <option value="part_time" {% if employment_type == 'part_time' %}selected{% endif %}>Part-Time</option>
+            <option value="contract" {% if employment_type == 'contract' %}selected{% endif %}>Contract</option>
+            <option value="internship" {% if employment_type == 'internship' %}selected{% endif %}>Internship</option>
+            <option value="freelance" {% if employment_type == 'freelance' %}selected{% endif %}>Freelance</option>
+            <option value="temporary" {% if employment_type == 'temporary' %}selected{% endif %}>Temporary</option>
+          </select>
+        </div>
+        <div class="jobs-search-field jobs-search-submit-wrap">
+          <label class="jobs-search-label">&nbsp;</label>
+          <button type="submit" class="jobs-search-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Search
+          </button>
+        </div>
+      </div>
+      <div class="jobs-search-extra">
+        <label class="jobs-check-label">
+          <input type="checkbox" name="remote" value="1" {% if is_remote %}checked{% endif %} onchange="this.form.submit()" class="jobs-check-input">
+          <span class="jobs-check-mark"></span>
+          Remote Only
+        </label>
+        <button type="button" class="jobs-location-btn" onclick="getJobsLocation()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Use My Location
+        </button>
+      </div>
+    </form>
+
+    {% if not query and not location and not category and not employment_type %}
+    <div class="jobs-filter-chips">
+      <a href="{% url 'jobs:job_list' %}" class="jobs-chip {% if not is_remote and not category and not employment_type %}jobs-chip-active{% endif %}">
+        All Jobs
+      </a>
+      <a href="?remote=1" class="jobs-chip {% if is_remote %}jobs-chip-active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="8.5" r="1.5"/><circle cx="8.5" cy="15.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/></svg>
+        Remote
+      </a>
+      <a href="?type=full_time" class="jobs-chip {% if employment_type == 'full_time' %}jobs-chip-active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Full-Time
+      </a>
+      <a href="?type=part_time" class="jobs-chip {% if employment_type == 'part_time' %}jobs-chip-active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 8 10"/></svg>
+        Part-Time
+      </a>
+      <a href="?type=internship" class="jobs-chip {% if employment_type == 'internship' %}jobs-chip-active{% endif %}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        Internship
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ===================== JOBS LIST ===================== -->
+<section class="jobs-list-section" id="jobsList">
+  <div class="jobs-hero-container">
+    {% if page_obj %}
+    <div class="jobs-grid">
+      {% for job in page_obj %}
+      {% cycle '#4f46e5' '#0ea5e9' '#8b5cf6' '#059669' '#d97706' '#dc2626' as avatar_color silent %}
+      {% cycle 1 2 3 4 as stagger_idx silent %}
+      <div class="job-card-premium reveal stagger-{{ stagger_idx }}">
+        <a href="{% url 'jobs:job_detail' job.id %}" class="job-card-link">
+          <div class="job-card-header">
+            <span class="job-avatar" style="background:{{ avatar_color }};">
+              {{ job.employer.company_name|first|upper }}
+            </span>
+            <div class="job-card-company">
+              <div class="job-company-name">{{ job.employer.company_name }}</div>
+              <h3 class="job-card-title">{{ job.title }}</h3>
+            </div>
+            <div class="job-card-time">{{ job.time_since_posted }}</div>
+          </div>
+
+          <div class="job-card-meta">
+            <span class="jpill jpill-location">{{ job.location }}</span>
+            {% if job.employment_type == 'full_time' %}
+            <span class="jpill jpill-ft">Full-Time</span>
+            {% elif job.employment_type == 'part_time' %}
+            <span class="jpill jpill-pt">Part-Time</span>
+            {% elif job.employment_type == 'contract' %}
+            <span class="jpill jpill-ct">Contract</span>
+            {% elif job.employment_type == 'internship' %}
+            <span class="jpill jpill-in">Internship</span>
+            {% endif %}
+            {% if job.is_remote %}
+            <span class="jpill jpill-remote">Remote</span>
+            {% endif %}
+            {% if job.application_url %}
+            <span class="jpill jpill-ext">External</span>
+            {% endif %}
+          </div>
+
+          {% if job.salary_min or job.salary_max %}
+          <div class="job-salary">{{ job.salary_range }}</div>
+          {% endif %}
+
+          <p class="job-card-desc">{{ job.description|truncatechars:150 }}</p>
+        </a>
+
+        <div class="job-card-footer">
+          <div>
+            {% if job.trust_score >= 80 %}
+            <span class="job-trust job-trust-high">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Verified
+            </span>
+            {% elif job.trust_score >= 50 %}
+            <span class="job-trust job-trust-med">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Reviewed
+            </span>
+            {% endif %}
+          </div>
+          <a href="{% url 'jobs:job_detail' job.id %}" class="job-view-btn">
+            View Details
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:6px"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="jobs-pagination">
+      {% if page_obj.has_previous %}
+      <a class="jp-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if employment_type %}&type={{ employment_type }}{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </a>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+      {% if num == page_obj.number %}
+      <span class="jp-link jp-active">{{ num }}</span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a class="jp-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if employment_type %}&type={{ employment_type }}{% endif %}">{{ num }}</a>
+      {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <a class="jp-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if employment_type %}&type={{ employment_type }}{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="jobs-empty">
+      <div class="jobs-empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <h3>No jobs found</h3>
+      <p>Try adjusting your search or filters, or <a href="{% url 'jobs:job_list' %}">browse all jobs</a>.</p>
+      <a href="{% url 'jobs:post_job' %}" class="template-btn">Post a Job</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getJobsLocation() {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('lat', position.coords.latitude);
+      url.searchParams.set('lng', position.coords.longitude);
+      window.location.href = url.toString();
+    },
+    function() {
+      alert('Could not get your location. Please enable GPS or type your city manually.');
+    }
+  );
+}
+</script>
+{% endblock %}
