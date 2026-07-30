@@ -145,7 +145,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 
             from concurrent.futures import ThreadPoolExecutor, as_completed
             analyses = []
-            with ThreadPoolExecutor(max_workers=len(jobs)) as ex:
+            with ThreadPoolExecutor(max_workers=min(len(jobs), 5)) as ex:
                 futures = [ex.submit(_analyse_job, job) for job in jobs]
                 for f in as_completed(futures, timeout=15):
                     try:

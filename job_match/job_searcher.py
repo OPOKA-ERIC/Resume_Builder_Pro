@@ -9,7 +9,7 @@ from .job_fetcher import fetch_job_from_url
 logger = logging.getLogger(__name__)
 
 
-def search_jobs_for_resume(resume_text: str, max_results: int = 2, max_workers: int = 6) -> list:
+def search_jobs_for_resume(resume_text: str, max_results: int = 5, max_workers: int = 6) -> list:
     queries = _generate_queries(resume_text)
     if not queries:
         return []
