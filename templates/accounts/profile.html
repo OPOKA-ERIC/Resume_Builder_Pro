@@ -109,6 +109,12 @@
                     <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-secondary btn-icon">
                         <i class="bi bi-shield-lock"></i> Change Password
                     </a>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-icon">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
+                    </form>
                 </div>
             </div>
 

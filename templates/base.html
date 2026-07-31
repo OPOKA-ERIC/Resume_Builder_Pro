@@ -25,22 +25,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'templates_app' %}active{% endif %}" href="{% url 'templates_app:gallery' %}">
-                            <i class="bi bi-palette"></i> Templates
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'jobs' %}active{% endif %}" href="{% url 'jobs:job_list' %}">
-                            <i class="bi bi-briefcase"></i> Jobs
-                        </a>
-                    </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.app_name == 'job_match' %}active{% endif %}" href="{% url 'job_match:analyze' %}">
-                                <i class="bi bi-graph-up-arrow"></i> Job Match
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.app_name == 'resumes' %}active{% endif %}" href="{% url 'resumes:dashboard' %}">
                                 <i class="bi bi-grid-1x2"></i> Dashboard
@@ -52,17 +37,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.app_name == 'job_match' %}active{% endif %}" href="{% url 'job_match:analyze' %}">
+                                <i class="bi bi-graph-up-arrow"></i> Job Match
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.app_name == 'jobs' %}active{% endif %}" href="{% url 'jobs:job_list' %}">
+                                <i class="bi bi-briefcase"></i> Jobs
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.app_name == 'accounts' and request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'accounts:profile' %}">
                                 <i class="bi bi-person-circle"></i> Profile
                             </a>
-                        </li>
-                        <li class="nav-item ms-lg-2">
-                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link text-decoration-none">
-                                    <i class="bi bi-box-arrow-right"></i> Logout
-                                </button>
-                            </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
