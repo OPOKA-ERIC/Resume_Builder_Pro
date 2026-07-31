@@ -8,40 +8,116 @@ from .job_fetcher import fetch_job_from_url
 
 logger = logging.getLogger(__name__)
 
+LOCAL_LOCATIONS = ['Uganda', 'Kampala']
+
+UGANDA_HINTS = ['kampala', 'uganda', 'entebbe', 'jinja', 'gulu', 'mbarara', 'mukono', 'east africa']
+
+
+def _local_query_variants(queries: list) -> list:
+    variants = []
+    for q in queries[:2]:
+        for loc in LOCAL_LOCATIONS:
+            variants.append(f'{q} {loc}')
+    return variants
+
+
+def _detect_location(text: str, url: str = '') -> str:
+    combined = f'{text[:3000]} {url}'.lower()
+    if 'kampala' in combined:
+        return 'Kampala, Uganda'
+    for hint in UGANDA_HINTS:
+        if hint in combined:
+            if hint == 'uganda':
+                return 'Uganda'
+            if hint == 'east africa':
+                return 'East Africa'
+            return f'{hint.title()}, Uganda'
+    m = re.search(r'(?im)^\s*(?:location|locality|based in|work location)\s*[:\-–]\s*([^\n|]{2,80})', text)
+    if m:
+        loc = m.group(1).strip()
+        if loc and 'remote' not in loc.lower():
+            return loc[:80]
+    return 'Remote' if 'remote' in combined else ''
+
+
+def _is_local_job(job: dict) -> bool:
+    loc = (job.get('location') or '').lower()
+    return 'uganda' in loc or 'kampala' in loc or 'east africa' in loc
+
+
+def _snippet_job(snippet: dict, url: str) -> dict:
+    """Build a job from the search-result snippet when the page can't be scraped."""
+    if not snippet:
+        return None
+    body = f"{snippet.get('title', '')}\n{snippet.get('body', '')}".strip()
+    if not body or not _looks_like_job({'description': body}):
+        return None
+    return {
+        'title': (snippet.get('title') or '')[:120],
+        'company': '',
+        'description': body[:8000],
+        'source': 'search',
+        'location': _detect_location(body, url),
+    }
+
 
 def search_jobs_for_resume(resume_text: str, max_results: int = 5, max_workers: int = 6) -> list:
-    queries = _generate_queries(resume_text)
-    if not queries:
+    base_queries = _generate_queries(resume_text)
+    if not base_queries:
         return []
 
+    queries = base_queries + _local_query_variants(base_queries)
     seen = set()
-    raw_urls = []
+    local_urls = []
+    intl_urls = []
+    snippets = {}
 
     for query in queries:
-        for url in _web_search(query):
-            if url not in seen:
-                seen.add(url)
-                raw_urls.append(url)
+        is_local = any(loc.lower() in query.lower() for loc in LOCAL_LOCATIONS)
+        for item in _web_search(query):
+            url = item['url']
+            if url in seen:
+                continue
+            seen.add(url)
+            snippets[url] = item
+            if is_local:
+                local_urls.append(url)
+            else:
+                intl_urls.append(url)
 
-    if not raw_urls:
+    if not local_urls and not intl_urls:
         return []
 
+    # Local URLs are submitted first so they're never starved out by intl ones
+    candidates = (local_urls + intl_urls)[:16]
+    local_url_set = set(local_urls)
     results = []
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_url = {executor.submit(fetch_job_from_url, url): url for url in raw_urls[:12]}
+        future_to_url = {executor.submit(fetch_job_from_url, url): url for url in candidates}
         try:
             for future in as_completed(future_to_url, timeout=30):
-                if len(results) >= max_results:
+                if len(results) >= max_results * 2:
                     break
+                url = future_to_url[future]
                 try:
                     fetched = future.result(timeout=8)
-                    if fetched['source'] != 'error' and _looks_like_job(fetched):
-                        results.append(fetched)
                 except Exception as e:
                     logger.warning('Fetch failed: %s', e)
+                    fetched = None
+
+                if fetched and fetched['source'] != 'error' and _looks_like_job(fetched):
+                    fetched['location'] = _detect_location(fetched.get('description', ''), url)
+                    results.append(fetched)
+                else:
+                    # Page blocked or not a full posting — fall back to the snippet
+                    job = _snippet_job(snippets.get(url), url)
+                    if job:
+                        results.append(job)
         except FuturesTimeoutError:
             logger.warning('Search timed out after 30s, returning %d results', len(results))
 
+    # Local jobs first so they show up in the results
+    results.sort(key=lambda j: 0 if _is_local_job(j) else 1)
     return results[:max_results]
 
 
@@ -110,7 +186,7 @@ def _generate_queries_local(text: str) -> list:
 
 
 def _web_search(query: str) -> list:
-    urls = []
+    items = []
     try:
         from ddgs import DDGS
         results = list(DDGS(timeout=5).text(f'{query} job', max_results=4))
@@ -120,9 +196,13 @@ def _web_search(query: str) -> list:
                 continue
             if not href.startswith('http'):
                 href = 'https://' + href
-            urls.append(href)
-        logger.info('Web search returned %d URLs for "%s"', len(urls), query)
+            items.append({
+                'url': href,
+                'title': (r.get('title') or '').strip(),
+                'body': (r.get('body') or '').strip(),
+            })
+        logger.info('Web search returned %d URLs for "%s"', len(items), query)
     except Exception as e:
         logger.warning('Web search failed for "%s": %s', query, e)
 
-    return urls[:4]
+    return items[:4]

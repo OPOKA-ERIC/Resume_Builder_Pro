@@ -1,6 +1,6 @@
+import hashlib
 import logging
 import threading
-import datetime
 from django.conf import settings
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import JobAnalysisForm
-from .models import AnalysisTask, JobDescription, SkillGapAnalysis
+from .models import AnalysisTask, JobDescription, SkillGapAnalysis, JobPool
 from .analyzer import analyze_match as _taxonomy_analyze
 from .analyzer import analyze_match_from_text as _taxonomy_analyze_from_text
 from .resume_parser import extract_text_from_upload
@@ -79,6 +79,19 @@ def _set(task: AnalysisTask, step: str, progress: int):
     task.save(update_fields=['step', 'progress', 'updated_at'])
 
 
+def _get_or_create_pool(user, resume, resume_text: str) -> JobPool:
+    """Return the cached job pool for this resume, or create an empty one."""
+    if resume is not None:
+        pool = JobPool.objects.filter(user=user, resume=resume).order_by('-updated_at').first()
+        fingerprint = ''
+    else:
+        fingerprint = hashlib.sha1(resume_text.encode('utf-8')).hexdigest()
+        pool = JobPool.objects.filter(user=user, fingerprint=fingerprint).order_by('-updated_at').first()
+    if pool is None:
+        pool = JobPool.objects.create(user=user, resume=resume, fingerprint=fingerprint)
+    return pool
+
+
 # ---------------------------------------------------------------------------
 # Background worker
 # ---------------------------------------------------------------------------
@@ -115,28 +128,41 @@ def _run_task(task_id: str, user_id: int, payload: dict):
         # ── 2. Job description ──────────────────────────────────────────────
         if jd_source == 'autosearch':
             _set(task, 'Searching for matching jobs online…', 25)
-            jobs = search_jobs_for_resume(resume_text)
+            pool = _get_or_create_pool(user, resume, resume_text)
+            job_descs = list(pool.jobs.all())
 
-            if not jobs:
-                task.status = AnalysisTask.STATUS_ERROR
-                task.error  = 'Could not find matching jobs. Try pasting a URL or description manually.'
-                task.save(update_fields=['status', 'error', 'updated_at'])
-                return
+            if not job_descs:
+                found = search_jobs_for_resume(resume_text)
 
-            _set(task, f'Found {len(jobs)} jobs — analysing…', 50)
+                if not found:
+                    task.status = AnalysisTask.STATUS_ERROR
+                    task.error  = 'Could not find matching jobs. Try pasting a URL or description manually.'
+                    task.save(update_fields=['status', 'error', 'updated_at'])
+                    return
 
-            def _analyse_job(job):
-                job_desc = JobDescription.objects.create(
-                    user=user,
-                    title=job.get('title', ''),
-                    company=job.get('company', ''),
-                    raw_text=job.get('description', ''),
-                    source_url='',
-                )
-                result = _run_analysis(resume_text, job.get('description', ''), resume=resume)
+                job_descs = []
+                for job in found:
+                    job_descs.append(JobDescription.objects.create(
+                        user=user,
+                        title=job.get('title', ''),
+                        company=job.get('company', ''),
+                        location=job.get('location', ''),
+                        raw_text=job.get('description', ''),
+                        source_url='',
+                    ))
+                pool.jobs.set(job_descs)
+                pool.save(update_fields=['updated_at'])
+            else:
+                _set(task, f'Re-using {len(job_descs)} previously found jobs — re-scoring…', 40)
+
+            _set(task, f'Found {len(job_descs)} jobs — analysing…', 50)
+
+            def _analyse_job(job_desc):
+                result = _run_analysis(resume_text, job_desc.raw_text, resume=resume)
                 return SkillGapAnalysis.objects.create(
                     job=job_desc,
                     resume=resume,
+                    task=task,
                     overall_score=result['overall_score'],
                     matched_skills=result['matched_skills'],
                     missing_skills=result['missing_skills'],
@@ -146,8 +172,8 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 
             from concurrent.futures import ThreadPoolExecutor, as_completed
             analyses = []
-            with ThreadPoolExecutor(max_workers=min(len(jobs), 5)) as ex:
-                futures = [ex.submit(_analyse_job, job) for job in jobs]
+            with ThreadPoolExecutor(max_workers=min(len(job_descs), 5)) as ex:
+                futures = [ex.submit(_analyse_job, jd) for jd in job_descs]
                 for f in as_completed(futures, timeout=15):
                     try:
                         analyses.append(f.result())
@@ -197,6 +223,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
         analysis = SkillGapAnalysis.objects.create(
             job=job_desc,
             resume=resume,
+            task=task,
             overall_score=result['overall_score'],
             matched_skills=result['matched_skills'],
             missing_skills=result['missing_skills'],
@@ -304,26 +331,17 @@ def results_view(request, analysis_id):
     total = (len(analysis.matched_skills) + len(analysis.missing_skills) +
              len(analysis.partial_skills))
 
-    # For autosearch: surface sibling analyses created in the same task batch
-    # (same job__user, same minute, different job)
+    # For autosearch: surface all analyses created by the SAME task batch,
+    # and always show the top-scoring match as the main card.
     all_analyses = None
     task = AnalysisTask.objects.filter(
         user=request.user, analysis_id=analysis_id
     ).first()
     if task:
-        # Collect all analyses whose IDs were produced by the same task payload
-        # We stored only the top analysis_id; retrieve siblings via job created_at proximity
-        sibling_ids = SkillGapAnalysis.objects.filter(
-            job__user=request.user,
-            created_at__gte=analysis.created_at - datetime.timedelta(minutes=2),
-            created_at__lte=analysis.created_at + datetime.timedelta(minutes=2),
-        ).exclude(id=analysis_id).values_list('id', flat=True)
-        if sibling_ids:
-            all_analyses = list(
-                SkillGapAnalysis.objects.filter(
-                    id__in=list(sibling_ids) + [analysis_id]
-                ).select_related('job').order_by('-overall_score')
-            )
+        batch = list(task.analyses.select_related('job').order_by('-overall_score'))
+        if batch and batch[0].id != analysis_id:
+            return redirect('job_match:results', analysis_id=batch[0].id)
+        all_analyses = batch or None
 
     return render(request, 'job_match/results.html', {
         'analysis': analysis,

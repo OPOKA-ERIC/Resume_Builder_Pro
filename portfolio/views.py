@@ -24,9 +24,9 @@ def portfolio_create(request, resume_id):
         return redirect('portfolio:manage', portfolio_id=exists.id)
 
     if request.method == 'POST':
-        portfolio = Portfolio.objects.create(user=request.user, resume=resume)
+        portfolio = Portfolio.objects.create(user=request.user, resume=resume, is_published=True)
         logger.info(f'Portfolio created: {portfolio.id} for resume {resume.id} by user {request.user.username}')
-        messages.success(request, 'Portfolio created! Share it with the link below.')
+        messages.success(request, 'Portfolio created and published! Share it with the link below.')
         return redirect('portfolio:manage', portfolio_id=portfolio.id)
 
     return render(request, 'portfolio/create.html', {'resume': resume})

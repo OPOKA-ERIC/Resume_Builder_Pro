@@ -3850,6 +3850,15 @@ h1, h2, h3, h4, h5, h6 {
   background: #059669;
   color: #fff;
 }
+.dash-act-portfolio {
+  color: #7c3aed;
+  background: #f3e8ff;
+  border: 1px solid transparent;
+}
+.dash-act-portfolio:hover {
+  background: #7c3aed;
+  color: #fff;
+}
 .dash-act-delete {
   color: #e11d48;
   background: #fff1f2;
