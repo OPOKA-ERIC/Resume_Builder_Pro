@@ -1,11 +1,14 @@
 import logging
+import threading
+import datetime
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import JobAnalysisForm
-from .models import JobDescription, SkillGapAnalysis
+from .models import AnalysisTask, JobDescription, SkillGapAnalysis
 from .analyzer import analyze_match as _taxonomy_analyze
 from .analyzer import analyze_match_from_text as _taxonomy_analyze_from_text
 from .resume_parser import extract_text_from_upload
@@ -18,14 +21,20 @@ from resumes.models import Resume
 logger = logging.getLogger(__name__)
 
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
 def _resume_to_text(resume) -> str:
     parts = [f"Title: {resume.title}"]
+    if hasattr(resume, 'summary') and resume.summary:
+        parts.append(f"Summary: {resume.summary}")
     for exp in resume.experiences.all():
-        parts.append(f"Experience: {exp.role} at {exp.company} ({exp.start_date}-{exp.end_date or 'Present'})")
+        parts.append(f"Experience: {exp.role} at {exp.company} ({exp.start_year}-{exp.end_year or 'Present'})")
         if exp.description:
             parts.append(exp.description)
     for edu in resume.educations.all():
-        parts.append(f"Education: {edu.qualification} at {edu.institution} ({edu.start_date}-{edu.end_date or 'Present'})")
+        parts.append(f"Education: {edu.qualification} at {edu.institution} ({edu.start_year}-{edu.end_year or 'Present'})")
         if edu.description:
             parts.append(edu.description)
     for proj in resume.projects.all():
@@ -42,7 +51,7 @@ def _resume_to_text(resume) -> str:
     return '\n'.join(parts)
 
 
-def _run_analysis(resume_text: str, job_text: str) -> dict:
+def _run_analysis(resume_text: str, job_text: str, resume=None) -> dict:
     if getattr(settings, 'GEMINI_API_KEY', None):
         try:
             result = _gemini_analyze_match(resume_text, job_text)
@@ -57,143 +66,202 @@ def _run_analysis(resume_text: str, job_text: str) -> dict:
         except Exception as e:
             logger.warning('Gemini analysis failed, using taxonomy fallback: %s', e)
 
+    if resume is not None:
+        return _taxonomy_analyze(resume, job_text)
     return _taxonomy_analyze_from_text(resume_text, job_text)
 
 
-@login_required
-def analyze_view(request):
-    form = JobAnalysisForm(request.POST or None, request.FILES or None, user=request.user)
+def _set(task: AnalysisTask, step: str, progress: int):
+    """Update task progress in-place and persist."""
+    task.step = step
+    task.progress = progress
+    task.save(update_fields=['step', 'progress', 'updated_at'])
 
-    if request.method == 'POST' and form.is_valid():
-        source = form.cleaned_data['source']
-        jd_source = form.cleaned_data['jd_source']
-        job_title = form.cleaned_data.get('job_title', '')
-        company = form.cleaned_data.get('company', '')
-        job_text = form.cleaned_data.get('job_description', '')
 
+# ---------------------------------------------------------------------------
+# Background worker
+# ---------------------------------------------------------------------------
+
+def _run_task(task_id: str, user_id: int, payload: dict):
+    """Runs in a daemon thread. Reads payload, does the work, updates task."""
+    from django.contrib.auth.models import User
+
+    try:
+        task = AnalysisTask.objects.get(id=task_id)
+        task.status = AnalysisTask.STATUS_RUNNING
+        task.save(update_fields=['status', 'updated_at'])
+
+        user = User.objects.get(id=user_id)
+        source    = payload['source']
+        jd_source = payload['jd_source']
+        job_title = payload.get('job_title', '')
+        company   = payload.get('company', '')
+        job_text  = payload.get('job_description', '')
+
+        # ── 1. Resume text ──────────────────────────────────────────────────
+        _set(task, 'Extracting resume text…', 10)
+        resume = None
         if source == 'existing':
-            resume_id = int(form.cleaned_data['resume'])
-            resume = get_object_or_404(Resume, id=resume_id, user=request.user)
-            resume_text = _resume_to_text(resume) if resume.pk else ''
+            resume = Resume.objects.prefetch_related(
+                'experiences', 'educations', 'projects',
+                'certifications', 'languages', 'skills',
+            ).get(id=payload['resume_id'], user=user)
+            resume_text = _resume_to_text(resume)
         else:
-            resume_file = request.FILES['resume_file']
-            resume_text = extract_text_from_upload(resume_file)
-            if not resume_text.strip():
-                messages.error(request, 'Could not extract text from the file.')
-                return render(request, 'job_match/analyze.html', {
-                    'form': form, 'has_resumes': request.user.resumes.exists(),
-                    'ai_available': bool(settings.GEMINI_API_KEY),
-                })
+            # Text was extracted in the view and stored in payload
+            resume_text = payload['resume_text']
 
+        # ── 2. Job description ──────────────────────────────────────────────
         if jd_source == 'autosearch':
-            messages.info(request, 'AI is searching for matching jobs online...')
+            _set(task, 'Searching for matching jobs online…', 25)
             jobs = search_jobs_for_resume(resume_text)
 
             if not jobs:
-                messages.error(request, 'Could not find matching jobs online. Try pasting a URL or description manually.')
-                return render(request, 'job_match/analyze.html', {
-                    'form': form, 'has_resumes': request.user.resumes.exists(),
-                    'ai_available': bool(settings.GEMINI_API_KEY),
-                })
+                task.status = AnalysisTask.STATUS_ERROR
+                task.error  = 'Could not find matching jobs. Try pasting a URL or description manually.'
+                task.save(update_fields=['status', 'error', 'updated_at'])
+                return
 
-            messages.success(request, f'Found {len(jobs)} matching jobs. Analyzing...')
+            _set(task, f'Found {len(jobs)} jobs — analysing…', 50)
 
-            analyses = []
-            for job in jobs:
+            def _analyse_job(job):
                 job_desc = JobDescription.objects.create(
-                    user=request.user,
+                    user=user,
                     title=job.get('title', ''),
                     company=job.get('company', ''),
                     raw_text=job.get('description', ''),
                     source_url='',
                 )
-                result = _run_analysis(resume_text, job.get('description', ''))
-                analysis = SkillGapAnalysis.objects.create(
+                result = _run_analysis(resume_text, job.get('description', ''), resume=resume)
+                return SkillGapAnalysis.objects.create(
                     job=job_desc,
-                    resume=resume if source == 'existing' else None,
+                    resume=resume,
                     overall_score=result['overall_score'],
                     matched_skills=result['matched_skills'],
                     missing_skills=result['missing_skills'],
                     partial_skills=result.get('partial_skills', []),
                     recommendations=result.get('recommendations', ''),
                 )
-                analyses.append(analysis)
 
-            analyses.sort(key=lambda a: a.overall_score, reverse=True)
-            top = analyses[0]
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+            analyses = []
+            with ThreadPoolExecutor(max_workers=min(len(jobs), 5)) as ex:
+                futures = [ex.submit(_analyse_job, job) for job in jobs]
+                for f in as_completed(futures, timeout=15):
+                    try:
+                        analyses.append(f.result())
+                    except Exception as e:
+                        logger.warning('Job analysis failed: %s', e)
 
-            if top.overall_score >= 80:
-                messages.success(request, f'Best match: {top.job.title} ({top.overall_score:.0f}%)')
-            elif top.overall_score >= 60:
-                messages.info(request, f'Top match: {top.job.title} ({top.overall_score:.0f}%)')
-            else:
-                messages.warning(request, f'Best match found: {top.job.title} ({top.overall_score:.0f}%)')
+            if not analyses:
+                task.status = AnalysisTask.STATUS_ERROR
+                task.error  = 'All job analyses failed. Please try again.'
+                task.save(update_fields=['status', 'error', 'updated_at'])
+                return
 
-            return render(request, 'job_match/results.html', {
-                'analysis': top,
-                'total': sum(len(a.matched_skills) + len(a.missing_skills) + len(a.partial_skills) for a in analyses),
-                'resume': resume if source == 'existing' else None,
-                'all_analyses': analyses,
-            })
+            top = max(analyses, key=lambda a: a.overall_score)
+            task.status      = AnalysisTask.STATUS_DONE
+            task.progress    = 100
+            task.step        = 'Complete'
+            task.analysis_id = top.id
+            task.save(update_fields=['status', 'progress', 'step', 'analysis_id', 'updated_at'])
+            return
 
         if jd_source == 'url':
-            job_url = form.cleaned_data['job_url']
-            messages.info(request, 'Fetching job details with AI...')
-
-            fetched = fetch_job_from_url(job_url)
+            _set(task, 'Fetching job posting from URL…', 25)
+            fetched = fetch_job_from_url(payload['job_url'])
 
             if fetched['source'] == 'error':
-                messages.warning(request, 'Could not fetch the URL. You can paste the description manually instead.')
-                return render(request, 'job_match/analyze.html', {
-                    'form': form,
-                    'has_resumes': request.user.resumes.exists(),
-                    'ai_available': bool(settings.GEMINI_API_KEY),
-                })
+                task.status = AnalysisTask.STATUS_ERROR
+                task.error  = 'Could not fetch the URL. Try pasting the description manually.'
+                task.save(update_fields=['status', 'error', 'updated_at'])
+                return
 
-            parsed = extract_job_details(fetched['description'])
+            # Use fetched title/company directly — skip the extra Gemini parse call
+            job_title = job_title or fetched.get('title', '')
+            company   = company   or fetched.get('company', '')
+            job_text  = fetched['description']
 
-            if not job_title and parsed.get('title'):
-                job_title = parsed['title']
-            if not company and parsed.get('company'):
-                company = parsed['company']
-            if not job_text and parsed.get('description'):
-                job_text = parsed['description']
-
-            if not job_text:
-                job_text = fetched['description']
-
-            messages.success(request, f'AI extracted job details for "{job_title or "position"}".')
-
+        # ── 3. Analyse ──────────────────────────────────────────────────────
+        _set(task, 'Scoring your resume against the job…', 70)
         job_desc = JobDescription.objects.create(
-            user=request.user,
+            user=user,
             title=job_title or '',
             company=company or '',
             raw_text=job_text,
-            source_url=form.cleaned_data.get('job_url', ''),
+            source_url=payload.get('job_url', ''),
         )
 
-        result = _run_analysis(resume_text, job_text)
+        result = _run_analysis(resume_text, job_text, resume=resume)
         analysis = SkillGapAnalysis.objects.create(
             job=job_desc,
-            resume=resume if source == 'existing' else None,
+            resume=resume,
             overall_score=result['overall_score'],
             matched_skills=result['matched_skills'],
             missing_skills=result['missing_skills'],
             partial_skills=result.get('partial_skills', []),
             recommendations=result.get('recommendations', ''),
         )
-        logger.info(f"Analysis #{analysis.id}: {result['overall_score']}%")
 
-        if result['overall_score'] >= 80:
-            messages.success(request, 'Strong match! Your resume covers most required skills.')
-        elif result['overall_score'] >= 60:
-            messages.info(request, 'Good match. Check the recommendations to improve further.')
-        elif result['overall_score'] >= 40:
-            messages.warning(request, 'Moderate match. Consider addressing the skill gaps below.')
+        task.status      = AnalysisTask.STATUS_DONE
+        task.progress    = 100
+        task.step        = 'Complete'
+        task.analysis_id = analysis.id
+        task.save(update_fields=['status', 'progress', 'step', 'analysis_id', 'updated_at'])
+
+    except Exception as exc:
+        logger.exception('AnalysisTask %s failed', task_id)
+        try:
+            task = AnalysisTask.objects.get(id=task_id)
+            task.status = AnalysisTask.STATUS_ERROR
+            task.error  = str(exc)
+            task.save(update_fields=['status', 'error', 'updated_at'])
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------------------
+# Views
+# ---------------------------------------------------------------------------
+
+@login_required
+def analyze_view(request):
+    form = JobAnalysisForm(request.POST or None, request.FILES or None, user=request.user)
+
+    if request.method == 'POST' and form.is_valid():
+        cd        = form.cleaned_data
+        source    = cd['source']
+        jd_source = cd['jd_source']
+
+        payload = {
+            'source':          source,
+            'jd_source':       jd_source,
+            'job_title':       cd.get('job_title', ''),
+            'company':         cd.get('company', ''),
+            'job_description': cd.get('job_description', ''),
+            'job_url':         cd.get('job_url', ''),
+        }
+
+        if source == 'existing':
+            payload['resume_id'] = int(cd['resume'])
         else:
-            messages.error(request, 'Low match. Your resume needs significant improvement for this role.')
+            resume_file = request.FILES['resume_file']
+            resume_text = extract_text_from_upload(resume_file)
+            if not resume_text.strip():
+                messages.error(request, 'Could not extract text from the uploaded file.')
+                return render(request, 'job_match/analyze.html', {
+                    'form': form,
+                    'has_resumes': request.user.resumes.exists(),
+                    'ai_available': bool(settings.GEMINI_API_KEY),
+                })
+            payload['resume_text'] = resume_text
 
-        return redirect('job_match:results', analysis_id=analysis.id)
+        task = AnalysisTask.objects.create(user=request.user, payload=payload)
+        threading.Thread(
+            target=_run_task, args=(str(task.id), request.user.id, payload), daemon=True
+        ).start()
+
+        return redirect('job_match:waiting', task_id=task.id)
 
     has_resumes = request.user.resumes.exists()
     return render(request, 'job_match/analyze.html', {
@@ -204,14 +272,59 @@ def analyze_view(request):
 
 
 @login_required
+def waiting_view(request, task_id):
+    task = get_object_or_404(AnalysisTask, id=task_id, user=request.user)
+    # If already done/error when page loads, skip the waiting screen
+    if task.status == AnalysisTask.STATUS_DONE and task.analysis_id:
+        return redirect('job_match:results', analysis_id=task.analysis_id)
+    return render(request, 'job_match/waiting.html', {'task_id': str(task_id)})
+
+
+@login_required
+def task_status(request, task_id):
+    task = get_object_or_404(AnalysisTask, id=task_id, user=request.user)
+    data = {
+        'status':      task.status,
+        'step':        task.step,
+        'progress':    task.progress,
+        'analysis_id': task.analysis_id,
+        'error':       task.error,
+    }
+    return JsonResponse(data)
+
+
+@login_required
 def results_view(request, analysis_id):
-    analysis = get_object_or_404(
-        SkillGapAnalysis, id=analysis_id, job__user=request.user,
-    )
+    analysis = get_object_or_404(SkillGapAnalysis, id=analysis_id, job__user=request.user)
     total = (len(analysis.matched_skills) + len(analysis.missing_skills) +
              len(analysis.partial_skills))
+
+    # For autosearch: surface sibling analyses created in the same task batch
+    # (same job__user, same minute, different job)
+    all_analyses = None
+    task = AnalysisTask.objects.filter(
+        user=request.user, analysis_id=analysis_id
+    ).first()
+    if task:
+        # Collect all analyses whose IDs were produced by the same task payload
+        # We stored only the top analysis_id; retrieve siblings via job created_at proximity
+        sibling_ids = SkillGapAnalysis.objects.filter(
+            job__user=request.user,
+            created_at__gte=analysis.created_at - datetime.timedelta(minutes=2),
+            created_at__lte=analysis.created_at + datetime.timedelta(minutes=2),
+        ).exclude(id=analysis_id).values_list('id', flat=True)
+        if sibling_ids:
+            all_analyses = list(
+                SkillGapAnalysis.objects.filter(
+                    id__in=list(sibling_ids) + [analysis_id]
+                ).select_related('job').order_by('-overall_score')
+            )
+
     return render(request, 'job_match/results.html', {
-        'analysis': analysis, 'total': total, 'resume': analysis.resume,
+        'analysis': analysis,
+        'total': total,
+        'resume': analysis.resume,
+        'all_analyses': all_analyses,
     })
 
 
@@ -225,9 +338,7 @@ def history_view(request):
 
 @login_required
 def delete_analysis(request, analysis_id):
-    analysis = get_object_or_404(
-        SkillGapAnalysis, id=analysis_id, job__user=request.user,
-    )
+    analysis = get_object_or_404(SkillGapAnalysis, id=analysis_id, job__user=request.user)
     if request.method == 'POST':
         analysis.delete()
         messages.success(request, 'Analysis deleted successfully.')

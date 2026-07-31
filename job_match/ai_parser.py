@@ -80,7 +80,9 @@ def _extract_skills_local(text: str) -> list:
     text_lower = text.lower()
     for category, skills in SKILL_TAXONOMY.items():
         for skill in skills:
-            if skill.lower() in text_lower:
+            skill_lower = skill.lower()
+            pattern = rf'(?<![a-z]){re.escape(skill_lower)}(?![a-z])'
+            if re.search(pattern, text_lower):
                 found.add(skill)
     return sorted(found)[:30]
 
