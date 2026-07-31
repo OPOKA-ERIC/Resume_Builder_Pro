@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import UserProfile
-from .forms import RegistrationForm, ProfileForm
+from .forms import RegistrationForm, ProfileForm, serialize_career, career_initial_from_data
 
 
 class RegistrationFormTest(TestCase):
@@ -123,6 +123,70 @@ class UserProfileModelTest(TestCase):
     def test_profile_str(self):
         profile = UserProfile.objects.create(user=self.user)
         self.assertIn(self.user.username, str(profile))
+
+
+class CareerSerializeTest(TestCase):
+    def test_serialize_career(self):
+        data = serialize_career({
+            'career_experience': 'Engineer | Acme | 2018 | 2022 | Built things\nBroken | | 2023 | | ',
+            'career_education': 'BSc | Makerere | 2014 | 2018 | Computer Science',
+            'career_projects': 'Portfolio | https://example.com | My site',
+            'career_certifications': 'AWS | Amazon | 2023',
+            'career_languages': 'English | native\nFrench | ',
+        })
+        self.assertEqual(len(data['experience']), 1)
+        self.assertEqual(data['experience'][0], {
+            'role': 'Engineer', 'company': 'Acme', 'start_year': 2018,
+            'end_year': 2022, 'description': 'Built things',
+        })
+        self.assertEqual(data['education'][0]['institution'], 'Makerere')
+        self.assertEqual(data['projects'][0]['name'], 'Portfolio')
+        self.assertEqual(data['certifications'][0]['year_awarded'], 2023)
+        self.assertEqual(data['languages'][0], {'name': 'English', 'proficiency_level': 'native'})
+        self.assertEqual(data['languages'][1]['proficiency_level'], 'fluent')
+
+    def test_round_trip_initial(self):
+        career = {
+            'experience': [{'role': 'Engineer', 'company': 'Acme', 'start_year': 2018, 'end_year': None, 'description': 'Work'}],
+        }
+        initial = career_initial_from_data(career)
+        self.assertIn('Engineer | Acme | 2018 |  | Work', initial['career_experience'])
+        back = serialize_career(initial)
+        self.assertEqual(back['experience'][0]['start_year'], 2018)
+
+
+class ProfileCareerDataTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user('testuser', 'test@example.com', 'pass1234!')
+        self.profile = UserProfile.objects.create(user=self.user)
+        self.client.force_login(self.user)
+
+    def test_profile_saves_career_biodata(self):
+        response = self.client.post(reverse('accounts:profile'), {
+            'email': 'test@example.com',
+            'phone': '+256700000000',
+            'skills': 'Python, Django',
+            'career_experience': 'Engineer | Acme | 2018 | 2022 | Built things',
+            'career_education': 'BSc | Makerere | 2014 | 2018 | CS',
+            'career_languages': 'English | native',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.skills, 'Python, Django')
+        self.assertEqual(len(self.profile.career_data['experience']), 1)
+        self.assertEqual(len(self.profile.career_data['education']), 1)
+        self.assertEqual(len(self.profile.career_data['languages']), 1)
+
+    def test_profile_renders_career_fields(self):
+        self.profile.career_data = {
+            'experience': [{'role': 'Engineer', 'company': 'Acme', 'start_year': 2018, 'end_year': None, 'description': ''}],
+        }
+        self.profile.save()
+        response = self.client.get(reverse('accounts:profile'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Career Biodata')
+        self.assertContains(response, 'Engineer | Acme | 2018 |  | ')
 
 
 class RegisterViewTest(TestCase):

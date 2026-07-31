@@ -1,7 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Resume, Education, Experience, Skill, Project, Certification, Language, Reference
-from templates_app.models import ResumeTemplate
 
 
 class ResumeModelTest(TestCase):
@@ -39,8 +38,8 @@ class EducationModelTest(TestCase):
             resume=self.resume,
             institution='Makerere University',
             qualification='BSc Computer Science',
-            start_date='2020-08-01',
-            end_date='2024-06-30',
+            start_year=2020,
+            end_year=2024,
         )
         self.assertEqual(str(edu), 'BSc Computer Science - Makerere University')
 
@@ -49,9 +48,9 @@ class EducationModelTest(TestCase):
             resume=self.resume,
             institution='Makerere University',
             qualification='BSc CS',
-            start_date='2020-08-01',
+            start_year=2020,
         )
-        self.assertIsNone(edu.end_date)
+        self.assertIsNone(edu.end_year)
 
 
 class ExperienceModelTest(TestCase):
@@ -65,7 +64,7 @@ class ExperienceModelTest(TestCase):
             resume=self.resume,
             company='MTN Uganda',
             role='Software Developer',
-            start_date='2024-01-01',
+            start_year=2024,
             description='Building mobile apps',
         )
         self.assertEqual(str(exp), 'Software Developer at MTN Uganda')
@@ -116,7 +115,7 @@ class CertificationModelTest(TestCase):
             resume=self.resume,
             title='AWS Cloud Practitioner',
             issuer='Amazon',
-            date_awarded='2024-03-15',
+            year_awarded=2024,
         )
         self.assertEqual(str(cert), 'AWS Cloud Practitioner')
 
@@ -223,8 +222,8 @@ class WizardStepViewTest(TestCase):
         response = self.client.post(f'/resumes/{self.resume.id}/wizard/education/', {
             'institution': 'Makerere University',
             'qualification': 'BSc CS',
-            'start_date': '2020-08-01',
-            'end_date': '2024-06-30',
+            'start_year': '2020',
+            'end_year': '2024',
             'description': '',
         })
         self.assertEqual(response.status_code, 302)
@@ -239,8 +238,8 @@ class WizardStepViewTest(TestCase):
         response = self.client.post(f'/resumes/{self.resume.id}/wizard/experience/', {
             'company': 'MTN',
             'role': 'Developer',
-            'start_date': '2024-01-01',
-            'end_date': '',
+            'start_year': '2024',
+            'end_year': '',
             'description': 'Building apps',
         })
         self.assertEqual(response.status_code, 302)
@@ -282,7 +281,7 @@ class WizardStepViewTest(TestCase):
         response = self.client.post(f'/resumes/{self.resume.id}/wizard/certifications/', {
             'title': 'AWS',
             'issuer': 'Amazon',
-            'date_awarded': '2024-03-15',
+            'year_awarded': '2024',
         })
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Certification.objects.filter(resume=self.resume).exists())
@@ -315,7 +314,7 @@ class WizardStepViewTest(TestCase):
         self.assertTrue(Reference.objects.filter(resume=self.resume).exists())
 
     def test_wizard_prevents_other_users_resume(self):
-        other = User.objects.create_user('other', 'o@t.com', 'pass1234!')
+        User.objects.create_user('other', 'o@t.com', 'pass1234!')
         self.client.login(username='other', password='pass1234!')
         response = self.client.get(f'/resumes/{self.resume.id}/wizard/education/')
         self.assertEqual(response.status_code, 404)
@@ -371,7 +370,7 @@ class ResumePreviewViewTest(TestCase):
         self.resume = Resume.objects.create(user=self.user, title='Preview CV')
         Education.objects.create(
             resume=self.resume, institution='MU',
-            qualification='BSc', start_date='2020-01-01'
+            qualification='BSc', start_year=2020
         )
         Skill.objects.create(resume=self.resume, name='Python')
 

@@ -9,6 +9,14 @@ class UserProfile(models.Model):
     photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     website = models.URLField(blank=True, help_text='Personal website URL')
     city = models.CharField(max_length=100, blank=True)
+    skills = models.TextField(
+        blank=True,
+        help_text='Comma-separated skills that will be auto-added to new job resumes.',
+    )
+    career_data = models.JSONField(
+        default=dict, blank=True,
+        help_text='Structured career biodata (education, experience, projects, certifications, languages) used to pre-fill job resumes.',
+    )
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 

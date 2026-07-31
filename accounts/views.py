@@ -1,6 +1,6 @@
 import logging
 from django.shortcuts import render, redirect, reverse
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.utils.http import urlencode
-from .forms import RegistrationForm, ProfileForm, CustomPasswordChangeForm
+from .forms import RegistrationForm, ProfileForm, CustomPasswordChangeForm, serialize_career
 from .models import UserProfile
 
 logger = logging.getLogger(__name__)
@@ -85,6 +85,8 @@ def profile_view(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
             form.save()
+            profile.career_data = serialize_career(form.cleaned_data)
+            profile.save(update_fields=['career_data'])
             messages.success(request, 'Profile updated successfully.')
             return redirect('accounts:profile')
     else:

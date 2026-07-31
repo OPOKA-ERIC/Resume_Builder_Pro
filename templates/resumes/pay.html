@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Pay to Unlock Applications - Resume Builder Pro{% endblock %}
+{% block title %}Pay to Unlock & Download - Resume Builder Pro{% endblock %}
 
 {% block content %}
 <div class="animate-fade-in-up" style="max-width: 760px; margin: 0 auto;">
@@ -8,8 +8,8 @@
             <i class="bi bi-arrow-left"></i>
         </a>
         <div>
-            <h3 class="mb-1"><i class="bi bi-credit-card me-2" style="color: var(--primary);"></i>Unlock Application Links</h3>
-            <small class="text-muted">One-time payment &middot; lifetime access to every approved job's application details</small>
+            <h3 class="mb-1"><i class="bi bi-credit-card me-2" style="color: var(--primary);"></i>Unlock Your CV</h3>
+            <small class="text-muted">One-time payment &middot; download this CV and access every approved job's application details</small>
         </div>
     </div>
 
@@ -31,9 +31,9 @@
                         </div>
                     </div>
                     <ul class="list-unstyled mt-4 mb-0 small">
-                        <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Unlock application links for this job</li>
+                        <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Download this CV as PDF</li>
+                        <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Unlock the application link for this job</li>
                         <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Access every approved job's application details</li>
-                        <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Pay once, enjoy lifetime access</li>
                         <li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color: #059669;"></i> Keep editing your resume anytime</li>
                     </ul>
                 </div>
@@ -50,6 +50,9 @@
 
                     <form method="post">
                         {% csrf_token %}
+                        {% if next_url %}
+                        <input type="hidden" name="next" value="{{ next_url }}">
+                        {% endif %}
                         <div class="mb-3">
                             <label class="form-label small fw-semibold">Email</label>
                             <input type="email" class="form-control" value="{{ user.email }}" readonly>

@@ -1,11 +1,22 @@
 import logging
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.http import urlencode
 from xhtml2pdf import pisa
 from resumes.models import Resume
 
 logger = logging.getLogger(__name__)
+
+
+def _pay_gate_redirect(request, resume, view_name):
+    """Return a redirect to payment if the resume is not paid, else None."""
+    if resume.is_paid:
+        return None
+    pay_url = reverse('resumes:resume_pay', args=[resume.id])
+    next_url = reverse(view_name, args=[resume.id])
+    return redirect(f'{pay_url}?{urlencode({"next": next_url})}')
 
 TEMPLATE_STYLES = {
     'galaxy': {
@@ -126,6 +137,9 @@ def render_to_pdf(html_string, filename):
 @login_required
 def download_pdf(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+    pay_gate = _pay_gate_redirect(request, resume, 'pdf_export:download_pdf')
+    if pay_gate:
+        return pay_gate
 
     try:
         html_string = generate_pdf_html(resume)
@@ -147,6 +161,9 @@ def download_pdf(request, resume_id):
 @login_required
 def pdf_preview(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+    pay_gate = _pay_gate_redirect(request, resume, 'pdf_export:pdf_preview')
+    if pay_gate:
+        return pay_gate
     html_string = generate_pdf_html(resume)
     return render(request, 'pdf/pdf_preview.html', {
         'resume': resume,

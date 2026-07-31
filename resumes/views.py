@@ -98,8 +98,29 @@ def _prefill_job_resume(resume):
     if not matched:
         fallback = job.category.title() if job.category else 'Communication'
         matched = [fallback, 'Teamwork', 'Problem Solving']
+    existing = {s.name.lower() for s in resume.skills.all()}
     for name in matched[:14]:
-        Skill.objects.create(resume=resume, name=name)
+        if name.lower() not in existing:
+            Skill.objects.create(resume=resume, name=name)
+            existing.add(name.lower())
+    if profile and profile.skills:
+        for raw in profile.skills.split(','):
+            name = raw.strip()
+            if name and name.lower() not in existing:
+                Skill.objects.create(resume=resume, name=name, proficiency_level='intermediate')
+                existing.add(name.lower())
+    if profile and profile.career_data:
+        data = profile.career_data
+        for item in data.get('education', []):
+            Education.objects.create(resume=resume, **item)
+        for item in data.get('experience', []):
+            Experience.objects.create(resume=resume, **item)
+        for item in data.get('projects', []):
+            Project.objects.create(resume=resume, **item)
+        for item in data.get('certifications', []):
+            Certification.objects.create(resume=resume, **item)
+        for item in data.get('languages', []):
+            Language.objects.create(resume=resume, **item)
     resume.save()
     return True
 
@@ -107,24 +128,38 @@ def _prefill_job_resume(resume):
 RESUME_PAYMENT_PRICE = 9.99
 
 
+def _safe_pay_next(request):
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+    if next_url.startswith('/') and not next_url.startswith('//'):
+        return next_url
+    return None
+
+
 @login_required
 def resume_pay(request, resume_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
     if resume.is_paid:
-        messages.info(request, 'This resume is already paid. You have access to every job application link.')
-        return redirect('jobs:job_list')
+        messages.info(request, 'This resume is already paid — your CV is unlocked and you can apply to every approved job.')
+        return redirect(_safe_pay_next(request) or 'jobs:job_list')
     if request.method == 'POST':
         resume.is_paid = True
         resume.paid_at = timezone.now()
         resume.save(update_fields=['is_paid', 'paid_at', 'updated_at'])
         messages.success(
             request,
-            'Payment successful! You now have lifetime access to the application links for every approved job.',
+            'Payment successful! Your CV is unlocked for download and you now have access to the application links for every approved job.',
         )
+        next_url = _safe_pay_next(request)
+        if next_url:
+            return redirect(next_url)
         if resume.job:
             return redirect('jobs:job_detail', job_id=resume.job.id)
         return redirect('resumes:resume_preview', resume_id=resume.id)
-    return render(request, 'resumes/pay.html', {'resume': resume, 'price': RESUME_PAYMENT_PRICE})
+    return render(request, 'resumes/pay.html', {
+        'resume': resume,
+        'price': RESUME_PAYMENT_PRICE,
+        'next_url': _safe_pay_next(request),
+    })
 
 
 @login_required
@@ -263,9 +298,20 @@ def template_select(request, resume_id):
                     messages.success(request, f'Template "{template.name}" selected.')
         return redirect('resumes:resume_preview', resume_id=resume.id)
 
+    tag_filter = request.GET.get('tag', '')
+    templates_list = list(templates)
+    if tag_filter:
+        templates_list = [t for t in templates_list if tag_filter in (t.tags or [])]
+    all_tags = set()
+    for t in templates:
+        if t.tags:
+            all_tags.update(t.tags)
+
     return render(request, 'resumes/template_select.html', {
         'resume': resume,
-        'templates': templates,
+        'templates': templates_list,
+        'all_tags': sorted(all_tags),
+        'current_tag': tag_filter,
         'can_prefill': bool(resume.job and not resume.skills.exists()),
     })
 
@@ -373,7 +419,6 @@ def resume_delete(request, resume_id):
 def wizard_entry_edit(request, resume_id, step, entry_id):
     resume = get_object_or_404(Resume, id=resume_id, user=request.user)
 
-    steps = ['education', 'experience', 'skills', 'projects', 'certifications', 'languages', 'references']
     form_classes = {
         'education': EducationForm,
         'experience': ExperienceForm,

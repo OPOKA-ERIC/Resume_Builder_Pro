@@ -17,6 +17,9 @@ staticfiles/
 # Environment variables
 .env
 
+# Vite build cache
+.vite/
+
 # IDE
 .vscode/
 .idea/

@@ -45,6 +45,7 @@ class ResumeTemplateModelTest(TestCase):
         self.assertIsNotNone(template.created_at)
 
     def test_ordering_by_name(self):
+        ResumeTemplate.objects.all().delete()
         t3 = ResumeTemplate.objects.create(name='Zebra', html_file='z.html')
         t1 = ResumeTemplate.objects.create(name='Alpha', html_file='a.html')
         t2 = ResumeTemplate.objects.create(name='Middle', html_file='m.html')
@@ -54,6 +55,7 @@ class ResumeTemplateModelTest(TestCase):
         self.assertEqual(templates[2], t3)
 
     def test_unique_instances(self):
+        ResumeTemplate.objects.all().delete()
         ResumeTemplate.objects.create(name='Only', html_file='only.html')
         self.assertEqual(ResumeTemplate.objects.count(), 1)
 

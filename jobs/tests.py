@@ -100,7 +100,7 @@ class JobApplyPipelineTests(TestCase):
         self.client.get(reverse('jobs:create_job_resume', args=[self.job.id]))
         response = self.client.get(reverse('jobs:apply', args=[self.job.id]), follow=True)
         self.assertFalse(JobApplication.objects.filter(user=self.user, job=self.job).exists())
-        self.assertContains(response, 'Unlock Application Links')
+        self.assertContains(response, 'Unlock Your CV')
         self.assertContains(response, 'Demo checkout')
 
     def test_paid_resume_grants_all_job_access(self):
@@ -188,6 +188,30 @@ class JobApplyPipelineTests(TestCase):
         self.assertGreater(resume.skills.count(), 0)
         self.assertIn('Sales Director', resume.summary)
         self.assertContains(response, 'auto-filled')
+
+    def test_template_selection_prefills_profile_career_biodata(self):
+        from accounts.models import UserProfile
+        from resumes.models import Education, Experience
+        profile = UserProfile.objects.create(
+            user=self.user,
+            skills='Negotiation, Leadership',
+            career_data={
+                'experience': [{'role': 'Sales Lead', 'company': 'Acme', 'start_year': 2019, 'end_year': None, 'description': 'Led sales team'}],
+                'education': [{'qualification': 'MBA', 'institution': 'Makerere', 'start_year': 2015, 'end_year': 2017, 'description': ''}],
+                'languages': [{'name': 'English', 'proficiency_level': 'native'}],
+            },
+        )
+        profile.refresh_from_db()
+        self._login()
+        self.client.get(reverse('jobs:create_job_resume', args=[self.job.id]))
+        resume = Resume.objects.filter(user=self.user, job=self.job).first()
+        template = ResumeTemplate.objects.create(name='Modern', description='A modern template', is_active=True)
+
+        self.client.post(reverse('resumes:template_select', args=[resume.id]), {'template_id': template.id})
+        resume.refresh_from_db()
+        self.assertEqual(Experience.objects.filter(resume=resume, role='Sales Lead', company='Acme').count(), 1)
+        self.assertEqual(Education.objects.filter(resume=resume, institution='Makerere').count(), 1)
+        self.assertGreater(resume.skills.filter(name__in=['Negotiation', 'Leadership']).count(), 0)
 
     def test_template_selection_does_not_duplicate_existing_content(self):
         self._login()

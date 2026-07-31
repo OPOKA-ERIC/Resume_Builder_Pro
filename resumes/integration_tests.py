@@ -43,15 +43,15 @@ class FullRegistrationToResumeFlowTest(TestCase):
             'education': {
                 'institution': 'Makerere University',
                 'qualification': 'BSc Computer Science',
-                'start_date': '2020-08-01',
-                'end_date': '2024-06-30',
+                'start_year': '2020',
+                'end_year': '2024',
                 'description': 'First Class Honours',
             },
             'experience': {
                 'company': 'MTN Uganda',
                 'role': 'Software Developer',
-                'start_date': '2024-07-01',
-                'end_date': '',
+                'start_year': '2024',
+                'end_year': '',
                 'description': 'Built mobile apps',
             },
             'skills': {
@@ -66,7 +66,7 @@ class FullRegistrationToResumeFlowTest(TestCase):
             'certifications': {
                 'title': 'AWS Cloud Practitioner',
                 'issuer': 'Amazon Web Services',
-                'date_awarded': '2024-03-15',
+                'year_awarded': '2024',
             },
             'languages': {
                 'name': 'English',
@@ -103,6 +103,8 @@ class FullRegistrationToResumeFlowTest(TestCase):
         self.assertContains(response, 'Python')
         self.assertContains(response, 'Resume Builder Pro')
 
+        resume.is_paid = True
+        resume.save()
         pdf_url = reverse('pdf_export:download_pdf', args=[resume.id])
         response = self.client.get(pdf_url)
         self.assertIn(response.status_code, [200, 500])
@@ -254,21 +256,21 @@ class PDFGenerationIntegrationTest(TestCase):
         self.client = Client()
         self.user = User.objects.create_user('u', 'u@t.com', 'pass1234!')
         self.client.force_login(self.user)
-        self.resume = Resume.objects.create(user=self.user, title='Full CV')
+        self.resume = Resume.objects.create(user=self.user, title='Full CV', is_paid=True)
         Education.objects.create(
             resume=self.resume, institution='MU', qualification='BSc',
-            start_date='2020-01-01', end_date='2024-01-01'
+            start_year=2020, end_year=2024
         )
         Experience.objects.create(
             resume=self.resume, company='TechCo', role='Dev',
-            start_date='2024-02-01', description='Work'
+            start_year=2024, description='Work'
         )
         Skill.objects.create(resume=self.resume, name='Python', proficiency_level='expert')
         Project.objects.create(
             resume=self.resume, name='Proj', description='Desc', link='https://example.com'
         )
         Certification.objects.create(
-            resume=self.resume, title='Cert', issuer='Issuer', date_awarded='2024-01-01'
+            resume=self.resume, title='Cert', issuer='Issuer', year_awarded=2024
         )
         Language.objects.create(resume=self.resume, name='English', proficiency_level='native')
         Reference.objects.create(

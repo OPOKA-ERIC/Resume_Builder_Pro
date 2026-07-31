@@ -1,87 +1,297 @@
 {% extends "base.html" %}
-{% block title %}Select Template - Resume Builder Pro{% endblock %}
+{% load static %}
+{% block title %}Choose a Template — Resume Builder Pro{% endblock %}
+{% block main_class %}landing-page{% endblock %}
 
 {% block content %}
-<div class="animate-fade-in-up">
-    <div class="d-flex align-items-center mb-4">
-        <a href="{% url 'resumes:dashboard' %}" class="btn btn-sm btn-outline-secondary me-3">
-            <i class="bi bi-arrow-left"></i>
-        </a>
-        <div>
-            <h3 class="mb-1"><i class="bi bi-palette me-2" style="color: var(--primary);"></i>Choose a Template</h3>
-            <small class="text-muted">For "{{ resume.title }}" &mdash; {{ templates|length }} templates available</small>
-        </div>
-    </div>
 
+<!-- ===================== TEMPLATES HERO ===================== -->
+<section class="templates-hero" id="templatesHero">
+  <div class="templates-hero-bg"></div>
+  <div class="templates-hero-dots"></div>
+  <div class="templates-hero-container">
+    <div class="d-flex justify-content-center mb-3">
+      <a href="{% if resume.job %}{% url 'jobs:job_detail' resume.job.id %}{% else %}{% url 'resumes:dashboard' %}{% endif %}" class="job-back-link" style="display:inline-flex; align-items:center; gap:0.4rem; color:#fff; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.28); backdrop-filter:blur(8px); font-size:0.82rem; font-weight:600; padding:0.45rem 1.05rem; border-radius:999px; text-decoration:none; transition:all 0.3s cubic-bezier(0.16,1,0.3,1);">
+        <i class="bi bi-arrow-left"></i> {% if resume.job %}Back to Job{% else %}Back to Dashboard{% endif %}
+      </a>
+    </div>
+    <div class="text-center">
+      <h1 class="templates-headline">
+        <span class="tw-reveal"><span>Choose a</span></span>
+        <span class="tw-reveal"><span>Template</span></span>
+      </h1>
+      <p class="templates-subhead">
+        Pick a design for &ldquo;{{ resume.title }}&rdquo; and make it yours.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== JOB CONTEXT BANNERS ===================== -->
+<section style="margin-top: 2.5rem;">
+  <div class="container-custom">
     {% if resume.job %}
-        <div class="alert alert-info d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
-            <i class="bi bi-bullseye"></i>
-            <span class="small">This resume is being built for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}. After picking a template you'll be able to finish and apply.</span>
-            <a href="{% url 'jobs:job_detail' resume.job.id %}" class="btn btn-outline-primary btn-sm ms-auto flex-shrink-0" style="border-radius: 10px;">
-                <i class="bi bi-eye"></i> View Job
-            </a>
-        </div>
+    <div class="gallery-banner gallery-banner-info">
+      <i class="bi bi-bullseye"></i>
+      <span>This resume is being built for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}. After picking a template you'll be able to finish and apply.</span>
+      <a href="{% url 'resumes:wizard_step' resume.id 'education' %}" class="gallery-banner-link">
+        <i class="bi bi-list-check"></i> Use the Wizard Instead
+      </a>
+    </div>
     {% endif %}
 
     {% if can_prefill %}
-        <div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
-            <i class="bi bi-magic"></i>
-            <span class="small"><strong>Quick start:</strong> choose a template and it will be auto-filled with the job's focus areas plus your profile info. Everything stays editable afterward.</span>
-            <a href="{% url 'resumes:wizard_step' resume.id 'education' %}" class="btn btn-outline-success btn-sm ms-auto flex-shrink-0" style="border-radius: 10px;">
-                <i class="bi bi-list-check"></i> Use the Wizard Instead
-            </a>
-        </div>
-    {% else %}
-        <div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
-            <i class="bi bi-pencil-square"></i>
-            <span class="small">This resume already has content. Pick a template to switch its look — your data stays untouched.</span>
-        </div>
+    <div class="gallery-banner gallery-banner-success">
+      <i class="bi bi-magic"></i>
+      <span><strong>Quick start:</strong> choose a template and it will be auto-filled with the job's focus areas plus your profile info. Everything stays editable afterward.</span>
+    </div>
     {% endif %}
+  </div>
+</section>
 
+<!-- ===================== TEMPLATES GALLERY ===================== -->
+<section class="templates-gallery" id="templatesGallery">
+  <div class="container-custom">
+
+    <!-- Top Controls -->
+    <div class="gallery-top-bar">
+      <div class="gallery-top-left">
+        <h2 class="gallery-heading">Resume Templates</h2>
+        <span class="gallery-count" id="galleryCount">{{ templates|length }} templates</span>
+      </div>
+      <div class="gallery-top-right">
+        <div class="gallery-search-wrap">
+          <svg class="gallery-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="gallery-search" id="gallerySearch" placeholder="Search templates..." aria-label="Search templates">
+        </div>
+        <div class="gallery-sort-wrap">
+          <select class="gallery-sort" id="gallerySort" aria-label="Sort templates">
+            <option value="default">Sort: Newest</option>
+            <option value="name">Sort: A–Z</option>
+            <option value="name-desc">Sort: Z–A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="filter-bar" role="tablist" aria-label="Template categories">
+      <a href="{% url 'resumes:template_select' resume.id %}"
+         class="filter-tag {% if not current_tag %}filter-active{% endif %}"
+         role="tab"
+         aria-selected="{% if not current_tag %}true{% else %}false{% endif %}">
+        All Templates
+      </a>
+      {% for tag in all_tags %}
+      <a href="{% url 'resumes:template_select' resume.id %}?tag={{ tag }}"
+         class="filter-tag {% if current_tag == tag %}filter-active{% endif %}"
+         role="tab"
+         aria-selected="{% if current_tag == tag %}true{% else %}false{% endif %}">
+        {{ tag }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Template Grid -->
     {% if templates %}
-        <div class="row g-3">
-            {% for t in templates %}
-                <div class="col-6 col-md-4 col-lg-3 animate-fade-in-up delay-{{ forloop.counter }}">
-                    <div class="card h-100 border-0 shadow-sm" style="border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;">
-
-                        {% if resume.template and resume.template.id == t.id %}
-                            <div style="background: #059669; color: white; padding: 4px 10px; font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-                                <i class="bi bi-check-lg"></i> Currently Selected
-                            </div>
-                        {% endif %}
-
-                        {% include "snippets/template_preview_card.html" with t=t %}
-
-                        <div class="card-body text-center p-3">
-                            <h6 class="fw-bold mb-1" style="font-size: 0.88rem;">{{ t.name }}</h6>
-                            <p class="text-muted mb-2" style="font-size: 0.72rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ t.description }}</p>
-                            <form method="post" action="{% url 'resumes:template_select' resume.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="template_id" value="{{ t.id }}">
-                                <button type="submit" class="btn btn-sm btn-primary btn-icon w-100" style="border-radius: var(--radius-sm);">
-                                    <i class="bi bi-check2-circle"></i> Use Template
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="card">
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-palette"></i>
-                </div>
-                <h4 class="fw-bold mb-2">No templates available</h4>
-                <p class="text-muted mb-4">
-                    Templates will appear here once an admin adds them.
-                </p>
-                <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary btn-icon">
-                    <i class="bi bi-arrow-left"></i> Back to Dashboard
-                </a>
+    <div class="template-grid" id="templateGrid">
+      {% for t in templates %}
+      <div class="template-card {% if resume.template and resume.template.id == t.id %}selected{% endif %}"
+           data-name="{{ t.name|lower }}" data-tags="{{ t.tags|join:','|lower }}">
+        <!-- Preview Area -->
+        <a href="{% url 'templates_app:preview' t.id %}" class="template-preview-link" aria-label="Preview {{ t.name }}">
+          <div class="template-preview-area">
+            {% if t.skin_file %}
+            <div class="template-paper">
+              <iframe src="{% url 'templates_app:preview_frame' t.id %}"
+                      class="template-iframe"
+                      loading="lazy"
+                      title="{{ t.name }} preview"></iframe>
             </div>
+            {% else %}
+            <div class="template-preview-legacy">
+              {% include "snippets/template_preview_card.html" with t=t %}
+            </div>
+            {% endif %}
+          </div>
+        </a>
+
+        {% if resume.template and resume.template.id == t.id %}
+        <div class="selected-badge">
+          <i class="bi bi-check-circle-fill"></i> Currently Selected
         </div>
+        {% endif %}
+
+        <!-- Card Info -->
+        <div class="template-info">
+          <h3 class="template-name">{{ t.name }}</h3>
+          <p class="template-desc">{{ t.description|truncatechars:100 }}</p>
+
+          <!-- Tags -->
+          {% if t.tags %}
+          <div class="template-tags">
+            {% for tag in t.tags|slice:":3" %}
+            <span class="template-badge">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Colors -->
+          {% if t.swatches %}
+          <div class="template-colors">
+            <span class="template-colors-label">Colors</span>
+            <div class="template-swatches">
+              {% for swatch in t.swatches|slice:":6" %}
+              <button class="color-dot" style="--swatch: {{ swatch }};" title="{{ swatch }}" aria-label="Color {{ swatch }}"></button>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Actions -->
+          <div class="template-actions">
+            <a href="{% url 'templates_app:preview' t.id %}" class="template-btn template-btn-secondary" aria-label="Preview {{ t.name }}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </a>
+            {% if resume.template and resume.template.id == t.id %}
+            <form method="post" action="{% url 'resumes:template_select' resume.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="template_id" value="{{ t.id }}">
+              <button type="submit" class="template-btn template-btn-primary">
+                <i class="bi bi-check2" style="font-size: 0.9rem;"></i> Selected
+              </button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'resumes:template_select' resume.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="template_id" value="{{ t.id }}">
+              <button type="submit" class="template-btn template-btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Use Template
+              </button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-gallery">
+      <div class="empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <h3>No templates found</h3>
+      <p>
+        {% if current_tag %}
+          No templates match the "{{ current_tag }}" filter.
+        {% else %}
+          Templates will appear here once they are added.
+        {% endif %}
+      </p>
+      <a href="{% url 'resumes:template_select' resume.id %}" class="template-btn template-btn-primary">View All Templates</a>
+    </div>
     {% endif %}
-</div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .container-custom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  .tw-reveal {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  .tw-reveal span {
+    display: inline-block;
+    animation: twUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  .tw-reveal:nth-child(1) span { animation-delay: 0s; }
+  .tw-reveal:nth-child(2) span { animation-delay: 0.12s; }
+  @keyframes twUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .job-back-link:hover {
+    background: rgba(255,255,255,0.95);
+    color: var(--primary);
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+  .gallery-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 14px;
+    padding: 0.75rem 1.1rem;
+    font-size: 0.88rem;
+    margin-bottom: 0.75rem;
+  }
+  .gallery-banner i {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .gallery-banner-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+  }
+  .gallery-banner-success {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+  }
+  .gallery-banner-link {
+    margin-left: auto;
+    white-space: nowrap;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gallery-banner-link:hover {
+    color: #fff;
+    border-color: transparent;
+  }
+  .gallery-banner-info .gallery-banner-link:hover { background: #1e40af; }
+  .gallery-banner-success .gallery-banner-link:hover { background: #065f46; }
+  .selected-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #059669;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+  }
+  .template-card {
+    position: relative;
+  }
+  .template-card.selected {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15), 0 20px 50px rgba(15, 23, 42, 0.08);
+  }
+</style>
 {% endblock %}

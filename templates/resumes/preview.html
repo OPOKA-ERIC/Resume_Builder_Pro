@@ -1,242 +1,366 @@
 {% extends "base.html" %}
-{% block title %}Preview - {{ resume.title }}{% endblock %}
+{% block title %}Preview — {{ resume.title }} · Resume Builder Pro{% endblock %}
+{% block main_class %}landing-page{% endblock %}
 
 {% block content %}
-<div class="resume-preview-container animate-fade-in-up">
+
+<!-- ===================== PREVIEW HERO ===================== -->
+<section class="pv-hero" id="rpHero">
+  <div class="pv-hero-bg"></div>
+  <div class="pv-hero-dots"></div>
+  <div class="pv-hero-container">
+    <a href="{% if resume.job %}{% url 'jobs:job_detail' resume.job.id %}{% else %}{% url 'resumes:dashboard' %}{% endif %}" class="pv-back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+      {% if resume.job %}Back to {{ resume.job.title }}{% else %}Back to Dashboard{% endif %}
+    </a>
+    <div class="pv-header-row">
+      <div>
+        <h1 class="pv-headline">{{ resume.title }}</h1>
+        <p class="pv-subhead">
+          {% if resume.job %}Tailored for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}.{% else %}A clean preview of your resume.{% endif %}
+          Preview exactly how it will look before you download or apply.
+        </p>
+        <div class="pv-badges">
+          {% if resume.job %}
+          <span class="pv-badge rp-badge-job">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            For {{ resume.job.title }}
+          </span>
+          {% endif %}
+          {% if resume.is_paid %}
+          <span class="pv-badge rp-badge-paid">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Paid — Applications Unlocked
+          </span>
+          {% endif %}
+          {% if resume.template %}
+          <span class="pv-badge rp-badge-job">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>
+            {{ resume.template.name }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="rp-actions">
+        {% if resume.job and resume.is_paid %}
+        <a href="{% url 'jobs:job_detail' resume.job.id %}" class="rp-btn rp-btn-success">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+          Finish &amp; Apply
+        </a>
+        {% endif %}
+        <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="rp-btn {% if resume.is_paid %}rp-btn-ghost{% else %}rp-btn-primary{% endif %}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+        <a href="{% url 'resumes:template_select' resume.id %}" class="rp-btn rp-btn-ghost">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>
+          Change Template
+        </a>
+        <a href="{% url 'resumes:dashboard' %}" class="rp-btn rp-btn-ghost">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </a>
+      </div>
+    </div>
+
     {% if resume.job %}
-    <div class="alert alert-info d-flex align-items-center gap-2 py-2 px-3 mb-4" role="alert" style="border-radius: 12px;">
-        <i class="bi bi-bullseye"></i>
-        <span class="small">This resume is tailored for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}. {% if resume.is_paid %}It's paid — you can apply and access every job's application links.{% else %}When it's ready, pay once to unlock the application links for this and every other job.{% endif %}</span>
+    <div class="rp-job-banner">
+      <div class="rp-job-meta">
         {% if resume.is_paid %}
-            <a href="{% url 'jobs:job_detail' resume.job.id %}" class="btn btn-primary btn-sm ms-auto flex-shrink-0" style="border-radius: 10px; padding: 0.45rem 1rem;">
-                <i class="bi bi-send-check"></i> Finish &amp; Apply
-            </a>
+        <strong>You're all set.</strong> Your resume is unlocked — go back to the job and hit <em>Finish &amp; Apply</em> to submit your application.
         {% else %}
-            <a href="{% url 'resumes:resume_pay' resume.id %}" class="btn btn-success btn-sm ms-auto flex-shrink-0" style="border-radius: 10px; padding: 0.45rem 1rem;">
-                <i class="bi bi-credit-card"></i> Pay to Unlock Applications
-            </a>
+        <strong>Your CV is ready.</strong> Review and refine it below — when you're happy, download it as a PDF to unlock the application link for <strong>{{ resume.job.title }}</strong> and every other approved job.
         {% endif %}
+      </div>
+      {% if resume.is_paid %}
+      <a href="{% url 'jobs:job_detail' resume.job.id %}" class="rp-btn rp-btn-success">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+        Finish &amp; Apply
+      </a>
+      {% else %}
+      <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="rp-btn rp-btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PDF
+      </a>
+      {% endif %}
     </div>
     {% endif %}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h3 class="mb-1"><i class="bi bi-eye me-2" style="color: var(--primary);"></i>{{ resume.title }}</h3>
-            <small class="text-muted">
-                Template: <strong>{{ resume.template.name|default:"Default" }}</strong> &mdash; Preview your resume before downloading
-            </small>
+  </div>
+</section>
+
+<!-- ===================== PREVIEW FRAME ===================== -->
+<section class="pv-frame-section" id="rpFrame">
+  <div class="pv-hero-container">
+    <div class="pv-frame-card">
+      <div class="pv-titlebar">
+        <div class="pv-dots">
+          <span class="pv-dot pv-dot-red"></span>
+          <span class="pv-dot pv-dot-yellow"></span>
+          <span class="pv-dot pv-dot-green"></span>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="btn btn-success btn-icon">
-                <i class="bi bi-download"></i> Download PDF
-            </a>
-            <a href="{% url 'portfolio:create' resume.id %}" class="btn btn-info btn-icon text-white">
-                <i class="bi bi-share"></i> Create Portfolio
-            </a>
-            <a href="{% url 'resumes:template_select' resume.id %}" class="btn btn-outline-primary btn-icon">
-                <i class="bi bi-palette"></i> Change Template
-            </a>
-            <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-secondary btn-icon">
-                <i class="bi bi-grid-1x2"></i> Dashboard
-            </a>
+        <span class="pv-titlebar-label">{% if resume.template %}{{ resume.template.name }}{% else %}No template{% endif %} &mdash; {{ resume.title }}</span>
+      </div>
+      {% if pdf_html %}
+      <iframe src="{% url 'resumes:resume_preview_frame' resume.id %}" class="pv-iframe" title="{{ resume.title }} preview"></iframe>
+      {% else %}
+      <div class="pv-empty">
+        <div class="pv-empty-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
         </div>
+        <p>No template selected yet — pick a design to see your resume.</p>
+        <a href="{% url 'resumes:template_select' resume.id %}" class="rp-btn rp-btn-primary" style="margin-top: 0.5rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>
+          Choose a Template
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EDIT SECTIONS ===================== -->
+<section class="rp-sections" id="rpSections">
+  <div class="pv-hero-container">
+    <div class="rp-sections-head">
+      <div>
+        <h2 class="rp-sections-title">Edit Your Resume</h2>
+        <p class="rp-sections-sub">Add or refine the content of each section — your CV updates instantly.</p>
+      </div>
+      <a href="{% url 'resumes:template_select' resume.id %}" class="rp-btn rp-btn-primary" style="box-shadow: 0 4px 15px rgba(79,70,229,0.25); color:#fff;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>
+        Choose a Template
+      </a>
     </div>
 
-    {% if pdf_html %}
-        <div class="card overflow-hidden border-0 shadow-sm animate-fade-in-up delay-1" style="border-radius: var(--radius-lg);">
-            <div style="background: var(--gray-100); padding: 8px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; gap: 8px;">
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></div>
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div>
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></div>
-                <span style="font-size: 0.75rem; color: var(--gray-500); margin-left: 8px;">{{ resume.template.name }} &mdash; {{ resume.title }}</span>
-            </div>
-            <iframe src="{% url 'resumes:resume_preview_frame' resume.id %}" style="width: 100%; height: 1100px; border: none;"></iframe>
+    <div class="rp-sections-grid">
+
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </span>
+          <h3>Education</h3>
+          <span class="rp-count-chip">{{ resume.educations.count }}</span>
         </div>
-    {% else %}
-        <div class="card overflow-hidden border-0 shadow-sm animate-fade-in-up delay-1" style="border-radius: var(--radius-lg);">
-            <div class="d-flex align-items-center justify-content-center" style="height: 500px; background: var(--gray-50);">
-                <div class="text-center">
-                    <i class="bi bi-file-earmark-text" style="font-size: 4rem; color: var(--gray-300);"></i>
-                    <p class="text-muted mt-3">No template selected or template failed to load.</p>
-                    <a href="{% url 'resumes:template_select' resume.id %}" class="btn btn-primary mt-2">
-                        <i class="bi bi-palette me-1"></i> Choose a Template
-                    </a>
-                </div>
-            </div>
+        {% for edu in resume.educations.all %}
+        <div class="rp-entry-row">
+          <div class="rp-entry-main">
+            <strong>{{ edu.qualification }}</strong> — {{ edu.institution }}
+            <div class="rp-entry-meta">{{ edu.start_year }} — {{ edu.end_year|default:"Present" }}</div>
+          </div>
+          <div class="rp-entry-actions">
+            <a href="{% url 'resumes:section_edit' resume.id 'education' edu.id %}" class="rp-entry-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'education' edu.id %}" onsubmit="return confirm('Delete this entry?');">
+              {% csrf_token %}
+              <button type="submit" class="rp-entry-btn rp-entry-btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
         </div>
-    {% endif %}
+        {% endfor %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'education' %}" class="rp-section-add">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Education
+        </a>
+      </div>
 
-    <!-- Edit Sections -->
-    <div class="mt-4 animate-fade-in-up delay-2">
-        <h5 class="mb-3"><i class="bi bi-pencil-square me-2" style="color: var(--primary);"></i>Edit Sections</h5>
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </span>
+          <h3>Work Experience</h3>
+          <span class="rp-count-chip">{{ resume.experiences.count }}</span>
+        </div>
+        {% for exp in resume.experiences.all %}
+        <div class="rp-entry-row">
+          <div class="rp-entry-main">
+            <strong>{{ exp.role }}</strong> at {{ exp.company }}
+            <div class="rp-entry-meta">{{ exp.start_year }} — {{ exp.end_year|default:"Present" }}</div>
+          </div>
+          <div class="rp-entry-actions">
+            <a href="{% url 'resumes:section_edit' resume.id 'experience' exp.id %}" class="rp-entry-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'experience' exp.id %}" onsubmit="return confirm('Delete this entry?');">
+              {% csrf_token %}
+              <button type="submit" class="rp-entry-btn rp-entry-btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'experience' %}" class="rp-section-add">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Experience
+        </a>
+      </div>
 
-        {% if resume.educations.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-book me-2 text-primary"></i>Education</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for edu in resume.educations.all %}
-                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                            <div>
-                                <strong>{{ edu.institution }}</strong> &mdash; {{ edu.qualification }}
-                                <div class="text-muted small">{{ edu.start_year }} &mdash; {{ edu.end_year|default:"Present" }}</div>
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'education' edu.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'education' edu.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-
-        {% if resume.experiences.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-briefcase me-2 text-primary"></i>Experience</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for exp in resume.experiences.all %}
-                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                            <div>
-                                <strong>{{ exp.role }}</strong> @ {{ exp.company }}
-                                <div class="text-muted small">{{ exp.start_year }} &mdash; {{ exp.end_year|default:"Present" }}</div>
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'experience' exp.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'experience' exp.id %}" style="display:inline;" onsubmit="return confirm('Delete this entry?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </span>
+          <h3>Skills</h3>
+          <span class="rp-count-chip">{{ resume.skills.count }}</span>
+        </div>
         {% if resume.skills.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-tools me-2 text-primary"></i>Skills</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for skill in resume.skills.all %}
-                            <span class="badge bg-primary-subtle text-primary d-flex align-items-center gap-1">
-                                {{ skill.name }} <small class="opacity-75">&middot; {{ skill.proficiency_level }}</small>
-                                <a href="{% url 'resumes:section_edit' resume.id 'skills' skill.id %}" class="text-primary ms-1" title="Edit"><i class="bi bi-pencil small"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'skills' skill.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-danger border-0 bg-transparent p-0 ms-1" title="Delete"><i class="bi bi-x-circle small"></i></button>
-                                </form>
-                            </span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+        <div class="rp-chips">
+          {% for skill in resume.skills.all %}
+          <span class="rp-chip">
+            {{ skill.name }} <small style="opacity:.6; font-weight:500;">{{ skill.proficiency_level }}</small>
+            <a href="{% url 'resumes:section_edit' resume.id 'skills' skill.id %}" title="Edit"><i class="bi bi-pencil small"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'skills' skill.id %}" style="display:inline;" onsubmit="return confirm('Delete this skill?');">
+              {% csrf_token %}
+              <button type="submit" class="border-0 bg-transparent p-0" title="Delete" style="color:inherit;"><i class="bi bi-x-circle small"></i></button>
+            </form>
+          </span>
+          {% endfor %}
+        </div>
         {% endif %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'skills' %}" class="rp-section-add" style="margin-top:.75rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Skill
+        </a>
+      </div>
 
-        {% if resume.projects.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-folder2-open me-2 text-primary"></i>Projects</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for project in resume.projects.all %}
-                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                            <div>
-                                <strong>{{ project.name }}</strong>
-                                {% if project.link %}<a href="{{ project.link }}" class="text-muted small ms-2" target="_blank"><i class="bi bi-link-45deg"></i></a>{% endif %}
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'projects' project.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'projects' project.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          <h3>Projects</h3>
+          <span class="rp-count-chip">{{ resume.projects.count }}</span>
+        </div>
+        {% for project in resume.projects.all %}
+        <div class="rp-entry-row">
+          <div class="rp-entry-main">
+            <strong>{{ project.name }}</strong>
+            {% if project.link %}<a href="{{ project.link }}" target="_blank" class="rp-entry-meta"><i class="bi bi-link-45deg"></i></a>{% endif %}
+          </div>
+          <div class="rp-entry-actions">
+            <a href="{% url 'resumes:section_edit' resume.id 'projects' project.id %}" class="rp-entry-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'projects' project.id %}" onsubmit="return confirm('Delete this project?');">
+              {% csrf_token %}
+              <button type="submit" class="rp-entry-btn rp-entry-btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'projects' %}" class="rp-section-add">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Project
+        </a>
+      </div>
 
-        {% if resume.certifications.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-award me-2 text-primary"></i>Certifications</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for cert in resume.certifications.all %}
-                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                            <div>
-                                <strong>{{ cert.title }}</strong> &mdash; {{ cert.issuer }}
-                                <div class="text-muted small">{{ cert.year_awarded }}</div>
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'certifications' cert.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'certifications' cert.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          </span>
+          <h3>Certifications</h3>
+          <span class="rp-count-chip">{{ resume.certifications.count }}</span>
+        </div>
+        {% for cert in resume.certifications.all %}
+        <div class="rp-entry-row">
+          <div class="rp-entry-main">
+            <strong>{{ cert.title }}</strong> — {{ cert.issuer }}
+            <div class="rp-entry-meta">{{ cert.year_awarded }}</div>
+          </div>
+          <div class="rp-entry-actions">
+            <a href="{% url 'resumes:section_edit' resume.id 'certifications' cert.id %}" class="rp-entry-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'certifications' cert.id %}" onsubmit="return confirm('Delete this certification?');">
+              {% csrf_token %}
+              <button type="submit" class="rp-entry-btn rp-entry-btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'certifications' %}" class="rp-section-add">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Certification
+        </a>
+      </div>
 
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6"/><path d="M4 14a2 2 0 1 0 2 2 2 2 0 0 0-2-2z"/><path d="M14 4a2 2 0 1 0 2 2 2 2 0 0 0-2-2z"/><line x1="16" y1="12" x2="20" y2="12"/><line x1="13" y1="16" x2="19" y2="16"/></svg>
+          </span>
+          <h3>Languages</h3>
+          <span class="rp-count-chip">{{ resume.languages.count }}</span>
+        </div>
         {% if resume.languages.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-translate me-2 text-primary"></i>Languages</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-wrap gap-2">
-                        {% for lang in resume.languages.all %}
-                            <span class="badge bg-secondary-subtle text-secondary d-flex align-items-center gap-1">
-                                {{ lang.name }} <small class="opacity-75">&middot; {{ lang.proficiency_level }}</small>
-                                <a href="{% url 'resumes:section_edit' resume.id 'languages' lang.id %}" class="text-secondary ms-1" title="Edit"><i class="bi bi-pencil small"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'languages' lang.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="text-danger border-0 bg-transparent p-0 ms-1" title="Delete"><i class="bi bi-x-circle small"></i></button>
-                                </form>
-                            </span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+        <div class="rp-chips">
+          {% for lang in resume.languages.all %}
+          <span class="rp-chip">
+            {{ lang.name }} <small style="opacity:.6; font-weight:500;">{{ lang.proficiency_level }}</small>
+            <a href="{% url 'resumes:section_edit' resume.id 'languages' lang.id %}" title="Edit"><i class="bi bi-pencil small"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'languages' lang.id %}" style="display:inline;" onsubmit="return confirm('Delete this language?');">
+              {% csrf_token %}
+              <button type="submit" class="border-0 bg-transparent p-0" title="Delete" style="color:inherit;"><i class="bi bi-x-circle small"></i></button>
+            </form>
+          </span>
+          {% endfor %}
+        </div>
         {% endif %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'languages' %}" class="rp-section-add" style="margin-top:.75rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Language
+        </a>
+      </div>
 
-        {% if resume.references.all %}
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: var(--radius-md);">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="bi bi-people me-2 text-primary"></i>References</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% for ref in resume.references.all %}
-                        <div class="d-flex justify-content-between align-items-center px-3 py-2 {% if not forloop.last %}border-bottom{% endif %}">
-                            <div>
-                                <strong>{{ ref.name }}</strong>
-                                <div class="text-muted small">{{ ref.relationship }} &mdash; {{ ref.contact }}</div>
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{% url 'resumes:section_edit' resume.id 'references' ref.id %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'resumes:section_delete' resume.id 'references' ref.id %}" style="display:inline;" onsubmit="return confirm('Delete?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
+      <div class="rp-section-card">
+        <div class="rp-section-head">
+          <span class="rp-section-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <h3>References</h3>
+          <span class="rp-count-chip">{{ resume.references.count }}</span>
+        </div>
+        {% for ref in resume.references.all %}
+        <div class="rp-entry-row">
+          <div class="rp-entry-main">
+            <strong>{{ ref.name }}</strong>
+            <div class="rp-entry-meta">{{ ref.relationship }} — {{ ref.contact }}</div>
+          </div>
+          <div class="rp-entry-actions">
+            <a href="{% url 'resumes:section_edit' resume.id 'references' ref.id %}" class="rp-entry-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+            <form method="post" action="{% url 'resumes:section_delete' resume.id 'references' ref.id %}" onsubmit="return confirm('Delete this reference?');">
+              {% csrf_token %}
+              <button type="submit" class="rp-entry-btn rp-entry-btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+        <a href="{% url 'resumes:wizard_step' resume.id 'references' %}" class="rp-section-add">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Reference
+        </a>
+      </div>
+
     </div>
-</div>
+  </div>
+</section>
+
+<!-- ===================== CTA BOTTOM ===================== -->
+<section class="pv-cta" id="rpCta">
+  <div class="pv-hero-container">
+    <div class="pv-cta-inner">
+      <div>
+        <h2 class="pv-cta-title">Ready when you are.</h2>
+        <p class="pv-cta-text">Your resume looks great — download it as PDF, create a portfolio, or go apply.</p>
+      </div>
+      <div class="rp-actions">
+        {% if resume.job and resume.is_paid %}
+        <a href="{% url 'jobs:job_detail' resume.job.id %}" class="pv-btn-use">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+          Finish &amp; Apply
+        </a>
+        {% endif %}
+        <a href="{% url 'pdf_export:download_pdf' resume.id %}" class="pv-btn-use">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

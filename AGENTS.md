@@ -56,6 +56,18 @@
 - **Register**: reverse order (`auth-card-wrap-reverse`) to alternate feature/form sides
 - **Responsive**: stacks vertically at ≤767px, mobile padding adjustments
 
+### 7. Resume Preview (`/resumes/<id>/preview/`)
+- **Hero**: back link, headline, badges (For Job / Paid or Not Paid Yet / template name), action buttons
+- **Unpaid**: primary "Download CV — ${{ price }}" (download is pay-gated); **paid**: primary "Finish & Apply" + "Download PDF"
+- **Mock browser frame** wrapping iframe to `resumes:resume_preview_frame`
+- **Edit Your Resume**: section-cards grid (Education/Work Experience/Skills/Projects/Certifications/Languages/References) with counts + add/edit/delete buttons
+- Uses `.pv-*` + `.rp-*` classes; payment flow: `resumes:resume_pay` (POST sets `is_paid=True` + `paid_at`), `pdf_export:download_pdf`/`pdf_preview` 302-gate unpaid resumes via `_pay_gate_redirect()` to pay page with `?next=`
+
+### 8. Profile Career Biodata (`/profile/`)
+- `UserProfile.career_data` JSON: `experience`/`education`/`projects`/`certifications`/`languages`
+- Line-based textarea format: `Role | Company | Start Year | End Year | Description` (decode colon)
+- Resume pre-fill (`_prefill_job_resume`) consumes profile skills + career_data
+
 ## CSS Architecture
 All page-specific CSS lives at the bottom of `static/css/style.css`:
 1. Templates Gallery: `/* === TEMPLATES GALLERY === */` (around lines 3500-3900)
@@ -64,6 +76,7 @@ All page-specific CSS lives at the bottom of `static/css/style.css`:
 4. Dashboard: `/* === DASHBOARD === */` (around lines 4500-4900)
 5. Profile: `/* === PROFILE === */` (around lines 4900-5314)
 6. Auth Pages: `/* === AUTH PAGES === */` (after line 5314)
+7. Resume Preview: `/* === RESUME PREVIEW (RP) === */` (appended at end, after landing-* styles)
 
 ## JS
 All page-specific JS lives at the bottom of `static/js/main.js`:
