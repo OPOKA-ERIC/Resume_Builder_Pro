@@ -25,15 +25,13 @@ class ResumeTemplate(models.Model):
     skin_file = models.CharField(max_length=200, blank=True, null=True,
                                   help_text='Path to the skin template (e.g., themes/skins/nebula.html)')
     tags = models.JSONField(default=list, blank=True,
-                             help_text='Tags for filtering: modern, simple, with_photo, professional, ats')
+                             help_text='Tags for filtering: modern, simple, with_photo, professional')
     swatches = models.JSONField(default=list, blank=True,
                                  help_text='Preset accent colors as hex codes')
     supports_photo = models.BooleanField(default=False,
                                           help_text='Whether this template supports profile photos')
     supports_monochrome = models.BooleanField(default=False,
                                                help_text='Whether this template supports monochrome mode')
-    ats_safe = models.BooleanField(default=True,
-                                    help_text='Whether this template is ATS-friendly')
 
     def __str__(self):
         return self.name

@@ -2576,10 +2576,6 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
   backdrop-filter: blur(4px);
 }
-.pv-badge-ats {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-}
 .pv-badge-layout {
   background: rgba(99, 102, 241, 0.2);
   color: #a5b4fc;
