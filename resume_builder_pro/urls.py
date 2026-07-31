@@ -3,14 +3,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
-from django.views.generic import TemplateView
 from portfolio import views as portfolio_views
 from templates_app.models import ResumeTemplate
 
 
 def landing_view(request):
+    from resumes.models import Resume
     featured_templates = ResumeTemplate.objects.filter(is_active=True).order_by('?')[:6]
-    return render(request, 'landing.html', {'featured_templates': featured_templates})
+    return render(request, 'landing.html', {
+        'featured_templates': featured_templates,
+        'resume_count': Resume.objects.count(),
+        'template_count': ResumeTemplate.objects.filter(is_active=True).count(),
+    })
 
 
 urlpatterns = [
