@@ -1,4 +1,3 @@
-import json
 import requests
 from datetime import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,7 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.utils import timezone
 from .models import Job, Employer, JobApplication
 from .scam_detector import ScamDetector
@@ -34,8 +33,8 @@ def get_client_location(request):
 
 def _resolve_user_location(request):
     if request.user.is_authenticated:
-        profile = request.user.profile
-        if profile.city:
+        profile = getattr(request.user, 'profile', None)
+        if profile is not None and profile.city:
             return {
                 'city': profile.city.split(',')[0].strip(),
                 'region': '',
@@ -291,6 +290,7 @@ def post_job(request):
             'title': title,
             'description': description,
             'requirements': requirements,
+            'responsibilities': responsibilities,
             'location': location,
             'is_remote': is_remote,
             'salary_min': float(salary_min) if salary_min else None,
@@ -325,10 +325,9 @@ def post_job(request):
 
         if is_auto_approved:
             messages.success(request, 'Your job has been verified and posted successfully!')
-        else:
-            messages.info(request, 'Your job has been submitted for review. We will notify you once it is approved.')
-
-        return redirect('jobs:job_detail', job_id=job.id)
+            return redirect('jobs:job_detail', job_id=job.id)
+        messages.info(request, 'Your job has been submitted for review. We will notify you once it is approved.')
+        return redirect('jobs:job_list')
 
     return render(request, 'jobs/post_job.html')
 

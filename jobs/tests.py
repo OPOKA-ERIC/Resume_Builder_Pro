@@ -224,3 +224,47 @@ class JobApplyPipelineTests(TestCase):
         self.client.post(reverse('resumes:template_select', args=[resume.id]), {'template_id': template.id})
         resume.refresh_from_db()
         self.assertEqual(resume.skills.count(), 1)
+
+
+class PostJobViewTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user('employer_user', 'e@example.com', 'password123')
+        self.client.login(username='employer_user', password='password123')
+
+    def _post_data(self):
+        return {
+            'company_name': 'Globex',
+            'email': 'jobs@globex.com',
+            'website': 'https://globex.com',
+            'title': 'Backend Developer',
+            'description': 'Build Django APIs for a growing product.',
+            'requirements': '3+ years Python and Django.',
+            'responsibilities': 'Ship features and review code.',
+            'location': 'Kampala',
+            'is_remote': 'on',
+            'salary_min': '5000',
+            'salary_max': '8000',
+            'employment_type': 'full_time',
+            'category': 'technology',
+        }
+
+    @patch('jobs.views.ScamDetector.run_all_checks', return_value={'score': 90})
+    def test_posted_approved_job_redirects_to_job_detail(self, mock):
+        Employer.objects.create(company_name='Globex', email='jobs@globex.com')
+        response = self.client.post(reverse('jobs:post_job'), self._post_data())
+        job = Job.objects.get(title='Backend Developer')
+        self.assertEqual(job.status, 'approved')
+        self.assertEqual(job.responsibilities, 'Ship features and review code.')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('jobs:job_detail', args=[job.id]))
+        self.assertEqual(self.client.get(response.url).status_code, 200)
+
+    @patch('jobs.views.ScamDetector.run_all_checks', return_value={'score': 90})
+    def test_posted_pending_job_redirects_to_job_list_not_detail(self, mock):
+        response = self.client.post(reverse('jobs:post_job'), self._post_data())
+        job = Job.objects.get(title='Backend Developer')
+        self.assertEqual(job.status, 'pending')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('jobs:job_list'))
+        self.assertEqual(self.client.get(response.url).status_code, 200)
