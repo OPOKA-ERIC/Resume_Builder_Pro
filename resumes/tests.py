@@ -180,6 +180,14 @@ class DashboardViewTest(TestCase):
         response = self.client.get('/resumes/')
         self.assertContains(response, 'No resumes yet')
 
+    def test_dashboard_shows_active_template_count(self):
+        from templates_app.models import ResumeTemplate
+        self.client.login(username='u', password='pass1234!')
+        base = ResumeTemplate.objects.filter(is_active=True).count()
+        ResumeTemplate.objects.create(name='Extra Template', html_file='x.html', is_active=True)
+        response = self.client.get('/resumes/')
+        self.assertContains(response, f'>{base + 1}</div>')
+
 
 class ResumeCreateViewTest(TestCase):
 

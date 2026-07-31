@@ -201,7 +201,12 @@ def dashboard(request):
     paginator = Paginator(resumes_list, 9)
     page_number = request.GET.get('page')
     resumes = paginator.get_page(page_number)
-    return render(request, 'resumes/dashboard.html', {'resumes': resumes})
+    from templates_app.models import ResumeTemplate
+    template_count = ResumeTemplate.objects.filter(is_active=True).count()
+    return render(request, 'resumes/dashboard.html', {
+        'resumes': resumes,
+        'template_count': template_count,
+    })
 
 
 @login_required
@@ -210,7 +215,9 @@ def resume_create(request):
         title = request.POST.get('title', 'My Professional Resume')
         resume = Resume.objects.create(user=request.user, title=title)
         return redirect('resumes:wizard_step', resume_id=resume.id, step='education')
-    return render(request, 'resumes/resume_form.html', {'action': 'Create'})
+    from templates_app.models import ResumeTemplate
+    template_count = ResumeTemplate.objects.filter(is_active=True).count()
+    return render(request, 'resumes/resume_form.html', {'action': 'Create', 'template_count': template_count})
 
 
 @login_required
