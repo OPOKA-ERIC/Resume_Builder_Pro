@@ -8,3 +8,4 @@ dj-database-url
 requests
 python-whois
 deep-translator==1.11.4
+apscheduler==3.11.3

@@ -49,11 +49,82 @@ def _sample_data():
             {'name': 'Spanish', 'proficiency_level': 'fluent'},
             {'name': 'Mandarin', 'proficiency_level': 'basic'},
         ],
-        'references': [
-            {'name': 'Dr. Sarah Chen', 'relationship': 'Professor, Stanford University', 'contact': 'sarah.chen@stanford.edu'},
-            {'name': 'Mark Williams', 'relationship': 'Engineering Manager, Google', 'contact': 'mark.w@google.com'},
-        ],
-    }
+    'references': [
+        {'name': 'Dr. Sarah Chen', 'relationship': 'Professor, Stanford University', 'contact': 'sarah.chen@stanford.edu'},
+        {'name': 'Mark Williams', 'relationship': 'Engineering Manager, Google', 'contact': 'mark.w@google.com'},
+    ],
+}
+
+
+SKILL_KEYWORDS = [
+    'python', 'javascript', 'typescript', 'java', 'c++', 'go', 'rust', 'sql', 'nosql',
+    'react', 'angular', 'vue', 'django', 'flask', 'node', 'express', 'html', 'css',
+    'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'terraform', 'git', 'linux',
+    'postgresql', 'mysql', 'mongodb', 'redis', 'elasticsearch',
+    'machine learning', 'data analysis', 'data science', 'nlp', 'tensorflow', 'pytorch',
+    'excel', 'powerpoint', 'word', 'communication', 'leadership', 'project management',
+    'agile', 'scrum', 'customer service', 'sales', 'marketing', 'seo', 'accounting',
+    'finance', 'hr', 'recruiting', 'negotiation', 'problem solving', 'teamwork',
+]
+
+
+def _prefill_job_resume(resume):
+    """Auto-fill a fresh job-linked resume from the job description + profile."""
+    job = resume.job
+    if not job:
+        return False
+    if resume.skills.exists() or resume.experiences.exists() or resume.educations.exists():
+        return False
+    user = resume.user
+    profile = getattr(user, 'profile', None)
+    full_name = user.get_full_name() or user.username
+    user_city = (profile.city if profile else '') or ''
+    location = user_city or job.location
+    focus = job.requirements or (job.description[:300] if job.description else '')
+    summary = (
+        f'{full_name}, a professional based in {location}, is applying for the {job.title} role at '
+        f'{job.employer.company_name} ({job.location}).\n\n'
+        f'Key focus areas from the role: {focus}. {full_name} combines relevant experience with a '
+        f'results-driven approach and strong collaboration skills.'
+    )
+    resume.summary = summary
+    text = f"{job.description or ''} {job.requirements or ''}".lower()
+    matched = []
+    for keyword in SKILL_KEYWORDS:
+        if keyword in text:
+            name = keyword.title()
+            if name not in matched:
+                matched.append(name)
+    if not matched:
+        fallback = job.category.title() if job.category else 'Communication'
+        matched = [fallback, 'Teamwork', 'Problem Solving']
+    for name in matched[:14]:
+        Skill.objects.create(resume=resume, name=name)
+    resume.save()
+    return True
+
+
+RESUME_PAYMENT_PRICE = 9.99
+
+
+@login_required
+def resume_pay(request, resume_id):
+    resume = get_object_or_404(Resume, id=resume_id, user=request.user)
+    if resume.is_paid:
+        messages.info(request, 'This resume is already paid. You have access to every job application link.')
+        return redirect('jobs:job_list')
+    if request.method == 'POST':
+        resume.is_paid = True
+        resume.paid_at = timezone.now()
+        resume.save(update_fields=['is_paid', 'paid_at', 'updated_at'])
+        messages.success(
+            request,
+            'Payment successful! You now have lifetime access to the application links for every approved job.',
+        )
+        if resume.job:
+            return redirect('jobs:job_detail', job_id=resume.job.id)
+        return redirect('resumes:resume_preview', resume_id=resume.id)
+    return render(request, 'resumes/pay.html', {'resume': resume, 'price': RESUME_PAYMENT_PRICE})
 
 
 @login_required
@@ -183,12 +254,19 @@ def template_select(request, resume_id):
             if template:
                 resume.template = template
                 resume.save()
-                messages.success(request, f'Template "{template.name}" selected.')
+                if resume.job and not resume.is_paid and _prefill_job_resume(resume):
+                    messages.success(
+                        request,
+                        f'Template "{template.name}" selected and auto-filled from the job description and your profile.',
+                    )
+                else:
+                    messages.success(request, f'Template "{template.name}" selected.')
         return redirect('resumes:resume_preview', resume_id=resume.id)
 
     return render(request, 'resumes/template_select.html', {
         'resume': resume,
         'templates': templates,
+        'can_prefill': bool(resume.job and not resume.skills.exists()),
     })
 
 

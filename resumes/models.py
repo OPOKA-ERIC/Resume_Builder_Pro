@@ -10,6 +10,12 @@ class Resume(models.Model):
     template = models.ForeignKey(
         ResumeTemplate, on_delete=models.SET_NULL, null=True, blank=True, related_name='resumes'
     )
+    job = models.ForeignKey(
+        'jobs.Job', on_delete=models.SET_NULL, null=True, blank=True, related_name='resumes',
+        help_text='Job this resume was created for',
+    )
+    is_paid = models.BooleanField(default=False, help_text='True when the one-time payment was completed')
+    paid_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

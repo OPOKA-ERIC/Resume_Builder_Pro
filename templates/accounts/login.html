@@ -50,6 +50,7 @@
 
           <form method="post" novalidate>
             {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
             {% if form.non_field_errors %}
             <div class="afp-alert">
@@ -95,7 +96,7 @@
             <span class="afp-link-divider"></span>
             <span class="afp-link-text">
               Don't have an account?
-              <a href="{% url 'accounts:register' %}" class="afp-link">Create one</a>
+              <a href="{% url 'accounts:register' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="afp-link">Create one</a>
             </span>
           </div>
         </div>

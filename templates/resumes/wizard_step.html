@@ -2,6 +2,86 @@
 {% load static %}
 {% block title %}{{ step|title }} - Resume Builder Pro{% endblock %}
 
+{% block extra_css %}
+<style>
+    .job-ref-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background: #ffffff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+    .job-ref-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    .job-ref-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .job-ref-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #4f46e5;
+        margin-bottom: 0.25rem;
+    }
+    .job-ref-title {
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 1.05rem;
+        line-height: 1.3;
+    }
+    .job-ref-meta {
+        font-size: 0.82rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+    }
+    .job-ref-body {
+        padding: 1.25rem 1.5rem;
+        display: grid;
+        gap: 1.25rem;
+    }
+    .job-ref-section {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+    }
+    .job-ref-heading {
+        font-weight: 700;
+        font-size: 0.8rem;
+        color: #4f46e5;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+    .job-ref-text {
+        color: #475569;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        white-space: pre-line;
+        max-height: 180px;
+        overflow-y: auto;
+        padding-right: 0.5rem;
+    }
+    @media (max-width: 575px) {
+        .job-ref-header { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -40,6 +120,37 @@
                 </div>
             </div>
         </div>
+
+        {% if resume.job %}
+        <div class="job-ref-card animate-fade-in-up delay-1 mb-4">
+            <div class="job-ref-header">
+                <div>
+                    <div class="job-ref-label"><i class="bi bi-bullseye"></i> Applying for</div>
+                    <div class="job-ref-title">{{ resume.job.title }}</div>
+                    <div class="job-ref-meta">
+                        <i class="bi bi-buildings"></i> {{ resume.job.employer.company_name }}
+                        &middot; <i class="bi bi-geo-alt"></i> {{ resume.job.location }}
+                        &middot; <i class="bi bi-clock"></i> {{ resume.job.get_employment_type_display }}
+                    </div>
+                </div>
+                <a href="{% url 'jobs:job_detail' resume.job.id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye"></i> View Job
+                </a>
+            </div>
+            <div class="job-ref-body">
+                <div class="job-ref-section">
+                    <div class="job-ref-heading"><i class="bi bi-file-text"></i> Job Description</div>
+                    <div class="job-ref-text">{{ resume.job.description|truncatewords:200 }}</div>
+                </div>
+                {% if resume.job.requirements %}
+                <div class="job-ref-section">
+                    <div class="job-ref-heading"><i class="bi bi-list-check"></i> Requirements to Match</div>
+                    <div class="job-ref-text">{{ resume.job.requirements|truncatewords:150 }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
 
         <!-- Form Card -->
         <div class="card animate-fade-in-up delay-1">

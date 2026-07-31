@@ -3864,6 +3864,15 @@ h1, h2, h3, h4, h5, h6 {
   background: #e11d48;
   color: #fff;
 }
+.dash-act-pay {
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid transparent;
+}
+.dash-act-pay:hover {
+  background: #b45309;
+  color: #fff;
+}
 
 /* --- Pagination --- */
 .dash-pagination {

@@ -3,6 +3,21 @@
 
 {% block content %}
 <div class="resume-preview-container animate-fade-in-up">
+    {% if resume.job %}
+    <div class="alert alert-info d-flex align-items-center gap-2 py-2 px-3 mb-4" role="alert" style="border-radius: 12px;">
+        <i class="bi bi-bullseye"></i>
+        <span class="small">This resume is tailored for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}. {% if resume.is_paid %}It's paid — you can apply and access every job's application links.{% else %}When it's ready, pay once to unlock the application links for this and every other job.{% endif %}</span>
+        {% if resume.is_paid %}
+            <a href="{% url 'jobs:job_detail' resume.job.id %}" class="btn btn-primary btn-sm ms-auto flex-shrink-0" style="border-radius: 10px; padding: 0.45rem 1rem;">
+                <i class="bi bi-send-check"></i> Finish &amp; Apply
+            </a>
+        {% else %}
+            <a href="{% url 'resumes:resume_pay' resume.id %}" class="btn btn-success btn-sm ms-auto flex-shrink-0" style="border-radius: 10px; padding: 0.45rem 1rem;">
+                <i class="bi bi-credit-card"></i> Pay to Unlock Applications
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="mb-1"><i class="bi bi-eye me-2" style="color: var(--primary);"></i>{{ resume.title }}</h3>

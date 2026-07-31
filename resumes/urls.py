@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:resume_id>/wizard/<str:step>/<int:entry_id>/edit/', views.wizard_entry_edit, name='wizard_entry_edit'),
     path('<int:resume_id>/wizard/<str:step>/<int:entry_id>/delete/', views.wizard_entry_delete, name='wizard_entry_delete'),
     path('<int:resume_id>/templates/', views.template_select, name='template_select'),
+    path('<int:resume_id>/pay/', views.resume_pay, name='resume_pay'),
     path('<int:resume_id>/preview/', views.resume_preview, name='resume_preview'),
     path('<int:resume_id>/preview/frame/', views.resume_preview_frame, name='resume_preview_frame'),
     path('cv/<int:resume_id>/', views.public_cv_view, name='public_cv'),

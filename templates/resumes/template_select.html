@@ -13,6 +13,31 @@
         </div>
     </div>
 
+    {% if resume.job %}
+        <div class="alert alert-info d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
+            <i class="bi bi-bullseye"></i>
+            <span class="small">This resume is being built for <strong>{{ resume.job.title }}</strong> at {{ resume.job.employer.company_name }}. After picking a template you'll be able to finish and apply.</span>
+            <a href="{% url 'jobs:job_detail' resume.job.id %}" class="btn btn-outline-primary btn-sm ms-auto flex-shrink-0" style="border-radius: 10px;">
+                <i class="bi bi-eye"></i> View Job
+            </a>
+        </div>
+    {% endif %}
+
+    {% if can_prefill %}
+        <div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
+            <i class="bi bi-magic"></i>
+            <span class="small"><strong>Quick start:</strong> choose a template and it will be auto-filled with the job's focus areas plus your profile info. Everything stays editable afterward.</span>
+            <a href="{% url 'resumes:wizard_step' resume.id 'education' %}" class="btn btn-outline-success btn-sm ms-auto flex-shrink-0" style="border-radius: 10px;">
+                <i class="bi bi-list-check"></i> Use the Wizard Instead
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3" role="alert" style="border-radius: 12px;">
+            <i class="bi bi-pencil-square"></i>
+            <span class="small">This resume already has content. Pick a template to switch its look — your data stays untouched.</span>
+        </div>
+    {% endif %}
+
     {% if templates %}
         <div class="row g-3">
             {% for t in templates %}

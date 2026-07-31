@@ -1,5 +1,5 @@
 import logging
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
@@ -7,16 +7,27 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from django.utils.http import urlencode
 from .forms import RegistrationForm, ProfileForm, CustomPasswordChangeForm
 from .models import UserProfile
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_AUTH_REDIRECT = 'resumes:dashboard'
+
+
+def _safe_next(request):
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+    if next_url.startswith('/') and not next_url.startswith('//'):
+        return next_url
+    return None
 
 
 @csrf_protect
 @never_cache
 @require_http_methods(["GET", "POST"])
 def register_view(request):
+    next_url = request.GET.get('next') or request.POST.get('next') or ''
     if request.user.is_authenticated:
         return redirect('resumes:dashboard')
     if request.method == 'POST':
@@ -26,18 +37,21 @@ def register_view(request):
             UserProfile.objects.create(user=user)
             logger.info(f"New user registered: {user.username}")
             messages.success(request, 'Account created successfully. Please log in.')
+            if next_url.startswith('/') and not next_url.startswith('//'):
+                return redirect(f"{reverse('accounts:login')}?{urlencode({'next': next_url})}")
             return redirect('accounts:login')
     else:
         form = RegistrationForm()
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'accounts/register.html', {'form': form, 'next': next_url})
 
 
 @csrf_protect
 @never_cache
 @require_http_methods(["GET", "POST"])
 def login_view(request):
+    next_url = _safe_next(request)
     if request.user.is_authenticated:
-        return redirect('resumes:dashboard')
+        return redirect(next_url or DEFAULT_AUTH_REDIRECT)
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -45,13 +59,13 @@ def login_view(request):
             login(request, user)
             logger.info(f"User logged in: {user.username}")
             request.session.set_expiry(3600 * 24 * 7)
-            return redirect('resumes:dashboard')
+            return redirect(next_url or DEFAULT_AUTH_REDIRECT)
         else:
             logger.warning(f"Failed login attempt for username: {request.POST.get('username', 'unknown')}")
             messages.error(request, 'Invalid username or password.')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form, 'next': next_url or ''})
 
 
 @require_http_methods(["GET", "POST"])

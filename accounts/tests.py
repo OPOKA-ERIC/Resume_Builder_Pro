@@ -227,6 +227,52 @@ class LogoutViewTest(TestCase):
         self.assertRedirects(response, reverse('accounts:login'))
 
 
+class AuthNextRedirectTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user('testuser', 'test@example.com', 'SecurePass123!')
+
+    def test_login_redirects_to_next(self):
+        next_url = '/resumes/create/'
+        response = self.client.post(
+            reverse('accounts:login') + f'?next={next_url}',
+            {'username': 'testuser', 'password': 'SecurePass123!'},
+        )
+        self.assertRedirects(response, next_url, fetch_redirect_response=False)
+
+    def test_login_ignores_external_next(self):
+        response = self.client.post(
+            reverse('accounts:login') + '?next=https://evil.com',
+            {'username': 'testuser', 'password': 'SecurePass123!'},
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('resumes:dashboard'), response.url)
+
+    def test_login_honors_post_next(self):
+        response = self.client.post(reverse('accounts:login'), {
+            'username': 'testuser',
+            'password': 'SecurePass123!',
+            'next': '/jobs/1/create-resume/',
+        })
+        self.assertRedirects(response, '/jobs/1/create-resume/', fetch_redirect_response=False)
+
+    def test_register_forwards_next_to_login(self):
+        from urllib.parse import unquote
+        response = self.client.post(
+            reverse('accounts:register') + '?next=/jobs/1/create-resume/',
+            {
+                'username': 'newuser',
+                'email': 'new@example.com',
+                'password1': 'SecurePass123!',
+                'password2': 'SecurePass123!',
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('accounts:login'), response.url)
+        self.assertIn('next=', response.url)
+        self.assertIn('/jobs/1/create-resume/', unquote(response.url))
+
+
 class ProfileViewTest(TestCase):
     def setUp(self):
         self.client = Client()

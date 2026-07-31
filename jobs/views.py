@@ -157,14 +157,22 @@ def job_list(request):
 def job_detail(request, job_id):
     job = get_object_or_404(Job, id=job_id, status='approved')
     user_has_resume = False
+    user_has_paid_resume = False
     has_applied = False
     can_view_details = False
+    job_resume = None
+    payable_resume = None
 
     if request.user.is_authenticated:
         from resumes.models import Resume
-        user_has_resume = Resume.objects.filter(user=request.user).exists()
+        resumes_qs = Resume.objects.filter(user=request.user)
+        job_resume = resumes_qs.filter(job=job).first()
+        user_has_resume = resumes_qs.exists()
+        user_has_paid_resume = resumes_qs.filter(is_paid=True).exists()
         has_applied = JobApplication.objects.filter(user=request.user, job=job).exists()
-        can_view_details = user_has_resume and has_applied
+        can_view_details = has_applied or user_has_paid_resume
+        if not user_has_paid_resume:
+            payable_resume = job_resume or resumes_qs.order_by('-updated_at').first()
 
     show_paywall = job.requires_resume and not can_view_details
 
@@ -179,11 +187,39 @@ def job_detail(request, job_id):
         'job': job,
         'related_jobs': related_jobs,
         'user_has_resume': user_has_resume,
+        'user_has_paid_resume': user_has_paid_resume,
         'has_applied': has_applied,
+        'job_resume': job_resume,
+        'payable_resume': payable_resume,
         'can_view_details': can_view_details,
         'show_paywall': show_paywall,
     }
     return render(request, 'jobs/job_detail.html', context)
+
+
+@login_required
+def create_job_resume(request, job_id):
+    job = get_object_or_404(Job, id=job_id, status='approved')
+
+    from resumes.models import Resume
+    existing = Resume.objects.filter(user=request.user, job=job).first()
+    if existing:
+        messages.info(request, f'You already have a resume tailored for {job.title}. Finish it and apply below.')
+        return redirect('jobs:job_detail', job_id=job.id)
+
+    resume = Resume.objects.create(
+        user=request.user,
+        job=job,
+        title=f'{job.title} — {job.employer.company_name}',
+        summary=f'Professional applying for the {job.title} role at {job.employer.company_name}'
+                f' ({job.location}).',
+    )
+    messages.success(
+        request,
+        f'Resume created for {job.title} at {job.employer.company_name}. '
+        f'Choose a template to auto-fill it from the job and your profile, or build it yourself with the wizard.',
+    )
+    return redirect('resumes:template_select', resume_id=resume.id)
 
 
 @login_required
@@ -195,10 +231,22 @@ def apply_for_job(request, job_id):
         return redirect('jobs:job_detail', job_id=job.id)
 
     from resumes.models import Resume
-    user_resume = Resume.objects.filter(user=request.user).first()
+    user_resume = Resume.objects.filter(user=request.user, job=job).first()
     if not user_resume:
-        messages.warning(request, 'You need to create a resume before you can apply for a position.')
-        return redirect('resumes:resume_create')
+        messages.warning(
+            request,
+            f'You must create a resume tailored for {job.title} at {job.employer.company_name} '
+            f'before you can apply. Use the description and requirements to build it.',
+        )
+        return redirect('jobs:create_job_resume', job_id=job.id)
+
+    if not user_resume.is_paid:
+        messages.warning(
+            request,
+            f'Your resume for {job.title} is ready but not yet paid. '
+            f'Complete the one-time payment to unlock the application link for this and every other job.',
+        )
+        return redirect('resumes:resume_pay', resume_id=user_resume.id)
 
     JobApplication.objects.create(user=request.user, job=job, resume=user_resume)
     messages.success(request, f'You have successfully applied for {job.title} at {job.employer.company_name}!')

@@ -131,6 +131,19 @@ class Job(models.Model):
             return f'{years} year{"s" if years != 1 else ""} ago'
 
 
+class AggregationState(models.Model):
+    key = models.CharField(max_length=50, unique=True)
+    last_run = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Aggregation State'
+        verbose_name_plural = 'Aggregation States'
+
+    def __str__(self):
+        return self.key
+
+
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='job_applications')
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')

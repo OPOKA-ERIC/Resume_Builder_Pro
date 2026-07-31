@@ -46,14 +46,28 @@
         z-index: 1;
     }
     .job-detail-hero .back-link {
-        color: rgba(255,255,255,0.7);
-        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: rgba(255,255,255,0.9);
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.28);
+        backdrop-filter: blur(8px);
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 0.45rem 1.05rem;
+        border-radius: 999px;
         text-decoration: none;
         position: relative;
         z-index: 1;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .job-detail-hero .back-link:hover {
-        color: #ffffff;
+        background: rgba(255,255,255,0.95);
+        color: var(--primary);
+        border-color: transparent;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
     }
     .hero-meta {
         position: relative;
@@ -136,6 +150,37 @@
     .paywall-card i { font-size: 3.5rem; color: #f59e0b; margin-bottom: 1rem; }
     .paywall-card h3 { font-weight: 700; color: #1e293b; }
     .paywall-card p { color: #64748b; max-width: 500px; margin: 0 auto 1.5rem; }
+
+    .paywall-actions .btn {
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 0.65rem 1.3rem;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-premium-cta {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.25);
+    }
+    .btn-premium-cta:hover {
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35);
+    }
+    .btn-premium-outline {
+        background: #ffffff;
+        color: #4f46e5;
+        border: 1.5px solid #e2e8f0;
+    }
+    .btn-premium-outline:hover {
+        color: #4338ca;
+        border-color: #4f46e5;
+        background: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.12);
+    }
 
     .unlocked-box {
         background: #f0fdf4;
@@ -315,27 +360,35 @@
                 <div class="paywall-card">
                     <i class="bi bi-lock-fill"></i>
                     <h3>Unlock Application Details</h3>
-                    <p>The application details for this position are hidden. Create a professional resume and apply to reveal how to contact the employer.</p>
-                    <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        {% if user.is_authenticated %}
-                            {% if user_has_resume %}
-                                <a href="{% url 'jobs:apply' job.id %}" class="btn btn-success btn-lg rounded-pill px-4">
-                                    <i class="bi bi-send-check"></i> Apply with Resume
-                                </a>
-                                <a href="{% url 'resumes:dashboard' %}" class="btn btn-outline-dark btn-lg rounded-pill px-4">
-                                    <i class="bi bi-grid-1x2"></i> My Resumes
-                                </a>
-                            {% else %}
-                                <a href="{% url 'resumes:resume_create' %}" class="btn btn-warning btn-lg rounded-pill px-4">
-                                    <i class="bi bi-file-earmark-plus"></i> Create Resume & Unlock
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            <a href="{% url 'accounts:register' %}?next={% url 'jobs:job_detail' job.id %}" class="btn btn-warning btn-lg rounded-pill px-4">
-                                <i class="bi bi-person-plus"></i> Register & Create Resume
+                    <p>Application details are hidden until you create a resume tailored to this job and complete the one-time payment. Once paid, you unlock the application links for every approved job.</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap paywall-actions">
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'jobs:create_job_resume' job.id %}" class="btn btn-premium-cta">
+                                <i class="bi bi-file-earmark-plus"></i> Create Resume for This Job
                             </a>
-                            <a href="{% url 'accounts:login' %}?next={% url 'jobs:job_detail' job.id %}" class="btn btn-outline-dark btn-lg rounded-pill px-4">
+                            <a href="{% url 'accounts:login' %}?next={% url 'jobs:job_detail' job.id %}" class="btn btn-premium-outline">
                                 <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        {% elif job_resume %}
+                            <a href="{% url 'resumes:resume_pay' job_resume.id %}" class="btn btn-premium-cta">
+                                <i class="bi bi-credit-card"></i> Pay to Unlock All Jobs
+                            </a>
+                            <a href="{% url 'resumes:resume_preview' job_resume.id %}" class="btn btn-premium-outline">
+                                <i class="bi bi-pencil-square"></i> Edit My Resume
+                            </a>
+                        {% elif payable_resume %}
+                            <a href="{% url 'jobs:create_job_resume' job.id %}" class="btn btn-premium-cta">
+                                <i class="bi bi-file-earmark-plus"></i> Create Resume for This Job
+                            </a>
+                            <a href="{% url 'resumes:resume_pay' payable_resume.id %}" class="btn btn-premium-outline">
+                                <i class="bi bi-credit-card"></i> Unlock with My Existing Resume
+                            </a>
+                        {% else %}
+                            <a href="{% url 'jobs:create_job_resume' job.id %}" class="btn btn-premium-cta">
+                                <i class="bi bi-file-earmark-plus"></i> Create Resume for This Job
+                            </a>
+                            <a href="{% url 'resumes:dashboard' %}" class="btn btn-premium-outline">
+                                <i class="bi bi-grid-1x2"></i> My Resumes
                             </a>
                         {% endif %}
                     </div>
@@ -345,7 +398,7 @@
                     <h5><i class="bi bi-unlock-fill"></i> Application Details Unlocked</h5>
                     {% if job.application_url %}
                         <p><strong>Apply on the original listing:</strong></p>
-                        <a href="{{ job.application_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-lg rounded-pill px-4 mb-2">
+                        <a href="{{ job.application_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-success mb-2">
                             <i class="bi bi-box-arrow-up-right"></i> Open Application Page
                         </a>
                         <p class="text-muted" style="font-size: 0.85rem;">{{ job.application_url }}</p>
@@ -367,7 +420,7 @@
                         <p class="mb-3">You've unlocked the details. Apply now — you'll be redirected to the original job listing.</p>
                         <form method="post" action="{% url 'jobs:apply' job.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-success btn-lg rounded-pill px-5">
+                            <button type="submit" class="btn btn-success">
                                 <i class="bi bi-send-fill"></i> Apply Now
                             </button>
                         </form>
