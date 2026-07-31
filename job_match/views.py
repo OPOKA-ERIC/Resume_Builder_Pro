@@ -2,6 +2,7 @@ import logging
 import threading
 import datetime
 from django.conf import settings
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -228,6 +229,18 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 def analyze_view(request):
     form = JobAnalysisForm(request.POST or None, request.FILES or None, user=request.user)
 
+    def context():
+        analyses = SkillGapAnalysis.objects.filter(job__user=request.user)
+        avg = analyses.aggregate(avg=Avg('overall_score'))['avg']
+        return {
+            'form': form,
+            'has_resumes': request.user.resumes.exists(),
+            'ai_available': bool(settings.GEMINI_API_KEY),
+            'total_analyses': analyses.count(),
+            'total_resumes': request.user.resumes.count(),
+            'avg_score': round(avg) if avg is not None else None,
+        }
+
     if request.method == 'POST' and form.is_valid():
         cd        = form.cleaned_data
         source    = cd['source']
@@ -249,11 +262,7 @@ def analyze_view(request):
             resume_text = extract_text_from_upload(resume_file)
             if not resume_text.strip():
                 messages.error(request, 'Could not extract text from the uploaded file.')
-                return render(request, 'job_match/analyze.html', {
-                    'form': form,
-                    'has_resumes': request.user.resumes.exists(),
-                    'ai_available': bool(settings.GEMINI_API_KEY),
-                })
+                return render(request, 'job_match/analyze.html', context())
             payload['resume_text'] = resume_text
 
         task = AnalysisTask.objects.create(user=request.user, payload=payload)
@@ -264,11 +273,7 @@ def analyze_view(request):
         return redirect('job_match:waiting', task_id=task.id)
 
     has_resumes = request.user.resumes.exists()
-    return render(request, 'job_match/analyze.html', {
-        'form': form,
-        'has_resumes': has_resumes,
-        'ai_available': bool(settings.GEMINI_API_KEY),
-    })
+    return render(request, 'job_match/analyze.html', context())
 
 
 @login_required
