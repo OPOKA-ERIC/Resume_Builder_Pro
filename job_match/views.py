@@ -136,7 +136,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 
                 if not found:
                     task.status = AnalysisTask.STATUS_ERROR
-                    task.error  = 'Could not find matching jobs. Try pasting a URL or description manually.'
+                    task.error  = 'Could not find matching jobs. Try entering a job URL instead.'
                     task.save(update_fields=['status', 'error', 'updated_at'])
                     return
 
@@ -200,7 +200,7 @@ def _run_task(task_id: str, user_id: int, payload: dict):
 
             if fetched['source'] == 'error':
                 task.status = AnalysisTask.STATUS_ERROR
-                task.error  = 'Could not fetch the URL. Try pasting the description manually.'
+                task.error  = 'Could not fetch the URL. Try Auto-Search or a different URL.'
                 task.save(update_fields=['status', 'error', 'updated_at'])
                 return
 

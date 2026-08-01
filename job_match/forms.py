@@ -9,7 +9,6 @@ class JobAnalysisForm(forms.Form):
 
     JD_SOURCE_CHOICES = (
         ('url', 'AI Fetch — Auto-extract from URL'),
-        ('manual', 'Manual — Paste description'),
         ('autosearch', 'Auto-Search — AI finds matching jobs'),
     )
 
@@ -56,7 +55,7 @@ class JobAnalysisForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={
             'class': 'form-control', 'rows': 10,
-            'placeholder': 'Paste the job description, or use AI Fetch from URL above...',
+            'placeholder': 'Will be auto-populated by AI — you can edit it here.',
         }),
     )
 
@@ -81,6 +80,4 @@ class JobAnalysisForm(forms.Form):
             raise forms.ValidationError('Please upload a resume file or switch to selecting an existing one.')
         if jd_source == 'url' and not cleaned.get('job_url'):
             raise forms.ValidationError('Please enter a job posting URL for AI to fetch.')
-        if jd_source == 'manual' and not cleaned.get('job_description'):
-            raise forms.ValidationError('Please paste a job description.')
         return cleaned
